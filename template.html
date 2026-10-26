@@ -386,53 +386,74 @@ footer.app a:hover{text-decoration:underline}
    ============================================================ */
 #printView{display:none}
 @media print{
-  @page{size:A4 landscape;margin:12mm 11mm}
+  @page{size:A4 landscape;margin:10mm}
   html,body{background:#fff !important}
   body{font-size:9.5pt;line-height:1.4;color:#111}
   header.app,main.app,footer.app,.modal-overlay,.toolbar{display:none !important}
-  #printView{display:block !important;color:#111}
+  /* exact: keep the chart colours even if "background graphics" is unchecked */
+  #printView{display:block !important;color:#111;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+
+  /* ---- layout budget (landscape A4 = 297 x 210mm) ----
+     Usable height is about 190mm. The masthead + summary + charts are held to
+     roughly 115mm so the first campus table starts on page 1. Previously the
+     charts alone needed ~150mm: break-inside:avoid then pushed the whole block
+     onto page 2, and a forced page break after it stranded the charts there on
+     their own, leaving most of page 1 blank. */
 
   /* ---- masthead: one compact block, no heavy ink ---- */
-  .pv-head{border-bottom:2.5pt solid #0b4a3d;padding-bottom:7pt;margin-bottom:9pt}
-  .pv-inst{font-size:8pt;font-weight:700;letter-spacing:.9pt;text-transform:uppercase;color:#0b4a3d}
-  .pv-head h1{font-size:15pt;line-height:1.2;color:#07322a;margin-top:2pt;letter-spacing:-.2pt}
-  .pv-meta{font-size:8pt;color:#555;margin-top:4pt;display:flex;gap:0;flex-wrap:wrap}
-  .pv-meta span + span::before{content:"·";margin:0 5pt;color:#aaa}
+  .pv-head{border-bottom:2pt solid #0b4a3d;padding-bottom:5pt;margin-bottom:6pt}
+  .pv-inst{font-size:7.4pt;font-weight:700;letter-spacing:.85pt;text-transform:uppercase;color:#0b4a3d}
+  .pv-head h1{font-size:13pt;line-height:1.15;color:#07322a;margin-top:1pt;letter-spacing:-.2pt}
+  .pv-meta{font-size:7.4pt;color:#555;margin-top:3pt;display:flex;flex-wrap:wrap}
+  .pv-meta span + span::before{content:"·";margin:0 4.5pt;color:#aaa}
 
   /* ---- summary strip: 4 figures, nothing else ---- */
-  .pv-summary{display:flex;gap:0;margin:0 0 9pt;border:0.6pt solid #d7e0dd;border-radius:3pt;overflow:hidden}
-  .pv-summary div{flex:1;padding:5pt 8pt;border-left:0.6pt solid #d7e0dd}
+  .pv-summary{display:flex;margin:0 0 6pt;border:0.6pt solid #d7e0dd;border-radius:2.5pt;overflow:hidden}
+  .pv-summary div{flex:1;padding:3.5pt 7pt;border-left:0.6pt solid #d7e0dd}
   .pv-summary div:first-child{border-left:0}
-  .pv-summary b{display:block;font-size:12pt;color:#07322a;line-height:1.15;font-variant-numeric:tabular-nums}
-  .pv-summary span{font-size:7.2pt;text-transform:uppercase;letter-spacing:.4pt;color:#666;font-weight:700}
+  .pv-summary b{display:block;font-size:10.5pt;color:#07322a;line-height:1.1;font-variant-numeric:tabular-nums}
+  .pv-summary span{font-size:6.6pt;text-transform:uppercase;letter-spacing:.4pt;color:#666;font-weight:700}
 
-  .pv-filterline{font-size:7.8pt;color:#444;background:#f4f7f6;border-left:2pt solid #0b4a3d;
-    padding:4pt 7pt;margin:0 0 10pt}
+  .pv-filterline{font-size:7.2pt;color:#444;background:#f4f7f6;border-left:2pt solid #0b4a3d;
+    padding:3pt 6pt;margin:0 0 6pt}
+
+  /* ---- visual summary: compact enough to share page 1 with the tables ---- */
+  .pv-charts{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4pt;
+    margin:0 0 7pt;break-inside:avoid;align-items:stretch}
+  .pv-chart{border:0.6pt solid #dfe6e4;border-radius:2.5pt;padding:3pt 6pt 2pt;min-width:0;
+    break-inside:avoid}
+  .pv-chart{grid-column:span 2}      /* the three donuts: a third each */
+  .pv-chart--half{grid-column:span 3} /* year + campus: a half each */
+  .pv-chart h4{font-size:6.8pt;font-weight:700;text-transform:uppercase;letter-spacing:.5pt;
+    color:#0b4a3d;margin:0 0 1pt}
+  .pv-chart svg{display:block;width:100%;height:auto}
 
   /* ---- campus sections ---- */
-  .pv-campus{margin:0 0 11pt;break-inside:auto}
-  .pv-campus > h2{font-size:10pt;font-weight:700;color:#07322a;margin:0 0 4pt;padding-bottom:2.5pt;
+  .pv-campus{margin:0 0 6pt;break-inside:auto}
+  .pv-campus > h2{font-size:9.5pt;font-weight:700;color:#07322a;margin:0 0 3pt;padding-bottom:2pt;
     border-bottom:1pt solid #b9cfc8;display:flex;justify-content:space-between;align-items:baseline;
     break-after:avoid;break-inside:avoid}
-  .pv-campus > h2 .ct{font-size:8pt;font-weight:600;color:#5b6c75}
+  .pv-campus > h2 .ct{font-size:7.6pt;font-weight:600;color:#5b6c75}
 
   /* one table per campus: the header repeats automatically across pages */
-  table.pv{width:100%;border-collapse:collapse;font-size:8.2pt;table-layout:auto}
+  table.pv{width:100%;border-collapse:collapse;font-size:8pt;table-layout:auto}
   table.pv thead{display:table-header-group}
-  table.pv th{background:#eef4f2;color:#07322a;text-align:left;padding:3.5pt 5pt;
-    border-bottom:0.8pt solid #b9cfc8;font-size:7.2pt;font-weight:700;text-transform:uppercase;
+  table.pv th{background:#eef4f2;color:#07322a;text-align:left;padding:2.8pt 4.5pt;
+    border-bottom:0.8pt solid #b9cfc8;font-size:6.9pt;font-weight:700;text-transform:uppercase;
     letter-spacing:.3pt;white-space:nowrap}
-  table.pv td{padding:3.5pt 5pt;border-bottom:0.5pt solid #e2e8e6;vertical-align:top;color:#1a1a1a}
+  table.pv td{padding:2.6pt 4.5pt;border-bottom:0.5pt solid #e2e8e6;vertical-align:top;color:#1a1a1a;
+    line-height:1.32}
   table.pv tr{break-inside:avoid;break-after:auto}
   table.pv tbody tr:nth-child(even) td{background:#fafcfb}
   td.pv-num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
-  td.pv-title{font-weight:600;min-width:130pt}
+  td.pv-title{font-weight:600;min-width:120pt}
   td.pv-muted{color:#999}
   .pv-dot{color:#0b4a3d;font-weight:700}
 
-  .pv-foot{margin-top:9pt;padding-top:5pt;border-top:0.5pt solid #d7e0dd;font-size:7pt;color:#777;
+  .pv-foot{margin-top:6pt;padding-top:4pt;border-top:0.5pt solid #d7e0dd;font-size:6.8pt;color:#777;
     display:flex;justify-content:space-between;gap:10pt;break-inside:avoid}
-  .pv-empty{padding:30pt;text-align:center;color:#666;font-size:10pt}
+  .pv-empty{padding:24pt;text-align:center;color:#666;font-size:9pt}
 }
 
 /* ============================================================
@@ -1256,6 +1277,118 @@ function printCell(p, f){
   }
 }
 
+/* ---- Print charts -------------------------------------------------------
+   Built as pure SVG on purpose. Browsers do not print CSS backgrounds by
+   default, so the on-screen bars (div widths + linear-gradients) and the
+   coloured legend swatches would come out blank. SVG shapes always print.
+   Every figure is computed from the FILTERED rows so the report is
+   internally consistent, and each value is labelled so the charts still
+   read in black and white. */
+const PV_N = v => Number(v).toLocaleString("en-US");
+
+function pvGroup(rows, key, keys, fmt){
+  return keys
+    .map(k => ({key:k, label:fmt ? fmt(k) : k, count:rows.filter(p=>p[key]===k).length}))
+    .filter(it => it.count > 0);
+}
+
+/* Vertical bars — programs per school year.
+   500 units wide (rendered half-width) keeps glyphs the same physical size as
+   1000 units at full width, so this chart can share a row with the campus
+   chart and free ~33mm of page height. */
+function pvSvgYears(rows){
+  const counts = new Map();
+  rows.forEach(p=>{ const y = p.year ?? "Undated"; counts.set(y, (counts.get(y)||0)+1); });
+  if(!counts.size) return "";
+  const keys = [...counts.keys()].sort((a,b)=>{
+    if(a==="Undated") return 1;
+    if(b==="Undated") return -1;
+    return a - b;
+  });
+  const W = 500, H = 137, padL = 22, padR = 6, padT = 14, padB = 22;
+  const max = Math.max(1, ...[...counts.values()]);
+  const slot = (W - padL - padR) / keys.length;
+  const bw = Math.min(30, slot * 0.62);
+  const bars = keys.map((k,i)=>{
+    const v = counts.get(k);
+    const h = Math.max((H - padT - padB) * (v / max), 2);
+    const x = padL + i * slot + (slot - bw) / 2;
+    const y = H - padB - h;
+    return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="2" fill="#0e6353"/>
+      <text x="${(x+bw/2).toFixed(1)}" y="${(y-4).toFixed(1)}" font-size="11" font-weight="700" fill="#07322a" text-anchor="middle">${v}</text>
+      <text x="${(x+bw/2).toFixed(1)}" y="${H-7}" font-size="10" fill="#5b6c75" text-anchor="middle">${esc(String(k))}</text>`;
+  }).join("");
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Programs per year">
+    <line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="#d7e0dd" stroke-width="1"/>
+    ${bars}</svg>`;
+}
+
+/* Donut + side legend, one card per category (compact 320x104 frame) */
+function pvSvgDonut(items, colors){
+  const total = items.reduce((a,i)=>a+i.count,0) || 1;
+  const r = 38, sw = 13, c = 2*Math.PI*r, cx = 56, cy = 54;
+  let off = 0, segs = "";
+  items.forEach(it=>{
+    const len = (it.count/total) * c;
+    if(len > 0){
+      const dash = Math.max(len - 1.6, 0.4);
+      segs += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${colors[it.key] || "#6b7280"}"
+        stroke-width="${sw}" stroke-dasharray="${dash.toFixed(2)} ${(c-dash).toFixed(2)}"
+        stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 ${cx} ${cy})"/>`;
+    }
+    off += len;
+  });
+  const legend = items.map((it,i)=>{
+    const y = 28 + i * 21, pct = Math.round(it.count/total*100);
+    return `<rect x="108" y="${y-7.5}" width="8" height="8" rx="2" fill="${colors[it.key] || "#6b7280"}"/>
+      <text x="122" y="${y}" font-size="11" fill="#1a1a1a">${esc(pvClip(it.label, 20))}</text>
+      <text x="316" y="${y}" font-size="11" font-weight="700" fill="#07322a" text-anchor="end">${it.count} · ${pct}%</text>`;
+  }).join("");
+  return `<svg viewBox="0 0 320 104" width="100%" role="img" aria-label="${esc(items.map(i=>i.label+": "+i.count).join(", "))}">
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#eef1f3" stroke-width="${sw}"/>
+    ${segs}
+    <text x="${cx}" y="${cy+1}" font-size="15" font-weight="700" fill="#07322a" text-anchor="middle">${total}</text>
+    <text x="${cx}" y="${cy+13}" font-size="8" fill="#5b6c75" text-anchor="middle" letter-spacing=".35">PROGRAMS</text>
+    ${legend}</svg>`;
+}
+
+/* Horizontal bars — programs per campus */
+function pvSvgCampus(rows){
+  const counts = new Map();
+  rows.forEach(p=>counts.set(p.campus, (counts.get(p.campus)||0)+1));
+  if(!counts.size) return "";
+  const items = [...counts.entries()].map(([key,count])=>({key,count})).sort((a,b)=>b.count-a.count);
+  const total = items.reduce((a,i)=>a+i.count,0) || 1;
+  const max = Math.max(1, ...items.map(i=>i.count));
+  const W = 500, rowH = 19, H = items.length*rowH + 4;
+  const trackX = 150, ctW = 78, trackW = W - trackX - ctW;
+  const bars = items.map((it,i)=>{
+    const y = i*rowH + 3, barW = Math.max(trackW*(it.count/max), 2);
+    const col = CAMPUS_COLORS[CAMPUSES.indexOf(it.key) % CAMPUS_COLORS.length];
+    return `<text x="0" y="${y+9.5}" font-size="10.5" fill="#1a1a1a">${esc(pvClip(it.key, 21))}</text>
+      <rect x="${trackX}" y="${y}" width="${trackW}" height="11" rx="2.5" fill="#edf1f3"/>
+      <rect x="${trackX}" y="${y}" width="${barW.toFixed(1)}" height="11" rx="2.5" fill="${col}"/>
+      <text x="${W}" y="${y+9.5}" font-size="10.5" font-weight="700" fill="#07322a" text-anchor="end">${it.count} · ${Math.round(it.count/total*100)}%</text>`;
+  }).join("");
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Programs by campus">${bars}</svg>`;
+}
+
+function pvCharts(rows){
+  if(!rows.length) return "";
+  const byExt = pvGroup(rows, "extensionType", EXTS);
+  const byBasis = pvGroup(rows, "researchType", BASES, basisShort);
+  const byLed = pvGroup(rows, "ledBy", LEDS);
+  const card = (title, body, half) =>
+    `<section class="pv-chart${half ? " pv-chart--half" : ""}"><h4>${esc(title)}</h4>${body}</section>`;
+  return `<div class="pv-charts">
+    ${card("Programs per school year", pvSvgYears(rows), true)}
+    ${card("Programs by campus", pvSvgCampus(rows), true)}
+    ${card("Type of extension", pvSvgDonut(byExt, EXT_COLORS))}
+    ${card("Research basis", pvSvgDonut(byBasis, BASIS_COLORS))}
+    ${card("Led by", pvSvgDonut(byLed, LED_COLORS))}
+  </div>`;
+}
+
 function buildPrint(rows){
   const sum = k => rows.reduce((a,p)=>a+(p[k]||0),0);
   const fields = visibleFields().length ? visibleFields()
@@ -1299,6 +1432,7 @@ function buildPrint(rows){
       <div><b>${sum("beneficiaries").toLocaleString()}</b><span>Beneficiaries</span></div>
     </div>
     ${filters ? `<div class="pv-filterline"><b>Filters</b> — ${esc(filters)}</div>` : ""}
+    ${pvCharts(rows)}
     ${rows.length ? sections : `<div class="pv-empty">No programs match the active filters.</div>`}
     <div class="pv-foot">
       <span>Source: CHED Form U8 published Google Sheet · full details and documents in the digital dashboard</span>
