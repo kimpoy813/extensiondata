@@ -96,6 +96,12 @@ python3 -m http.server 8080 --directory build
   or the CSV for the actual link). Only the fields ticked in the Columns picker appear —
   pick **Minimal** to print just Year, Campus and Program title. Use the browser's
   "Save as PDF" destination to produce the file.
+- **Charts print too** — the visual summary is rebuilt for paper as **pure SVG**
+  (programs per year, type of extension, research basis, led by, programs by campus),
+  because browsers do not print CSS backgrounds and the on-screen bars would come out
+  blank. Every figure is computed from the **filtered** list, so the charts and the tables
+  always agree, and each value is labelled so they still read in black and white. When the
+  result is larger than a page the visuals get their own page ahead of the tables.
 - **Detail modal** with every Form U8 field and a link to the supporting Google Drive /
   TinyURL document.
 - **Export CSV** of the currently filtered results (Excel-friendly UTF-8 BOM).

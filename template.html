@@ -390,7 +390,9 @@ footer.app a:hover{text-decoration:underline}
   html,body{background:#fff !important}
   body{font-size:9.5pt;line-height:1.4;color:#111}
   header.app,main.app,footer.app,.modal-overlay,.toolbar{display:none !important}
-  #printView{display:block !important;color:#111}
+  /* exact: keep the chart colours even if "background graphics" is unchecked */
+  #printView{display:block !important;color:#111;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
 
   /* ---- masthead: one compact block, no heavy ink ---- */
   .pv-head{border-bottom:2.5pt solid #0b4a3d;padding-bottom:7pt;margin-bottom:9pt}
@@ -408,6 +410,17 @@ footer.app a:hover{text-decoration:underline}
 
   .pv-filterline{font-size:7.8pt;color:#444;background:#f4f7f6;border-left:2pt solid #0b4a3d;
     padding:4pt 7pt;margin:0 0 10pt}
+
+  /* ---- visual summary ---- */
+  .pv-charts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6pt;
+    margin:0 0 11pt;break-inside:avoid}
+  .pv-charts--pb{break-after:page}   /* plenty of rows below: give the visuals their own page */
+  .pv-chart{border:0.6pt solid #dfe6e4;border-radius:3pt;padding:5pt 8pt 4pt;min-width:0;
+    break-inside:avoid}
+  .pv-chart--wide{grid-column:1/-1}
+  .pv-chart h4{font-size:7.2pt;font-weight:700;text-transform:uppercase;letter-spacing:.55pt;
+    color:#0b4a3d;margin:0 0 2pt}
+  .pv-chart svg{display:block;width:100%;height:auto}
 
   /* ---- campus sections ---- */
   .pv-campus{margin:0 0 11pt;break-inside:auto}
@@ -1256,6 +1269,115 @@ function printCell(p, f){
   }
 }
 
+/* ---- Print charts -------------------------------------------------------
+   Built as pure SVG on purpose. Browsers do not print CSS backgrounds by
+   default, so the on-screen bars (div widths + linear-gradients) and the
+   coloured legend swatches would come out blank. SVG shapes always print.
+   Every figure is computed from the FILTERED rows so the report is
+   internally consistent, and each value is labelled so the charts still
+   read in black and white. */
+const PV_N = v => Number(v).toLocaleString("en-US");
+
+function pvGroup(rows, key, keys, fmt){
+  return keys
+    .map(k => ({key:k, label:fmt ? fmt(k) : k, count:rows.filter(p=>p[key]===k).length}))
+    .filter(it => it.count > 0);
+}
+
+/* Vertical bars — programs per school year */
+function pvSvgYears(rows){
+  const counts = new Map();
+  rows.forEach(p=>{ const y = p.year ?? "Undated"; counts.set(y, (counts.get(y)||0)+1); });
+  if(!counts.size) return "";
+  const keys = [...counts.keys()].sort((a,b)=>{
+    if(a==="Undated") return 1;
+    if(b==="Undated") return -1;
+    return a - b;
+  });
+  const W = 1000, H = 168, padL = 26, padR = 8, padT = 22, padB = 26;
+  const max = Math.max(1, ...[...counts.values()]);
+  const slot = (W - padL - padR) / keys.length;
+  const bw = Math.min(46, slot * 0.62);
+  const bars = keys.map((k,i)=>{
+    const v = counts.get(k);
+    const h = Math.max((H - padT - padB) * (v / max), 2);
+    const x = padL + i * slot + (slot - bw) / 2;
+    const y = H - padB - h;
+    return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="3" fill="#0e6353"/>
+      <text x="${(x+bw/2).toFixed(1)}" y="${(y-5).toFixed(1)}" font-size="11" font-weight="700" fill="#07322a" text-anchor="middle">${v}</text>
+      <text x="${(x+bw/2).toFixed(1)}" y="${H-9}" font-size="10" fill="#5b6c75" text-anchor="middle">${esc(String(k))}</text>`;
+  }).join("");
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Programs per year">
+    <line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="#d7e0dd" stroke-width="1"/>
+    ${bars}</svg>`;
+}
+
+/* Donut + side legend, one card per category */
+function pvSvgDonut(items, colors){
+  const total = items.reduce((a,i)=>a+i.count,0) || 1;
+  const r = 44, sw = 16, c = 2*Math.PI*r, cx = 62, cy = 74;
+  let off = 0, segs = "";
+  items.forEach(it=>{
+    const len = (it.count/total) * c;
+    if(len > 0){
+      const dash = Math.max(len - 1.8, 0.4);
+      segs += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${colors[it.key] || "#6b7280"}"
+        stroke-width="${sw}" stroke-dasharray="${dash.toFixed(2)} ${(c-dash).toFixed(2)}"
+        stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 ${cx} ${cy})"/>`;
+    }
+    off += len;
+  });
+  const legend = items.map((it,i)=>{
+    const y = 40 + i * 26, pct = Math.round(it.count/total*100);
+    return `<rect x="122" y="${y-8.5}" width="9" height="9" rx="2" fill="${colors[it.key] || "#6b7280"}"/>
+      <text x="137" y="${y}" font-size="11.5" fill="#1a1a1a">${esc(pvClip(it.label, 20))}</text>
+      <text x="312" y="${y}" font-size="11.5" font-weight="700" fill="#07322a" text-anchor="end">${it.count} · ${pct}%</text>`;
+  }).join("");
+  return `<svg viewBox="0 0 320 152" width="100%" role="img" aria-label="${esc(items.map(i=>i.label+": "+i.count).join(", "))}">
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#eef1f3" stroke-width="${sw}"/>
+    ${segs}
+    <text x="${cx}" y="${cy+2}" font-size="18" font-weight="700" fill="#07322a" text-anchor="middle">${total}</text>
+    <text x="${cx}" y="${cy+15}" font-size="7.5" fill="#5b6c75" text-anchor="middle" letter-spacing=".6">PROGRAMS</text>
+    ${legend}</svg>`;
+}
+
+/* Horizontal bars — programs per campus */
+function pvSvgCampus(rows){
+  const counts = new Map();
+  rows.forEach(p=>counts.set(p.campus, (counts.get(p.campus)||0)+1));
+  if(!counts.size) return "";
+  const items = [...counts.entries()].map(([key,count])=>({key,count})).sort((a,b)=>b.count-a.count);
+  const total = items.reduce((a,i)=>a+i.count,0) || 1;
+  const max = Math.max(1, ...items.map(i=>i.count));
+  const W = 1000, rowH = 23, H = items.length*rowH + 6;
+  const nameW = 150, trackX = 162, ctW = 86, trackW = W - trackX - ctW;
+  const rows3 = items.map((it,i)=>{
+    const y = i*rowH + 5, barW = Math.max(trackW*(it.count/max), 2);
+    const col = CAMPUS_COLORS[CAMPUSES.indexOf(it.key) % CAMPUS_COLORS.length];
+    return `<text x="0" y="${y+11.5}" font-size="11.5" fill="#1a1a1a">${esc(pvClip(it.key, 22))}</text>
+      <rect x="${trackX}" y="${y}" width="${trackW}" height="13" rx="3" fill="#edf1f3"/>
+      <rect x="${trackX}" y="${y}" width="${barW.toFixed(1)}" height="13" rx="3" fill="${col}"/>
+      <text x="${W}" y="${y+11.5}" font-size="11.5" font-weight="700" fill="#07322a" text-anchor="end">${it.count} · ${Math.round(it.count/total*100)}%</text>`;
+  }).join("");
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Programs by campus">${rows3}</svg>`;
+}
+
+function pvCharts(rows){
+  if(!rows.length) return "";
+  const byExt = pvGroup(rows, "extensionType", EXTS);
+  const byBasis = pvGroup(rows, "researchType", BASES, basisShort);
+  const byLed = pvGroup(rows, "ledBy", LEDS);
+  const card = (title, body, wide) =>
+    `<section class="pv-chart${wide ? " pv-chart--wide" : ""}"><h4>${esc(title)}</h4>${body}</section>`;
+  return `<div class="pv-charts${rows.length > 12 ? " pv-charts--pb" : ""}">
+    ${card("Programs per school year", pvSvgYears(rows), true)}
+    ${card("Type of extension", pvSvgDonut(byExt, EXT_COLORS))}
+    ${card("Research basis", pvSvgDonut(byBasis, BASIS_COLORS))}
+    ${card("Led by", pvSvgDonut(byLed, LED_COLORS))}
+    ${card("Programs by campus", pvSvgCampus(rows), true)}
+  </div>`;
+}
+
 function buildPrint(rows){
   const sum = k => rows.reduce((a,p)=>a+(p[k]||0),0);
   const fields = visibleFields().length ? visibleFields()
@@ -1299,6 +1421,7 @@ function buildPrint(rows){
       <div><b>${sum("beneficiaries").toLocaleString()}</b><span>Beneficiaries</span></div>
     </div>
     ${filters ? `<div class="pv-filterline"><b>Filters</b> — ${esc(filters)}</div>` : ""}
+    ${pvCharts(rows)}
     ${rows.length ? sections : `<div class="pv-empty">No programs match the active filters.</div>`}
     <div class="pv-foot">
       <span>Source: CHED Form U8 published Google Sheet · full details and documents in the digital dashboard</span>
