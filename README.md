@@ -29,6 +29,42 @@ python3 -m http.server 8000
 # open http://localhost:8000
 ```
 
+## Deploy on Render
+
+This repo is a **static site** — there is no server and no runtime dependencies. Render
+just needs to be told where the finished page is.
+
+`render.yaml` in the repo root is a ready-made Blueprint that does this. If your service
+was created by hand in the dashboard instead, open **Settings → Build & Deploy** and set:
+
+| Setting | Value |
+|---|---|
+| **Runtime** | Static Site |
+| **Build Command** | `mkdir -p build && cp index.html build/index.html` |
+| **Publish Directory** | `build` |
+
+Then **Manual Deploy → Deploy latest commit**.
+
+> **Why the original deploy failed.** Render reported
+> `Empty build command; skipping build` and `Publish directory build does not exist!`.
+> The service was pointed at a `build/` folder, but nothing in the repo ever created
+> one — the finished dashboard is `index.html` in the repository root. Publishing the
+> root (`.`) also works, but it would also expose `raw.csv`, `parse.py`, etc.
+
+If you would rather have Render regenerate the page from `data.json` + `template.html`
+on every deploy, use this build command instead (it needs Python in the build image):
+
+```bash
+python3 build.py --out-dir build
+```
+
+Locally, `python3 build.py --out-dir build` produces the same `build/index.html`, so
+you can preview exactly what will be deployed with:
+
+```bash
+python3 -m http.server 8080 --directory build
+```
+
 ## Features
 
 - **KPI cards** — programs, campuses reached, beneficiaries (15,859), students (2,983),
