@@ -100,8 +100,12 @@ python3 -m http.server 8080 --directory build
   (programs per year, type of extension, research basis, led by, programs by campus),
   because browsers do not print CSS backgrounds and the on-screen bars would come out
   blank. Every figure is computed from the **filtered** list, so the charts and the tables
-  always agree, and each value is labelled so they still read in black and white. When the
-  result is larger than a page the visuals get their own page ahead of the tables.
+  always agree, and each value is labelled so they still read in black and white.
+- **Page space is budgeted** — landscape A4 with 10mm margins gives ~190mm of usable
+  height, and the masthead + summary + charts are held to ~107mm, so the charts and the
+  first ~12 table rows share page 1 (~93% of it used). The year and campus charts sit side
+  by side at half width, where 500 SVG units still render text at 7.6pt or larger. There
+  are no forced page breaks.
 - **Detail modal** with every Form U8 field and a link to the supporting Google Drive /
   TinyURL document.
 - **Export CSV** of the currently filtered results (Excel-friendly UTF-8 BOM).
