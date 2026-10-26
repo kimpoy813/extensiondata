@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISPSC Extension Programs Dashboard — CHED Form U8</title>
+<style>
+:root{
+  --g900:#06352c; --g800:#0b5345; --g700:#0e6b57; --g600:#11846b; --g50:#e9f4f1;
+  --gold:#c9a227; --gold-l:#e7c65b;
+  --ink:#16242b; --muted:#5f717b; --line:#e3e8eb; --bg:#f3f6f7; --card:#ffffff;
+  --blue:#2563eb; --blue-bg:#e9f0fe;
+  --teal:#0891b2; --teal-bg:#e2f6fa;
+  --amber:#b45309; --amber-bg:#fdf1e1;
+  --violet:#7c3aed; --violet-bg:#f2ebfe;
+  --purple:#9333ea; --purple-bg:#f6ebfd;
+  --pink:#db2777; --pink-bg:#fdeaf3;
+  --gray:#4b5563; --gray-bg:#eef0f2;
+  --shadow:0 1px 2px rgba(16,40,48,.06),0 6px 18px rgba(16,40,48,.07);
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5}
+a{color:var(--g700)}
+.wrap{max-width:1420px;margin:0 auto;padding:0 22px}
+
+/* ---------- Header ---------- */
+header{background:linear-gradient(135deg,var(--g900) 0%,var(--g800) 55%,var(--g700) 100%);color:#fff;
+  padding:30px 0 26px;position:relative;overflow:hidden}
+header::after{content:"";position:absolute;right:-90px;top:-90px;width:330px;height:330px;border-radius:50%;
+  background:radial-gradient(circle,rgba(201,162,39,.28),transparent 65%)}
+header::before{content:"";position:absolute;left:-60px;bottom:-120px;width:280px;height:280px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.08),transparent 65%)}
+.h-grid{position:relative;z-index:1;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.seal{width:74px;height:74px;border-radius:50%;background:rgba(255,255,255,.12);border:2px solid rgba(231,198,91,.75);
+  display:flex;align-items:center;justify-content:center;flex:none}
+.seal svg{width:44px;height:44px}
+.h-text h1{font-size:25px;letter-spacing:.2px;font-weight:700}
+.h-text .sub{color:var(--gold-l);font-weight:600;font-size:14px;margin-top:3px;letter-spacing:.6px;text-transform:uppercase}
+.h-text .meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:9px;font-size:13.5px;color:#cfe3dd}
+.h-text .meta span{display:inline-flex;align-items:center;gap:6px}
+.h-text .meta svg{width:15px;height:15px;opacity:.85}
+.h-badge{margin-left:auto;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);
+  padding:10px 16px;border-radius:12px;font-size:13px;text-align:center;backdrop-filter:blur(4px)}
+.h-badge b{display:block;font-size:22px;color:var(--gold-l)}
+
+/* ---------- Section titles ---------- */
+.sec-title{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700;margin:26px 2px 12px;color:var(--g900)}
+.sec-title::before{content:"";width:5px;height:19px;border-radius:3px;background:var(--gold)}
+.sec-title small{font-weight:500;color:var(--muted);font-size:12.5px;margin-left:4px}
+
+/* ---------- KPI cards ---------- */
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:22px}
+.kpi{background:var(--card);border-radius:var(--radius);padding:16px 16px 14px;box-shadow:var(--shadow);
+  border-top:3px solid var(--g600);position:relative;overflow:hidden}
+.kpi:nth-child(2){border-top-color:var(--teal)}
+.kpi:nth-child(3){border-top-color:var(--gold)}
+.kpi:nth-child(4){border-top-color:var(--blue)}
+.kpi:nth-child(5){border-top-color:var(--violet)}
+.kpi:nth-child(6){border-top-color:var(--pink)}
+.kpi .ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:var(--g50);margin-bottom:10px}
+.kpi .ic svg{width:20px;height:20px;stroke:var(--g700)}
+.kpi:nth-child(2) .ic{background:var(--teal-bg)} .kpi:nth-child(2) .ic svg{stroke:var(--teal)}
+.kpi:nth-child(3) .ic{background:#faf3dc} .kpi:nth-child(3) .ic svg{stroke:#a8841d}
+.kpi:nth-child(4) .ic{background:var(--blue-bg)} .kpi:nth-child(4) .ic svg{stroke:var(--blue)}
+.kpi:nth-child(5) .ic{background:var(--violet-bg)} .kpi:nth-child(5) .ic svg{stroke:var(--violet)}
+.kpi:nth-child(6) .ic{background:var(--pink-bg)} .kpi:nth-child(6) .ic svg{stroke:var(--pink)}
+.kpi .num{font-size:26px;font-weight:750;letter-spacing:-.5px}
+.kpi .lbl{font-size:12.5px;color:var(--muted);font-weight:600;margin-top:1px}
+.kpi .of{font-size:11px;color:#94a3ad;margin-top:3px}
+
+/* ---------- Charts ---------- */
+.charts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.panel{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px}
+.panel h3{font-size:14px;font-weight:700;color:var(--g900);margin-bottom:2px}
+.panel .hint{font-size:11.5px;color:#94a3ad;margin-bottom:8px}
+.span2{grid-column:span 2}.span3{grid-column:span 3}
+svg text{font-family:inherit}
+.bar{cursor:pointer;transition:opacity .15s,fill .15s}
+.bar:hover{opacity:.82}
+.bar.dim{opacity:.28}
+.bar.active{fill:var(--gold)}
+.bar-val{font-size:10.5px;font-weight:700;fill:var(--g900);text-anchor:middle;pointer-events:none}
+.bar-lbl{font-size:11px;fill:var(--muted);text-anchor:middle;pointer-events:none}
+.axis{stroke:var(--line);stroke-width:1}
+.donut-seg{cursor:pointer;transition:opacity .15s;stroke:#fff;stroke-width:2.5px}
+.donut-seg:hover{opacity:.82}.donut-seg.dim{opacity:.25}
+.donut-center{text-anchor:middle;pointer-events:none}
+.legend{margin-top:6px;display:flex;flex-direction:column;gap:7px}
+.legend button{display:flex;align-items:center;gap:9px;width:100%;background:none;border:1px solid transparent;
+  border-radius:9px;padding:5px 8px;cursor:pointer;font:inherit;text-align:left;color:var(--ink)}
+.legend button:hover{background:var(--bg)}
+.legend button.active{border-color:var(--line);background:var(--g50)}
+.legend .dot{width:11px;height:11px;border-radius:3px;flex:none}
+.legend .nm{flex:1;font-size:13px;font-weight:600}
+.legend .ct{font-size:12.5px;color:var(--muted);font-weight:700}
+.legend .pc{font-size:11.5px;color:#94a3ad;width:42px;text-align:right}
+.hbar-row{display:flex;align-items:center;gap:10px;margin-bottom:11px;cursor:pointer;border-radius:8px;padding:2px 4px}
+.hbar-row:hover{background:var(--bg)}
+.hbar-row.active{background:var(--g50)}
+.hbar-row.dim{opacity:.4}
+.hbar-name{width:128px;flex:none;font-size:12.8px;font-weight:600;color:var(--ink)}
+.hbar-track{flex:1;height:17px;background:#f0f3f4;border-radius:6px;overflow:hidden}
+.hbar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--g700),var(--g600));transition:width .5s ease}
+.hbar-row.active .hbar-fill{background:linear-gradient(90deg,var(--gold),var(--gold-l))}
+.hbar-ct{width:34px;text-align:right;font-size:12.5px;font-weight:700;color:var(--muted);flex:none}
+
+/* ---------- Filter card ---------- */
+.filter-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;margin-top:14px}
+.search-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.search{position:relative;flex:1;min-width:250px}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:17px;height:17px;stroke:#94a3ad;pointer-events:none}
+.search input{width:100%;padding:11px 14px 11px 39px;border:1.5px solid var(--line);border-radius:11px;
+  font:inherit;font-size:14px;background:var(--bg);outline:none;transition:border .15s}
+.search input:focus{border-color:var(--g600);background:#fff;box-shadow:0 0 0 3px rgba(17,132,107,.12)}
+.search .hint-q{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;color:#a7b4bb;pointer-events:none}
+
+select,.plain-input{padding:11px 32px 11px 12px;border:1.5px solid var(--line);border-radius:11px;font:inherit;font-size:13.5px;
+  background:var(--bg);color:var(--ink);cursor:pointer;outline:none;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235f717b' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 11px center}
+.plain-input{background-image:none;cursor:text}
+select:focus,.plain-input:focus{border-color:var(--g600);background-color:#fff}
+select.on{border-color:var(--g600);background-color:var(--g50);font-weight:600}
+.plain-input.on{border-color:var(--g600);background-color:var(--g50)}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:11px 17px;border-radius:11px;font:inherit;font-size:13.5px;
+  font-weight:650;cursor:pointer;border:1.5px solid transparent;transition:filter .15s,background .15s;white-space:nowrap}
+.btn svg{width:15px;height:15px}
+.btn-primary{background:var(--g700);color:#fff}
+.btn-primary:hover{background:var(--g800)}
+.btn-ghost{background:#fff;border-color:var(--line);color:var(--gray)}
+.btn-ghost:hover{background:var(--bg)}
+.btn-gold{background:#faf3dc;color:#8a6d17;border-color:#ecd99a}
+.btn-gold:hover{background:#f5e8c0}
+
+/* segmented view toggle */
+.seg{display:inline-flex;background:var(--bg);border:1.5px solid var(--line);border-radius:11px;padding:3px;gap:2px}
+.seg button{border:none;background:transparent;padding:8px 14px;border-radius:8px;font:inherit;font-weight:650;font-size:13px;
+  color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.seg button.on{background:#fff;color:var(--g800);box-shadow:0 1px 4px rgba(16,40,48,.14)}
+.seg svg{width:15px;height:15px}
+
+/* multi-select dropdowns */
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.ms{position:relative}
+.ms-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border:1.5px solid var(--line);border-radius:11px;
+  background:var(--bg);font:inherit;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;max-width:240px}
+.ms-btn.on{border-color:var(--g600);background:var(--g50)}
+.ms-btn .lbl{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ms-badge{background:var(--g700);color:#fff;border-radius:999px;font-size:11px;font-weight:700;padding:1px 7px;flex:none}
+.ms-caret{width:11px;height:11px;stroke:#5f717b;flex:none}
+.ms-pop{position:absolute;top:calc(100% + 6px);left:0;z-index:60;background:#fff;border:1px solid var(--line);
+  border-radius:12px;box-shadow:0 14px 34px rgba(16,40,48,.18);width:272px;max-height:340px;overflow:auto;padding:8px;display:none}
+.ms.open .ms-pop{display:block}
+.ms-actions{display:flex;justify-content:space-between;padding:3px 6px 8px;border-bottom:1px solid var(--line);margin-bottom:6px;position:sticky;top:0;background:#fff}
+.ms-actions button{border:none;background:none;color:var(--g700);font:inherit;font-weight:700;font-size:12px;cursor:pointer;padding:0}
+.ms-actions button:hover{text-decoration:underline}
+.ms-opt{display:flex;align-items:center;gap:9px;padding:6px 7px;border-radius:8px;cursor:pointer;font-size:13px}
+.ms-opt:hover{background:var(--bg)}
+.ms-opt input{accent-color:var(--g700);width:15px;height:15px;flex:none}
+.ms-opt .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ms-opt .ct{color:var(--muted);font-size:12px;font-weight:700;flex:none}
+.ms-note{font-size:10.5px;color:#8ba0a9;padding:2px 7px 8px;line-height:1.45}
+.ms-presets{display:flex;gap:5px;padding:0 6px 8px;border-bottom:1px solid var(--line);margin-bottom:6px}
+.ms-presets button{flex:1;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:5px 4px;
+  font:inherit;font-size:11px;font-weight:700;color:var(--g800);cursor:pointer}
+.ms-presets button:hover{background:var(--g50);border-color:#b9d6ce}
+.min-input{width:175px;padding:10px 12px}
+
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.chips:empty{display:none}
+.chip{display:inline-flex;align-items:center;gap:7px;background:var(--g50);color:var(--g800);border:1px solid #cde3dc;
+  font-size:12.5px;font-weight:650;padding:5px 7px 5px 11px;border-radius:999px}
+.chip button{border:none;background:var(--g800);color:#fff;width:17px;height:17px;border-radius:50%;cursor:pointer;
+  font-size:11px;line-height:1;display:flex;align-items:center;justify-content:center}
+.chip button:hover{background:var(--g900)}
+
+/* ---------- Result header ---------- */
+.res-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:22px 2px 12px}
+.res-head h2{font-size:16px;color:var(--g900)}
+.res-head h2 b{color:var(--g700)}
+.res-head .spacer{flex:1}
+
+/* ---------- Cards ---------- */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding-bottom:30px}
+.pcard{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:17px 18px;
+  display:flex;flex-direction:column;gap:10px;transition:transform .15s,box-shadow .15s;border:1px solid transparent}
+.pcard:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(16,40,48,.13);border-color:#d7e5e0}
+.pc-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.yr{background:var(--g800);color:#fff;font-weight:750;font-size:12.5px;padding:3px 10px;border-radius:999px}
+.campus-tag{font-size:12px;font-weight:700;color:var(--teal);display:inline-flex;align-items:center;gap:4px}
+.campus-tag svg{width:13px;height:13px}
+.pcard h3{font-size:14.8px;line-height:1.4;color:var(--ink);font-weight:700}
+.badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;letter-spacing:.2px}
+.b-ext-Research-based{background:var(--blue-bg);color:var(--blue)}
+.b-ext-Community-based{background:var(--g50);color:var(--g700)}
+.b-ext-Request-based{background:var(--amber-bg);color:var(--amber)}
+.b-basis-Faculty{background:var(--violet-bg);color:var(--violet)}
+.b-basis-Student{background:var(--teal-bg);color:var(--teal)}
+.b-basis-Others{background:var(--gray-bg);color:var(--gray)}
+.b-led{background:var(--purple-bg);color:var(--purple)}
+.pc-info{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:5px}
+.pc-info .row{display:flex;gap:8px}
+.pc-info .row svg{width:15px;height:15px;flex:none;margin-top:2px;stroke:#8ba0a9}
+.pc-obj{font-size:13px;color:#3d4f58;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:auto}
+.stat{background:var(--bg);border-radius:10px;padding:8px 4px;text-align:center}
+.stat b{display:block;font-size:15.5px;font-weight:750;color:var(--g800)}
+.stat span{font-size:10.5px;color:var(--muted);font-weight:650;text-transform:uppercase;letter-spacing:.3px}
+.pc-foot{display:flex;gap:9px;margin-top:2px}
+.pc-foot .btn{flex:1;justify-content:center;padding:9px 10px;font-size:12.8px}
+.btn-detail{background:var(--g50);color:var(--g800)}
+.btn-detail:hover{background:#dcefe9}
+.btn-doc{background:#fff;border-color:var(--line);color:var(--gray)}
+.btn-doc:hover{background:var(--bg)}
+.btn-doc.none{opacity:.55;cursor:not-allowed}
+.empty{grid-column:1/-1;text-align:center;padding:70px 20px;color:var(--muted)}
+.empty svg{width:56px;height:56px;stroke:#c3cfd5;margin-bottom:14px}
+.empty b{display:block;font-size:17px;color:var(--ink);margin-bottom:5px}
+
+/* ---------- Table view ---------- */
+.table-wrap{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:30px}
+.table-wrap[hidden]{display:none}
+.table-scroll{overflow-x:auto;max-height:760px;overflow-y:auto}
+table.data{border-collapse:collapse;width:100%;font-size:13px;min-width:720px}
+table.data thead th{position:sticky;top:0;z-index:2;background:var(--g800);color:#fff;font-size:11px;
+  text-transform:uppercase;letter-spacing:.5px;padding:11px 12px;text-align:left;white-space:nowrap;
+  cursor:pointer;user-select:none;font-weight:700}
+table.data thead th:hover{background:var(--g700)}
+table.data thead th .arr{font-size:9px;margin-left:4px}
+table.data td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+table.data tbody tr{cursor:pointer}
+table.data tbody tr:hover{background:var(--g50)}
+td.t-title{font-weight:650;min-width:240px;color:var(--ink)}
+td.t-text{min-width:200px;max-width:340px;color:#3d4f58;font-weight:400;line-height:1.45}
+td.t-title .sub{font-weight:400;font-size:11.5px;color:var(--muted);margin-top:4px;display:flex;flex-direction:column;gap:2px}
+td.num-cell{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:650}
+td.num-cell.muted{color:#9aa8af;font-weight:500}
+td .mini-badges{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+.t-doc{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700}
+.t-doc svg{width:14px;height:14px}
+.t-doc.no{color:#b6c2c8;cursor:default}
+.table-foot{padding:11px 16px;font-size:12.5px;color:var(--muted);background:#fafcfc;border-top:1px solid var(--line);
+  display:flex;gap:18px;flex-wrap:wrap}
+.table-foot b{color:var(--g800)}
+
+/* ---------- Modal ---------- */
+.modal-overlay{position:fixed;inset:0;background:rgba(6,32,27,.55);backdrop-filter:blur(3px);z-index:100;
+  display:none;align-items:flex-start;justify-content:center;padding:45px 18px;overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:18px;max-width:860px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.3);
+  animation:pop .22s ease}
+@keyframes pop{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+.m-head{background:linear-gradient(135deg,var(--g900),var(--g700));color:#fff;padding:22px 26px;border-radius:18px 18px 0 0;position:relative}
+.m-head h2{font-size:18px;line-height:1.45;padding-right:38px}
+.m-head .m-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+.m-head .yr{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3)}
+.m-close{position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:50%;border:none;
+  background:rgba(255,255,255,.15);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.m-close:hover{background:rgba(255,255,255,.28)}
+.m-body{padding:22px 26px 26px}
+.m-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px 22px}
+.m-field{display:flex;flex-direction:column;gap:4px}
+.m-field.full{grid-column:1/-1}
+.m-field label{font-size:11px;font-weight:750;text-transform:uppercase;letter-spacing:.7px;color:var(--g700)}
+.m-field .val{font-size:13.8px;color:#2c3e46;white-space:pre-line}
+.m-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:6px 0 4px}
+.m-stat{background:var(--g50);border-radius:12px;padding:13px 8px;text-align:center}
+.m-stat b{display:block;font-size:21px;color:var(--g800)}
+.m-stat span{font-size:11px;color:var(--muted);font-weight:650}
+.m-doc{margin-top:18px;display:flex}
+.m-doc .btn{width:100%;justify-content:center;padding:13px}
+
+/* ---------- Footer ---------- */
+footer{background:var(--g900);color:#bcd4cd;padding:24px 0;margin-top:10px;font-size:13px}
+footer .wrap{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+footer a{color:var(--gold-l);word-break:break-all}
+
+/* ---------- Print report (screen-hidden) ---------- */
+#printView{display:none}
+@media print{
+  @page{size:A4 landscape;margin:11mm}
+  body{background:#fff !important}
+  header.app, main.app, footer.app, .modal-overlay{display:none !important}
+  #printView{display:block !important;color:#111}
+  .pv-head{border-bottom:3px solid #0b5345;padding-bottom:10px;margin-bottom:12px}
+  .pv-head h1{font-size:19px;color:#06352c}
+  .pv-head .pv-sub{font-size:12px;color:#334;margin-top:4px}
+  .pv-kpis{display:flex;gap:26px;flex-wrap:wrap;margin:10px 0 4px;font-size:12px}
+  .pv-kpis b{font-size:15px;color:#0b5345}
+  .pv-filters{font-size:11px;color:#555;background:#f2f6f5;padding:7px 10px;border-radius:6px;margin:8px 0 14px}
+  .pv-campus{break-inside:auto;margin-bottom:16px}
+  .pv-campus > h2{font-size:14px;background:#0b5345;color:#fff;padding:5px 10px;border-radius:5px;
+    display:flex;justify-content:space-between;break-after:avoid}
+  .pv-year{break-inside:avoid-page;margin:10px 0 6px}
+  .pv-year > h3{font-size:12.5px;color:#0b5345;border-bottom:1px solid #9db8b1;padding-bottom:3px;
+    margin-bottom:5px;break-after:avoid}
+  table.pv{width:100%;border-collapse:collapse;font-size:10.5px}
+  table.pv th{background:#e9f4f1;color:#06352c;text-align:left;padding:5px 7px;border:1px solid #c9dbd6;
+    font-size:10px;text-transform:uppercase;letter-spacing:.3px}
+  table.pv td{padding:5px 7px;border:1px solid #d5e0dd;vertical-align:top;break-inside:avoid}
+  table.pv tr{break-inside:avoid}
+  td.pv-title{width:30%;font-weight:700}
+  td.pv-title .pv-meta{font-weight:400;color:#445;font-size:9.5px;margin-top:2px}
+  td.pv-counts{text-align:center;white-space:nowrap}
+  .p-doc{color:#0b5345;font-weight:600;text-decoration:none;word-break:break-all}
+  .p-doc::after{content:" (" attr(href) ")";font-weight:400;color:#667;font-size:9px}
+  .pv-nodoc{color:#99a}
+  .pv-foot{margin-top:14px;border-top:1px solid #9db8b1;padding-top:8px;font-size:10px;color:#556}
+}
+
+/* ---------- Responsive ---------- */
+@media(max-width:1150px){.kpis{grid-template-columns:repeat(3,1fr)}.charts{grid-template-columns:repeat(2,1fr)}
+  .span2,.span3{grid-column:span 2}.cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){
+  .h-badge{margin-left:0;width:100%}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .charts{grid-template-columns:1fr}.span2,.span3{grid-column:span 1}
+  .cards{grid-template-columns:1fr}
+  .m-grid{grid-template-columns:1fr}.m-stats{grid-template-columns:repeat(2,1fr)}
+  .hbar-name{width:96px}
+  .ms-pop{left:0;right:auto;width:min(86vw,272px)}
+  .search{width:100%}
+  .search .hint-q{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="app">
+  <div class="wrap h-grid">
+    <div class="seal" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#e7c65b" stroke-width="1.7">
+        <path d="M12 3l8 4v5c0 4.6-3.2 7.8-8 9-4.8-1.2-8-4.4-8-9V7l8-4z"/>
+        <path d="M9 12l2 2 4-4.5"/>
+      </svg>
+    </div>
+    <div class="h-text">
+      <h1>Extension &amp; Outreach Programs Dashboard</h1>
+      <div class="sub">CHED Form U8 · University Conversion Document · UIP 2026</div>
+      <div class="meta">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>Ilocos Sur Polytechnic State College</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.3-7-11a7 7 0 1114 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>San Nicolas, Candon City, Ilocos Sur · Region I</span>
+      </div>
+    </div>
+    <div class="h-badge"><b id="hTotal">—</b>programs catalogued</div>
+  </div>
+</header>
+
+<main class="wrap app">
+
+  <div class="sec-title">Key Performance Indicators <small>figures update with active filters</small></div>
+  <section class="kpis" id="kpis"></section>
+
+  <div class="sec-title">Visual Summary <small>click any bar, segment or campus to toggle filters</small></div>
+  <section class="charts">
+    <div class="panel span2">
+      <h3>Programs per Year</h3>
+      <div class="hint">Outreach activities documented across school years 2014–2026</div>
+      <div id="yearChart"></div>
+    </div>
+    <div class="panel">
+      <h3>By Type of Extension</h3>
+      <div class="hint">Click a segment to toggle filter</div>
+      <div id="extDonut"></div>
+    </div>
+    <div class="panel">
+      <h3>By Research Basis</h3>
+      <div class="hint">Faculty research, student research or others</div>
+      <div id="basisDonut"></div>
+    </div>
+    <div class="panel span3">
+      <h3>Programs by Campus</h3>
+      <div class="hint">Seven ISPSC campuses · click a row to toggle filter</div>
+      <div id="campusBars"></div>
+    </div>
+    <div class="panel">
+      <h3>By Proponent</h3>
+      <div class="hint">Who led the extension activity</div>
+      <div id="ledDonut"></div>
+    </div>
+  </section>
+
+  <div class="sec-title">Advanced Search &amp; Filters</div>
+  <section class="filter-card">
+    <div class="search-row">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" id="q" placeholder="Search title, objective, community, research output, deliverable…" autocomplete="off">
+        <span class="hint-q">all words must match · “quotes” = exact phrase</span>
+      </div>
+      <div class="seg" id="viewSeg" role="group" aria-label="View mode">
+        <button data-view="cards" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          Cards</button>
+        <button data-view="table" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16M15 4v16"/></svg>
+          Table</button>
+      </div>
+      <button class="btn btn-gold" id="btnPrint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V3h12v6M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="7" rx="1"/></svg>
+        Print / PDF</button>
+      <button class="btn btn-ghost" id="btnCsv">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+        Export CSV</button>
+      <button class="btn btn-ghost" id="btnReset">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 109-9 9 9 0 00-6.7 3M3 4v5h5"/></svg>
+        Reset</button>
+    </div>
+
+    <div class="controls">
+      <div class="ms" id="ms-campus"></div>
+      <div class="ms" id="ms-year"></div>
+      <div class="ms" id="ms-ext"></div>
+      <div class="ms" id="ms-basis"></div>
+      <div class="ms" id="ms-led"></div>
+      <div class="ms" id="ms-cols"></div>
+      <select id="fDoc" class="on-when-active">
+        <option value="All">Documents: All</option>
+        <option value="yes">With linked document</option>
+        <option value="no">No document</option>
+      </select>
+      <input type="number" min="0" class="plain-input min-input" id="minBen" placeholder="Min beneficiaries">
+      <input type="number" min="0" class="plain-input min-input" id="minStu" placeholder="Min students">
+      <select id="fSort">
+        <option value="year_desc">Sort: Newest first</option>
+        <option value="year_asc">Sort: Oldest first</option>
+        <option value="title_asc">Sort: Title A–Z</option>
+        <option value="beneficiaries_desc">Sort: Most beneficiaries</option>
+        <option value="students_desc">Sort: Most students</option>
+        <option value="campus_asc">Sort: Campus A–Z</option>
+      </select>
+    </div>
+    <div class="chips" id="chips"></div>
+  </section>
+
+  <div class="res-head">
+    <h2><b id="resCount">0</b> extension programs found <span id="resOf" style="color:#94a3ad;font-weight:500;font-size:13.5px"></span></h2>
+    <div class="spacer"></div>
+    <button class="btn btn-primary" id="btnTop">Back to dashboard</button>
+  </div>
+
+  <section class="cards" id="cards"></section>
+  <section class="table-wrap" id="tableWrap" hidden>
+    <div class="table-scroll">
+      <table class="data" id="dataTable">
+        <thead><tr id="tableHead"></tr></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+    <div class="table-foot" id="tableFoot"></div>
+  </section>
+</main>
+
+<footer class="app">
+  <div class="wrap">
+    <div>
+      <b style="color:#fff">Ilocos Sur Polytechnic State College</b> — Complete Listing and Description of Outreach Programs (CHED Form U8)<br>
+      Data covers school years 2014–2026 across seven campuses. Dashboard generated for university-conversion documentation.
+    </div>
+    <div>Source: <a id="srcLink" href="#" target="_blank" rel="noopener">Published Google Sheet</a></div>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="m-head">
+      <button class="m-close" id="mClose" aria-label="Close">✕</button>
+      <h2 id="mTitle"></h2>
+      <div class="m-tags" id="mTags"></div>
+    </div>
+    <div class="m-body" id="mBody"></div>
+  </div>
+</div>
+
+<div id="printView"></div>
+
+<script>
+const DATA = {"meta": {"hei": "Ilocos Sur Polytechnic State College", "address": "San Nicolas, Candon City, Ilocos Sur", "form": "CHED Form U8 — Complete Listing and Description of Outreach Programs", "region": "Region I"}, "programs": [{"id": 1, "campus": "Main Campus", "researchType": "Based on Faculty Research", "title": "2025 MAKING YOUR MARK: CAMPUS JOURNALISM TRAINING", "year": 2025, "researchOutput": "", "objectives": "To empower student- journalists with the skills and values for ethical, inclusive, and responsible campus journalism", "community": "Department of Education, Lidlidda National High School", "duration": "October 8-10, 2025", "deliverables": "1 published school newsletter, trained student writers and organized juurlism teams", "students": 3, "faculty": 5, "researchStaff": null, "beneficiaries": 50, "rawCounts": {"students": "3", "faculty": "5", "researchStaff": "", "beneficiaries": "50"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1VPtF9_zS-cAIUbBIYShTnpGXNdta4Cdk/view?usp=sharing"}, {"id": 2, "campus": "Main Campus", "researchType": "Based on Faculty Research", "title": "2025 BRIDGING THE DIGITAL GAP: EMPOWERING GOVERNMENT AGENCIES IN ILOCOS SUR, A DIGITAL TRANSFORMATION AND IMPACT ASSESSMENT EXTENSION SERVICES, ADOPT-A-LGU", "year": 2025, "researchOutput": "Needs Analysis Survey in Public or Private Schools, LGU and the Community in Ilocos Sur - VJ Barayuga, AJ Pagatpatan, and J. Umangay", "objectives": "To conduct a comprehensive assessment to profile the demographic characteristics of teachers, LGU personnel, and communities specifically within the Santa Maria, Ilocos Sur LGU.", "community": "LGU administrators and community of Sta. Maria, Ilocos Sur", "duration": "February 4,5,6, 2025", "deliverables": "Official municipal website of Santa Maria, Ilocos Sur", "students": null, "faculty": 3, "researchStaff": null, "beneficiaries": 33, "rawCounts": {"students": "", "faculty": "3", "researchStaff": "", "beneficiaries": "33"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/14HorZ3GETiVWye62wI2La5e1f1FmgOGl/view?usp=drive_link"}, {"id": 3, "campus": "Main Campus", "researchType": "Based on Student Research", "title": "2025 EMPOWERING TANODS: ENHANCEMENT TRAINING FOR COMMUNITY GUARDIANS", "year": 2025, "researchOutput": "The Roles of Barangay Police in Barangays of Suyo", "objectives": "This program aims to enhance the knowledge, skills, and capabilities of tanods enabling them to provide more effective and efficient support in maintaining the safety, security, and welfare of their community.", "community": "Barangay tanods of Suyo, Ilocos Sur", "duration": "January-October 2025", "deliverables": "Enhanced knowledge and skills", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": 98, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": "98"}, "extensionType": "Research-based", "ledBy": "Joint", "document": "https://drive.google.com/file/d/1xSQaAlBXUiypV5IEAUsgBjiQhd7QuW6o/view?usp=sharing"}, {"id": 4, "campus": "Main Campus", "researchType": "Based on Faculty Research", "title": "2025 SUSTAINABLE HEALTH AND WELLNES: A 3-DAY COMMUNITY EMPOWERMENT PROGRAM FOR BRGY. SABANGAN", "year": 2025, "researchOutput": "Community Diagnosis of Brgy. Sabangan, Santiago, Ilocos Sur", "objectives": "This program aims to enhance the environmental sustainability, health promotion  and the capacity of healthcare workers in Barngay Sabangan focusing on the well-being of its residents.", "community": "Residents of Sabangan, Santiago, Ilocos Sur", "duration": "May 7-9, 2025", "deliverables": "Strengthened community resilience", "students": 79, "faculty": null, "researchStaff": null, "beneficiaries": 170, "rawCounts": {"students": "79", "faculty": "", "researchStaff": "", "beneficiaries": "170"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1o64mbL49j9HGI8m2-xAgLCTtzLFO-XOE/view?usp=drive_link"}, {"id": 5, "campus": "Main Campus", "researchType": "Based on Faculty Research", "title": "2025 EMPOWERING STUDENTS AND EDUCATORS: A THREE-DAY WORKSHOP ON STI PREVENTION, EDUCATION, AND ADVOCACY  FOR SENIOR HIGH  STUDENTS AND TEACHERS", "year": 2025, "researchOutput": "Students' Knowledge on Sexually Transmitted Infection in a State College", "objectives": "This program aims to enhance the knowledge ans awareness of Senior High Students and DepEd  teachers on Sexually Transmitted Infections (STIs), their prevention, management, and impact on overall health.", "community": "Teachers and Senior High School students of Sta. Maria National High School", "duration": "November 12-14, 2025", "deliverables": "Solid understanding and awareness on STI", "students": null, "faculty": 11, "researchStaff": null, "beneficiaries": 273, "rawCounts": {"students": "", "faculty": "11", "researchStaff": "", "beneficiaries": "273"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1LBeor3s-Hy1m619BaQdbT_9VsQMAvK4W/view?usp=sharing"}, {"id": 6, "campus": "Main Campus", "researchType": "Based on Faculty Research", "title": "2025 ENHANCING COMMUNITY RESILIENCE THROUGH EFFECTIVE DISASTER RISK REDUCTION MECHANISMS", "year": 2025, "researchOutput": "Reduction Risk Reduction Mechanism of the Coastal Barangays of Candon City", "objectives": "This program aims to enhance community awareness and understandig of disaster risks, vulnerabilities and resilience to strengthen local capacities for disater risks assessment, planning and implementation; and to establish early warning systems and emergency response mechanisms", "community": "30 Cleinteles; Brgy. Officials, Brgy. Tanods, BHWs of Tamurong 2nd. Candon City, Ilocos Sur", "duration": "September 2-5, 2025", "deliverables": "Awareness, skills and strengthened community resilience through disaster", "students": 4, "faculty": 5, "researchStaff": null, "beneficiaries": 26, "rawCounts": {"students": "4", "faculty": "5", "researchStaff": "", "beneficiaries": "26"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1z64GJZJYbGe7Kdtz4qEUmS5tQ48uHukW/view?usp=sharing"}, {"id": 7, "campus": "Main Campus", "researchType": "Based on Faculty Research", "title": "2025 EXPRESSIVE RHYTHMS:  UNLEASHING CREATIVITY THOUGH DANCE", "year": 2025, "researchOutput": "Benjamin A. Raceles, Joselita E. Viado, Edwin E. De Guzman, Jolius Dominic B. Gangano, Marlon T. Hipona, Lovely Kae H. Talavera, Marc Kenneth O. Drije, Alma May P. Wanlas", "objectives": "To provide individuals with a platform for self-expression and creative exploration.", "community": "Faculty and Students of Galimuyod Integrated School, Galimuyog, Ilocos Sur", "duration": "August 14, 28, Setember 4, 11, 18, 25, October 9, 16, November 20, 2024", "deliverables": "Taught rich ethnic dances like TADEK, LABLABBAAN, and BALLIWES", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": 50, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": "50"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/15tVwNqepSa0qBHg5XS8cECXEn0mZBbqg/view?usp=drive_link"}, {"id": 8, "campus": "Main Campus", "researchType": "Based on Faculty Research", "title": "2025 CAPACITY BUILDING FOR BARANGAY HEALTH WORKERS: ENSURING QUALITY CARE IN MATERNAL AND CHILD HEALTH (TD)", "year": 2025, "researchOutput": "Gevin R. Soriano, Sherwin S. Paguiligan, Magnolia A. Biete, Ma. Cristina C. Remiendo, Llyod B. Lozano", "objectives": "To enhance the capacity of Barangay Health Workers (BHWs) in providing quality maternal and child health care through comprehensive training in essential skills, such as health assessment, first aid, emergency response, and health education, thereby improving health outcomes and fostering resilience in underserved communities", "community": "Barangay Health Workers of Galimuyod Ilocos Sur", "duration": "May 26-28, 2025", "deliverables": "Skills on CPR  for adults, advanced first aid techniques, including bandaging, splinting, and managing medical emergencies such as choking, bleeding and shock", "students": null, "faculty": 11, "researchStaff": null, "beneficiaries": 72, "rawCounts": {"students": "", "faculty": "11", "researchStaff": "", "beneficiaries": "72"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/105_bGDvfsTwvOQki_uq0I2QM7_HUlmG2/view?usp=drive_link"}, {"id": 9, "campus": "Main Campus", "researchType": "Based on Faculty Research", "title": "2025 EMPOWERING COMMUNITIES: BASIC LIFE SUPPORT AND FIRST-AID TRAINING", "year": 2025, "researchOutput": "Gevin R. Soriano Ma. Cristina Reminendo", "objectives": "", "community": "Barangay Arangin, Sta. Lucia, Ilocos Sur", "duration": "March 4-6, 2025", "deliverables": "", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": 50, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": "50"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1kplzvmXysifFhfMkx-LBKDZ4Ou_1SMks/view?usp=drive_link"}, {"id": 10, "campus": "Main Campus", "researchType": "Based on Faculty Research", "title": "2025 HIV VERTICAL TRANSMISSION PREVENTION DURING LABOR AND DELIVERY  TRAINING AND WORKSHOP", "year": 2025, "researchOutput": "Knowledge and Readiness to Implement HIV Vertical Transmission Prevention among Midwives: Basis for Targeted Training Programs", "objectives": "This program aims to combat the global challenge of vertical HIV transmission during labor and delivery by empowering midwiveswith essential knowledge and skills", "community": "Ilocos Sur Medical Center Nursing Service", "duration": "September 25, 26 and 29, 2025", "deliverables": "Knowledge and skills of midwives to prevent HIV transmission during pregnancy, labor and postpartum care", "students": null, "faculty": 11, "researchStaff": null, "beneficiaries": 26, "rawCounts": {"students": "", "faculty": "11", "researchStaff": "", "beneficiaries": "26"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1xvwkc7Ybe51JxYgv2bmv4aqSviImuU6v/view?usp=drive_link"}, {"id": 11, "campus": "Main Campus", "researchType": "Based on Faculty Research", "title": "2025 ISPSC COMMUNITY", "year": 2025, "researchOutput": "DOST CEST Program at San Emilio, Ilocos Sur", "objectives": "To provide essential healthcare services through medical consultations; to empower barangay health workers, nutrition scholars, and midwives through targeted health education sessions; and to encourage community participation in a blood donation drive while providing dental care services.", "community": "residents of San Emilio, Ilocos Sur", "duration": "October 11, November 26-27, 2", "deliverables": "Healthcare services, blood donation", "students": null, "faculty": 9, "researchStaff": null, "beneficiaries": 300, "rawCounts": {"students": "", "faculty": "9", "researchStaff": "", "beneficiaries": "300"}, "extensionType": "Community-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1_5tA9dXXA8DZ9-HY2I1-VY3fq2YzNX2P/view?usp=sharing"}, {"id": 12, "campus": "Main Campus", "researchType": "Based on Faculty Research", "title": "2024 RA 9262 ANTI-VIOLENCE AGAINST WOMEN AND THEIR CHILDREN ACT  SEMINAR TRAINING PROGRAM (Caterman, Candon)", "year": 2024, "researchOutput": "Implementation of RA 9262 (Anti-Violence Against Women and their Children Act) in the Different Barangays of Candon City", "objectives": "This program aims to empower the barangay officials and other implementers of peace and order in the barangay by offering a seminar/training workshop on the implementation of RA 9262 and to increase the knowledge and awarness about the Anti Bastos Law, in order to protect their personal safe spaces and eventually will lead to the prevention of VAWC in the community.", "community": "Barangay Caterman, Candon City, Barangay Officials, PNP Candon-VAWC desk, DSWD Candon City", "duration": "September 18-20, 2024", "deliverables": "Awareness on RA9262, and empowers local leaders in responding to sunch incidents", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": 100, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": "100"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/11G2CWxt4Gw_nna6YShy3EndvUCiINkSv/view?usp=sharing"}, {"id": 13, "campus": "Main Campus", "researchType": "Based on Faculty Research", "title": "2024 COMMUNITY HEALTH INITIATIVE: PROMOTING HYGIENE WITH ANTIBACTERIAL SOAP FROM NATURAL EXTRACTS", "year": 2024, "researchOutput": "Antibacterial Solution Using Arius (Podocarpus costalis) Leaf Extracts", "objectives": "This program aims to engage local communities in the project through training sessions encouraging active partcipation in the production and use  of the Arius leaf extract soap", "community": "50 residents of Tablac, Candon City, Ilocos Sur", "duration": "November 4-7, 2024", "deliverables": "Technology transfer and RD results dissemination", "students": 16, "faculty": 3, "researchStaff": null, "beneficiaries": 30, "rawCounts": {"students": "16", "faculty": "3", "researchStaff": "", "beneficiaries": "30"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/15-yMhouh1PuV-Rq419EK3LwXCBhHtWT_/view?usp=sharing"}, {"id": 14, "campus": "Main Campus", "researchType": "Others", "title": "2024 SEMINAR-WORKSHOP ON FINANCIAL LITERACY FOR SANGGUNIANG KABATAAN AND KATIPUNAN NG KABATAAN OF BARANGAY TAMPUGO, STA. CRUZ, ILOCOS SUR", "year": 2024, "researchOutput": "Community Diagnosis of Brgy. Arangin, Sta. Lucia, Ilocos Sur", "objectives": "Demostrate youth with essential financial knowledge and skills for informed money management and responsible behavior.", "community": "Sangguniang Kabataan and Katipunan ng Kabataan of Barangay Tampugo, Sta. Cruz, Ilocos Sur", "duration": "September 21, 28, and October 5, 2024", "deliverables": "Strategy", "students": 12, "faculty": 7, "researchStaff": null, "beneficiaries": 11, "rawCounts": {"students": "12", "faculty": "7", "researchStaff": "", "beneficiaries": "11"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1ugQz-oW_3dRbN4DfqVOCZg6dGWPEiZyA/view?usp=sharing"}, {"id": 15, "campus": "Main Campus", "researchType": "Others", "title": "2025 EMPOWERING TANODS THROUGH KNOWLEDGE AND PRACTICE: ENHANCEMENT TRAINING FOR COMMUNITY GUARDIANS", "year": 2025, "researchOutput": "DOST-CEST Program  at San Emilio, Ilocos Sur; Rose MArie C. Detran, Michelle R. Mendoza, Donabelle B. Buting and John Paul R. Alasaas", "objectives": "", "community": "Barangay tanods of San Emilio, Ilocos Sur", "duration": "September 23-25, 2024", "deliverables": "enhanced knowledge and skills", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": 70, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": "70"}, "extensionType": "Community-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1l5lx2cAk-jXbASlISP3euU3mjyewhZBP/view?usp=drive_link"}, {"id": 16, "campus": "Main Campus", "researchType": "Others", "title": "2024 LECTURE – SEMINAR IN HEALTH ASSESSMENT & INFECTIOUS DISEASES", "year": 2024, "researchOutput": "DOST CEST Program at San Emilio, Ilocos Sur", "objectives": "Enhance the knowledge and skills of community members regarding health assessment techniques.", "community": "BHW, Brgy. Officials, and residents of San Emilio, Ilocos Sur", "duration": "September 25-27, 2024", "deliverables": "Enhanced knowledge regarding infectious diseases", "students": null, "faculty": 14, "researchStaff": null, "beneficiaries": 139, "rawCounts": {"students": "", "faculty": "14", "researchStaff": "", "beneficiaries": "139"}, "extensionType": "Community-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1_xzSHwjjwVpI9wwJhbrBsgHgTAAZSZb8/view?usp=sharing"}, {"id": 17, "campus": "Main Campus", "researchType": "Others", "title": "2024 LECTURE-SEMINAR IN THE PREVENTION OF MALNUTRITION AMONG CHILDREN & MAKING OF MALUNGGAY MIKI (Malunggay Noodles)", "year": 2024, "researchOutput": "DOST CEST Program at San Emilio, Ilocos Sur", "objectives": "Educate parents about prevalence, causes, and consequences of malnutrition  of pre-school children within the community.", "community": "BHW, Brgy. Officials, and residents of San Emilio, Ilocos Sur", "duration": "September 23-25, 2024", "deliverables": "Improved nutrition Malunggay miki noodles", "students": null, "faculty": 14, "researchStaff": null, "beneficiaries": 94, "rawCounts": {"students": "", "faculty": "14", "researchStaff": "", "beneficiaries": "94"}, "extensionType": "Community-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1lNo510Bwih99aQxzFRMNShvdo4kGL7sa/view?usp=drive_link"}, {"id": 18, "campus": "Main Campus", "researchType": "Based on Faculty Research", "title": "2022 Adopt-a-School Program: Literacy and Numeracy Drive", "year": 2022, "researchOutput": "*The MTB-MLE in the Field of Instruction: Snapshot Observations and review of Practices in the Philippines by Andres T. Malinnag Jr., Ed.D.; Ausbert I. Felicitas, MPA; Avelina D. Gatdula, Ed.D.; and Isanie K. Collo, MAEd.", "objectives": "a) To improve the reading ability of the identified students in Santo Tomas National High School who have reading difficulties in both English and Filipino. And the numeracy skills of the identified students who have difficulty in mathematics.", "community": "Selected students of Sto. Tomas National High School", "duration": "November 17, 2022 – April 14, 2023 (staggered basis)", "deliverables": "Improvement on numeracy and literacy skills", "students": 80, "faculty": 14, "researchStaff": null, "beneficiaries": 80, "rawCounts": {"students": "80", "faculty": "14", "researchStaff": "", "beneficiaries": "80"}, "extensionType": "Research-based", "ledBy": "Joint", "document": "https://drive.google.com/file/d/1d_Bore3peZ6t7si9Jup43ArzRbkPHVJL/view?usp=drive_link"}, {"id": 19, "campus": "Main Campus", "researchType": "Based on Faculty Research", "title": "2022 Adopt a School (Health Advocacy Campaign- Suicide Prevention and Understanding Depression, BLS, and First Aid)", "year": 2022, "researchOutput": "Mandy Roie Atendido, ISPSC Main", "objectives": "a) To develop skills and expertise of the secondary school teacher participants on Basic Life Support, and First Aid", "community": "Secondary school teachers of Santo Tomas National High School", "duration": "April 22 and 29, 2022 (staggered basis)", "deliverables": "Expertise on health awareness, basic life support, and first-aid.", "students": null, "faculty": 7, "researchStaff": null, "beneficiaries": 17, "rawCounts": {"students": "", "faculty": "7", "researchStaff": "", "beneficiaries": "17"}, "extensionType": "Research-based", "ledBy": "Joint", "document": "https://drive.google.com/file/d/1mMHqHfjIgQMvnsh0UUUX_y-0PvXOCwTY/view?usp=drive_link"}, {"id": 20, "campus": "Main Campus", "researchType": "Others", "title": "2022 Disaster Preparedness Training on Selected Barangays", "year": 2022, "researchOutput": "Olive Shower Basabas, ISPSC Main", "objectives": "a) To educate the women in the barangays (particularly the 4P's and RIC on the different livelihood trainings;                                                                                       b)      To create sustainable livelihood opportunities through skills and entrepreneurship training;                                                                                                   c)      To impart trainings to aspiring and potential entrepreneurs for setting up SME's;\nd)      To advance the GAD objectives in its quest of recognizing the role of women in nation-building.", "community": "Women in barangay Bugnay and Caterman particularly the 4P’s and RIC", "duration": "August 12, 2022                                              (1 day)", "deliverables": "Entrepreneurial skills and knowledge", "students": null, "faculty": 14, "researchStaff": null, "beneficiaries": 100, "rawCounts": {"students": "", "faculty": "14", "researchStaff": "", "beneficiaries": "100"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1NoQFgWOser7nbvK3oH_9HNi2fTEge9WU/view?usp=drive_link"}, {"id": 21, "campus": "Main Campus", "researchType": "Others", "title": "2021 Voluntary Blood Donation Program", "year": 2021, "researchOutput": "Englebert P. Escalona, ISPSC Main", "objectives": "To collect blood that will be utilized to save the lives of patients, particularly those who are in critical need of blood transfusions and those who are in need of.", "community": "Patients particularly those in critical need of blood transfusions", "duration": "December 10, 2021                                              (1 day)", "deliverables": "Create Awareness of the importance of sharing lives by means of giving their blood", "students": null, "faculty": 30, "researchStaff": null, "beneficiaries": 129, "rawCounts": {"students": "", "faculty": "30", "researchStaff": "", "beneficiaries": "recipients of the 129 bags of blood"}, "extensionType": "Request-based", "ledBy": "Joint", "document": "https://drive.google.com/file/d/1Vtmm-e6wOtUNKwIx11AV0YvjaGMXFlK9/view?usp=drive_link"}, {"id": 22, "campus": "Main Campus", "researchType": "Others", "title": "2021 NLPSC Community Pantry", "year": 2021, "researchOutput": "Practices of Good Governance in the Selected Local Government Units of Ilocos Sur by Severino G. Alviento and Gerardo G. Garnace", "objectives": "To supply food items (vegetables, canned goods, noodles, fruits) to the community, particularly those severely affected.", "community": "Communities from Barangay Bugnay and Caterman, and nearby households from NLPSC.", "duration": "(3 days) May 5-7 and 10, 2021", "deliverables": "Relief foods", "students": null, "faculty": 20, "researchStaff": null, "beneficiaries": 307, "rawCounts": {"students": "", "faculty": "20", "researchStaff": "", "beneficiaries": "307"}, "extensionType": "Community-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1XJJYIxUoRLVfrq7f8mvrCoiLbMW9MBwf/view?usp=drive_link"}, {"id": 23, "campus": "Main Campus", "researchType": "Others", "title": "2021 Gulayan sa Pamayanan", "year": 2021, "researchOutput": "John Paul Alasaas, ISPSC Main", "objectives": "a) To provide vegetable seeds to the recipient barangays of the NLPSC Gulayan sa Pamayanan Project.                                                                                                                                                                              b)      To assist barangay residents to engage in vegetable growing in order to ensure the cultivation of healthier vegetables.", "community": "6 barangays (Bugnay, Bagani Tocgo, Cubcubbuot, Caterman, Amguid, San Andres)", "duration": "July 7, 2021 - September 30, 2021 (Staggered Basis)", "deliverables": "Vegetable seeds distribution", "students": null, "faculty": 6, "researchStaff": null, "beneficiaries": 6, "rawCounts": {"students": "", "faculty": "6", "researchStaff": "", "beneficiaries": "6 barangays"}, "extensionType": "Community-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1WTqsjkdDhUW-0JDQADU92Iib0wbE_b7p/view?usp=drive_link"}, {"id": 24, "campus": "Main Campus", "researchType": "Based on Faculty Research", "title": "2020 T-shirt Printing, Wall Painting, Meat/Fish Processing, Making of Detergent Powder Soap, Making of Fabric Conditioner and Dishwashing Liquid", "year": 2020, "researchOutput": "*The Socio-Economic Status of Families of Students of NLPSC: Basis for Intervention Measure by Caridad O. Abuan, Ed. D. and Severino G. Alviento, DPA", "objectives": "To train beneficiaries to start their own meat and fish processing business, fabric conditioner/dishwashing liquid/ detergent soap making and t-shirt, and wall signage painting as a source or additional income.", "community": "25 beneficiaries per barangay (Bugnay, Bagani Tocgo, and Cubcubbuot)", "duration": "December 14, 15, 16, 17, 18, 19, 21, 22, 23, 2020                                                                    (9 days)", "deliverables": "Entrepreneurial skills and knowledge", "students": null, "faculty": 27, "researchStaff": null, "beneficiaries": 81, "rawCounts": {"students": "", "faculty": "27", "researchStaff": "", "beneficiaries": "81"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1LnGHMl8Vve5-4ELhGrp4QOLn3CvdM3d7/view?usp=drive_link"}, {"id": 25, "campus": "Main Campus", "researchType": "Based on Faculty Research", "title": "2019 CBE-Extension on Livelihood and Entrepreneurial Skills Program on Meat/Fish Processing and Making of Detergent Powder Soap", "year": 2019, "researchOutput": "Santos Sanchez, ISPSC Main", "objectives": "a) To provide basic entrepreneurial knowledge and skills for the recipients of Brgy. Salvador 2nd, it also aimed how to produce products for them to start their own business that serves as a source of income.", "community": "30 pre-selected 4P’s of Barangay Salvador 2nd.", "duration": "December 7, 2019                  (1 day)", "deliverables": "Entrepreneurial skills and knowledge", "students": 4, "faculty": 14, "researchStaff": null, "beneficiaries": 26, "rawCounts": {"students": "4", "faculty": "14", "researchStaff": "", "beneficiaries": "26"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1Jt7eSV7bKPV8Uy0cDajI_TnbLLuMwSEV/view?usp=drive_link"}, {"id": 26, "campus": "Main Campus", "researchType": "Others", "title": "2018 Seminar on Violence Against Women and Children, and Sexual Harassment on Selected Barangays with Special Participation of PWD’", "year": 2018, "researchOutput": "Olive Shower P. Basabas", "objectives": "a) To educate the women in the barangay (particularly the 4P’s and RIC) on the provisions of RA 9262(Anti-Violence Against Women and their Children) and RA 7877 (Anti-Sexual Harassment Act),                b)      To make them aware of the incidence of VAWC and help them how to address it in case they become victims or perpetrators of such violence;\nc)      To minimize or avoid the perpetration of sexual harassment within the barangay particularly among the women (4P’s and RIC);\nd)      To support the government in its thrusts in minimizing VAWC and SH in the barangays;\ne)      To advance the GAD objectives in its quest of recognizing the role of women in nation-building.", "community": "Brgy. Darapidap, Balingaoan, and San Jose, Candon City, Ilocos Sur", "duration": "July 11-13, 2018", "deliverables": "Safety of women against potential attacks", "students": null, "faculty": 19, "researchStaff": null, "beneficiaries": 274, "rawCounts": {"students": "", "faculty": "19", "researchStaff": "", "beneficiaries": "274"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1QVEHVZ4_bX54nkkDlcdUC7XaCz6lnGQG/view?usp=drive_link"}, {"id": 27, "campus": "Main Campus", "researchType": "Based on Faculty Research", "title": "2017 Livelihood and Entrepreneurial Skills Training – Powder Detergent and Meat Processing", "year": 2017, "researchOutput": "Nelie Manzano, ISPSC Main", "objectives": "a) To provide basic entrepreneurial knowledge and skills to the residents that they can use in putting up a small business.                                                                                             a)   To make the people aware of the existence of the college thereby promoting NLPSC.", "community": "Residents of barangay Calongbuyan, Candon City, Ilocos Sur", "duration": "May 26, 2017", "deliverables": "Entrepreneurial skills and knowledge", "students": 4, "faculty": 13, "researchStaff": null, "beneficiaries": 29, "rawCounts": {"students": "4", "faculty": "13", "researchStaff": "", "beneficiaries": "29"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1FwNG3TJ1rZgXmuAVNEK1JkydceLQaImy/view?usp=drive_link"}, {"id": 28, "campus": "Candon Campus", "researchType": "Based on Student Research", "title": "2024 RESEARCH RESULTS DISSEMINATION ON PIGEON PEA  NATIVE DELICACIES", "year": 2024, "researchOutput": "Formulation and Acceptability of Pigeon Pea ( Cajanus cajan) Hopia", "objectives": "This program aims to develop awareness on other ways to utilize pigeon pea and to capacitate skills training program on native delicacies making to the community as a means of transferring technology and skills", "community": "housewives and farmers of Sta. Lucia, Ilocos Sur", "duration": "May 8-10, 2024", "deliverables": "Technology transfer", "students": null, "faculty": 5, "researchStaff": null, "beneficiaries": 60, "rawCounts": {"students": "", "faculty": "5", "researchStaff": "", "beneficiaries": "60"}, "extensionType": "Research-based", "ledBy": "Student", "document": "https://drive.google.com/file/d/1DBisT-oqQaV1e0LLF2h4ZFK0yeVMUgYa/view?usp=sharing"}, {"id": 29, "campus": "Candon Campus", "researchType": "Based on Faculty Research", "title": "2024 ADULT EDUCATION: A WOMAN EMPOWERMENT ON GENDER & DEVELOPMENT & BASIC HUMAN RIGHT CONCEPTS", "year": 2024, "researchOutput": "Eric L. Villanueva", "objectives": "To widen the knowledge and to help the beneficiaries understand basic concepts on different topics that will affect them in their daily lives.", "community": "women of barangay San Agustin, Candon City, Ilocos Sur", "duration": "March 18-20, 2024", "deliverables": "Dissemination of Magna Carta for Women (RA 9710)", "students": 4, "faculty": 9, "researchStaff": null, "beneficiaries": 25, "rawCounts": {"students": "4", "faculty": "9", "researchStaff": "", "beneficiaries": "25"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1-BysPxHEOmPcmH5vrWCJmBCXyNjGzL6g/view?usp=sharing"}, {"id": 30, "campus": "Candon Campus", "researchType": "Based on Faculty Research", "title": "2024 Computer Trouble Shooting and Repair", "year": 2024, "researchOutput": "Ariel A.Dela Cruz,Chriza Valdez", "objectives": "1.To maintain proper utilization of computer units and educated the best practices for computer wage including proper handling, strorage and software management                                                                                  2.To diagnose and troubleshoot hardware issues such as family components connectivity problems and hardware failures.                                                                                                                                                                             3.To troubleshoot install configure and update software applications drivers and operating systems to ensure compatibility", "community": "Municipality of San Emilio", "duration": "September 19, 2024", "deliverables": "", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": null, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": ""}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/10jI2xs9Fhaz8dOlMe3spUcQXwLw0cGUi/view?usp=sharing"}, {"id": 31, "campus": "Candon Campus", "researchType": "Based on Faculty Research", "title": "2023 Research Results Dissemination Program on \"White Yam Native Delicacies\"", "year": 2023, "researchOutput": "*Consumer's Acceptability and Quality Characteristics of White Yam Puto by Perlita F. Tomas, Remely A. Sanidad, Katrina S. Sarazawa, Richard Etrata, Annie Dorada & Consumers' Acceptability of White Yam Dudol by Perlita F. Tomas, Remely A. Sanidad, Katrina S. Sarazawa, Richard Etrata, Annie Dorada", "objectives": "a) To develop awareness of the use of white yam;                                                              b) To capacitate the community on the preparation of native delicacies using white yam;                                                 c)To develop the entrepreneurial skills of the beneficiaries.", "community": "Puso ng Kababaihan ng Lidlida in Brgy Labut, Lidlidda, Ilocos Sur", "duration": "(1 day) December 19, 2022", "deliverables": "Transferred technology                                   Skilled and Knowledgeable Parents and future entreprenuers", "students": 2, "faculty": 5, "researchStaff": null, "beneficiaries": 110, "rawCounts": {"students": "2", "faculty": "5", "researchStaff": "", "beneficiaries": "110"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1Bfzb8AIt4KEZcBew03U46CFi3YI2CF7l/view?usp=drive_link"}, {"id": 32, "campus": "Candon Campus", "researchType": "Others", "title": "2022 Seminar-Workshop on Local Tour Guiding Services", "year": 2022, "researchOutput": "Perlita F. Tomas", "objectives": "a) Acquire basic knowledge and skills in local guiding services, familiarize with the tourist attractions found in the barangay and City as a whole", "community": "Student from Darapidap, Candon City, Ilocos Sur", "duration": "(1 day) June 10, 2022", "deliverables": "Trained Local Tour Guides", "students": null, "faculty": 7, "researchStaff": null, "beneficiaries": 123, "rawCounts": {"students": "", "faculty": "7", "researchStaff": "", "beneficiaries": "123"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://tinyurl.com/5n6djjf8"}, {"id": 33, "campus": "Candon Campus", "researchType": "Based on Student Research", "title": "2021 Skills Training on Bilimbi Products", "year": 2021, "researchOutput": "*Formulation and Acceptability of Bilimbi (Averrhoa bilimbi) Vinegar by Philip Cesar S. Gironella and Jerrybelle M. Manzano,                                                                                                                      *Kamias Jelly: Its Acceptability by Joy T. Gabor and Myla Q. Gallardo,                                                                                                                    *Kamias Candy: Its Acceptability by Roselle R. Dario and Rizza P. Orquero,                                                                           *Utilization of Brown Sugar in Kamias Vinegar Making by John Tougan and Maria teresa Sidayen", "objectives": "a) To develop the entrepreneurial skills of the community;                                                                                                                                   b) To create awareness and to develop a sense of responsibility in the community; and c) to help improve the econnomic status of community.", "community": "Parents of pupils enrolled in Bay-asan Elementary School", "duration": "December 27, 2021                                       (1 day)", "deliverables": "Technology transfer", "students": 2, "faculty": 6, "researchStaff": null, "beneficiaries": 35, "rawCounts": {"students": "2", "faculty": "6", "researchStaff": "", "beneficiaries": "35"}, "extensionType": "Research-based", "ledBy": "Joint", "document": "https://drive.google.com/file/d/1duXhEAGbNl7zdBf6X5-jik-8sUG8dW2n/view?usp=drive_link"}, {"id": 34, "campus": "Candon Campus", "researchType": "Based on Student Research", "title": "2021 Skills Training on Native Food Delicacy", "year": 2021, "researchOutput": "*Sweet Potato Bibingka: Its Acceptability by Maria Imelda S. Ellazar and Mary Rose E. Dampulay,                                                                                                                                                                                                                                                                               *Sweet Potato (Ipomoea batatas) Candy: Its Acceptability by Kristine Rose A. Rivera and Glaiza Mae E. Jarquio,                                                                                                                                                                                                                                                                 *Sweet Potato (Ipomoea batatas) Pandesal: Its Acceptability by Ryan Jay G. Bautista and Charmaine C. Gamoso,                                                                                                                                                                                                                                                       *Sweet Potato Ice Cream: Its Acceptability by Jay-ar R. Galazo and Levy May Tamayo,                                                                                                                                                                                                                                                                                                     *Utilization of Sweet Potato Flour in Making Noodles: Its Acceptability by Sharmaine G. Galaites and Dianne P. Llanes,                                                                                                                                                                                                                                          *Utilizing Sweet Potato Flour in Making Bar Cookies by Jay ar C. Fabro and Daniel M. Gabatino", "objectives": "a) To conduct skills training on native foods and delicies making;                                                                                     b) to develop the entrepreneurial skills of the youth;                                                               c) to create better oppurtunities for employment; and d) provide additional income for the family and improve the economic status of the community.", "community": "SK Officials/Members in Dap-ayan, Daguiti, Mannalon, Suyo, Ilocos Sur", "duration": "June 29-30, 2021                                         (2 days)", "deliverables": "Technology transfer", "students": 5, "faculty": 12, "researchStaff": null, "beneficiaries": 20, "rawCounts": {"students": "5", "faculty": "12", "researchStaff": "", "beneficiaries": "20"}, "extensionType": "Research-based", "ledBy": "Joint", "document": "https://drive.google.com/file/d/1bSMa7oAgStp7N2Y3_bjK_StjMJJMc7gl/view?usp=drive_link"}, {"id": 35, "campus": "Cervantes Campus", "researchType": "Others", "title": "2025 EMPOWERING D' BEST CERVANTES THROUGH RADYO KABINNADANG (Phase 1: TRAINING WORKSHOP ON COMMUNITY RADIO PROGRAM DEVELOPMENT, PRODUCTION, AND COMUNICATION SKILLS)", "year": 2025, "researchOutput": "Severo B. Talipo", "objectives": "1. enhance communication between the LGU and the community by providing a platform for disseminating information and promoting public participation.                         2. Offer residents of Cervantes valuable knowledge and skills for self-improvement  and community development through informative  and engaging radio programs.                            3. Equip LGU Offices Representatives, SK Officials and Members, and college students with practical experience in radio broadcasting and public service, contributing to their professional development.                                                        4. Strengthen the college's connection with the community by fostering collaboration with the LGU and addressing local needs.", "community": "LGU employees, Barangay Officials, SK Officals, Local Police Officers, RMFB 102 nd Maneuver COmpany Police Officers, and members and officers of the Broadcasters of Bayang Cervantes", "duration": "September 23-24, 2024", "deliverables": "", "students": null, "faculty": 5, "researchStaff": null, "beneficiaries": 53, "rawCounts": {"students": "", "faculty": "5", "researchStaff": "", "beneficiaries": "53"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1GcZI3xGLY0VkTSENizW_V1ySyw9V1SBp/view?usp=sharing"}, {"id": 36, "campus": "Cervantes Campus", "researchType": "Others", "title": "2022-2025 Alay Yaman, Dunong at Kakayahan para sa Cervantes National High school: Adopt-a-school program (Phase ||)", "year": 2022, "researchOutput": "Grades six pupils of Cervantes Central School by Jessica Palomo, Reading skills of incoming Grade 1 pupils  of Cervantes Central School by Clarissa Gaceta Improving the Reading  Comprehension skills among Grade ||| Pupils trough the Use of Character Mapping at Cervantes Central School, the year 2016-2017 by Lester Campila, Reading Difficulties Encountered by the Grade ||| Pupils as Perceived by the Elementary Teachers of Cervantes Central School by Mirriam Garino", "objectives": "a) Provide remedial instructions to the struggling learners  of the recepient school: B) To develop and air programs that can pursuade the learners to observe proper nutrition and balanced diet and maintain habits that lead to empty life.", "community": "Struggling, Learners, ingridients, learners, teachers", "duration": "3 years, Every Friday of SY 2022-2023 to 2024-2025 (Straggered basis)", "deliverables": "Remedial Instructions in Math, Science and Reading: School-on-the Air on anti bullying and capacitating parents to provide Instructional support to indigent learners, Trainingdesing for teachers, Free Human resources/labor Physical development", "students": 60, "faculty": 12, "researchStaff": 12, "beneficiaries": 203, "rawCounts": {"students": "60", "faculty": "12", "researchStaff": "12", "beneficiaries": "203"}, "extensionType": "Request-based", "ledBy": "Joint", "document": "https://drive.google.com/file/d/18sN7RRktB9ORFw4IYd3HQYZ8bycXdnWo/view?usp=sharing"}, {"id": 37, "campus": "Cervantes Campus", "researchType": "Others", "title": "2022 Alay Yaman, Dunong at Kakayahan para sa Cervantes National High School: Adopt-a-School Program (Phase II)", "year": 2022, "researchOutput": "*Levels of Reading Comprehension of Grade Six Pupils of Cervantes Central School by Jessica Palomo,                                                                                                                    *Reading Skills of Incoming Grade I Pupils of Cervantes Central School by Clarissa Gaceta,                                           **Improving the Reading Comprehension Skills among Grade III Pupils through the Use of Character Mapping at Cervantes Central School, the Year 2016-2017 by Lester Campila,                                                                                                                 **Reading Difficulties Encountered by the Grade III Pupils as Perceived by the Elementary Teachers of Cervantes Central School by Mirriam Garinno", "objectives": "a) Provide remedial instructions to the struggling learners of the recipient school;\nb) To develop and air programs that can persuade the learners to observe proper nutrition and balanced diet and maintain habits that lead to healthy life.", "community": "Struggling Learners, indigent learners, parents of learners, teachers", "duration": "3 years, Every Friday of SY 2022-2023 to 2024 - 2025 (Staggered basis)", "deliverables": "Remedial Instructions in Math, Science and Reading; School-on-the Air on Health and Nutrition, Free Human resource/labor for Physical Development", "students": 60, "faculty": 12, "researchStaff": null, "beneficiaries": 203, "rawCounts": {"students": "60", "faculty": "12", "researchStaff": "", "beneficiaries": "203"}, "extensionType": "Request-based", "ledBy": "Joint", "document": "https://drive.google.com/file/d/1iOM77_Pu-uEs0iBVbk44rhRUtjCrOtHd/view?usp=drive_link"}, {"id": 38, "campus": "Cervantes Campus", "researchType": "Others", "title": "2018 ALAY YAMAN, DUNONG AT KAKAYAHAN : ADOPT-A-SCHOOL PROGRAM at Cervantes Central School (Phase I)", "year": 2018, "researchOutput": "", "objectives": "a) Improve the skills of identified struggling learners in reading, writing, and numeracy.\nb) Enhance the capacity of teachers on developing technology-instructional materials, radio-based instruction materials development, action research writing, and modern teaching strategies utilization", "community": "Struggling Learners, indigent learners, parents of learners, teachers", "duration": "3 years, Every Friday of SY 2022-2023 to 2024 - 2025 (Continues - Staggered Basis)", "deliverables": "Remedial Instructions in Math, Science and Reading; School-on-the Air on anti-bullying and capacitating parents to provide instructional support to their children, Material and financial support to indigent learners, Training desing for teachers, Free Human resource/labor for Physical Development", "students": 45, "faculty": 25, "researchStaff": null, "beneficiaries": 150, "rawCounts": {"students": "45", "faculty": "25", "researchStaff": "", "beneficiaries": "150"}, "extensionType": "Request-based", "ledBy": "Joint", "document": "https://drive.google.com/file/d/1jfiMfpKHkGIMu-tPxXeY6SHhj3sav2dm/view?usp=drive_link"}, {"id": 39, "campus": "Narvacan Campus", "researchType": "Others", "title": "2025 TRAINING ON MILKFISH DEBONING AND VALUE-ADDING UNDER THE PROGRAM ''ENHANCING FISHERIES DEVELOPMENT AND LIVELIHOOD PROGRAM\"", "year": 2025, "researchOutput": "Vanessa Joy R. Oboza, Gina A. Mendoza, Solomon A. Anangaran, Jose Q. Cabatu", "objectives": "To gain hands-on experience in proper fish deboning  techniques, food safety standards, and the production of innovative value- added milkfish products such as marinated, smoked, or stuffed varieties.", "community": "Residents of Sulvec", "duration": "April 5, 11,12, 2025", "deliverables": "Skills to Debone and create value-added milkfish-product. Income opportunities.", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": 50, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": "50"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/14AZ8rPblq5s9z6d6mR4Imf9YrJ20MRPA/view?usp=sharing"}, {"id": 40, "campus": "Narvacan Campus", "researchType": "Others", "title": "2025 Drafting/Crafting of Resolution/Ordinances for MPAs under the program \"Enhancing Fisheries Development and Livelihood Program.\"", "year": 2025, "researchOutput": "Jose Q. Cabatu, Vanessa Joy R. Oboza, Christian C. Molina, Charlie J. Dasalla", "objectives": "To establish and stregthen Marine Protected Areas (MPAs) as a means to protect and restore marine biodiversity, critical habitats, and fish spawning spawning grounds .", "community": "Brgy. Official, Brgy. Police, Residents of Sulvec", "duration": "April 5,7,8 2025", "deliverables": "Draft sections of resolution or ordinance", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": 50, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": "50"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1CXC5o_P2S1eQNOiiAFBhk7Gp-Ird185P/view?usp=sharing"}, {"id": 41, "campus": "Narvacan Campus", "researchType": "Others", "title": "2025 Enhancing Fisheries Development and Livelihood Programs", "year": 2025, "researchOutput": "Faculty from Department of Fisharies", "objectives": "To enhance the capacity of fishermen and relevant stakeholders through training programs, workshops and knowledge-sharing Initiatives.", "community": "Fisherfolks community, barangay officials and residents of Sulvec, Narvacan, Ilocos Sur", "duration": "September 24, 26, 2024", "deliverables": "", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": 103, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": "103"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1_tBIE4QrdIWX1BHTLgIgzQ90fqrjSnx_/view?usp=sharing"}, {"id": 42, "campus": "Narvacan Campus", "researchType": "Based on Student Research", "title": "2022  Seminar Workshop on Surviving College Life", "year": 2022, "researchOutput": "Harnessing and Enabling Lifelong Learning Practices (HELP) of senior High School and Teachers in Ilocos Sur- A RDE Programs of ISPSC- Narvacan Campus (Projects 3: H.E.L.P IN Survivng College life of Senior High School Students in the New Normal by Emed F. Manzano, et.al.", "objectives": "Implement and evaluate seminar workshop on delivering H.E.L.P. for Surviving College Life", "community": "Senior High Shool Learners of 1st and 2nd district of Ilocos Sur", "duration": "(5 days) April 25-29,2022 (simultaneos)", "deliverables": "1. Develop EIC materials 2. Improve academic practices of the students to enhance their lifelong learning practices 3. Develop learning indicators for individual learners", "students": 720, "faculty": 19, "researchStaff": null, "beneficiaries": null, "rawCounts": {"students": "720", "faculty": "19", "researchStaff": "", "beneficiaries": ""}, "extensionType": "Research-based", "ledBy": "Joint", "document": "https://drive.google.com/file/d/1R0z-Oy2nFSIEKeqtuuQNmFRM008qxAE1/view?usp=sharing"}, {"id": 43, "campus": "Narvacan Campus", "researchType": "Based on Student Research", "title": "2021 Project Maring", "year": 2021, "researchOutput": "Mitogating Operations through Voluntering Efforts to Overcome the Negative Impact of Typhoon Maring (M.O.V.E. O.N. Typhoon Maring", "objectives": "a) Conduct stress debriefing to 50 children in the selected barangay of Narvacan that severly affected by Typhoon Maring b) Implement simple repair and maintenance to at least one chosen beneficiary c) Conduct needs assessment fot livelihood assistance to 150 severely affected individuals", "community": "50 children in the selected barangay of Narvacan, Ilocos Sur", "duration": "October 21- October 29, 2021", "deliverables": "Establish a stable and healthy mental health and sustainable sources of income", "students": 50, "faculty": null, "researchStaff": null, "beneficiaries": null, "rawCounts": {"students": "50", "faculty": "", "researchStaff": "", "beneficiaries": ""}, "extensionType": "Research-based", "ledBy": "Joint", "document": "https://tinyurl.com/4mw5dned"}, {"id": 44, "campus": "Narvacan Campus", "researchType": "Based on Student Research", "title": "2018 Skills Training on Microenterprise Development Projects of Sustainable Development Program for Agricultural Crop Production", "year": 2018, "researchOutput": "Bernadette Calibuso DSWD", "objectives": "a) To equip the participants with the new knowledge and skills necessary for enterprise establishment, operation, and management b) To Train participants in agricultural crop production, ready and competent to take the NC II assessment", "community": "SLP eligible particioants", "duration": "March-April 2018 (20 days)", "deliverables": "NC|| Certification in ACP Trained SLP Beneficiaries", "students": null, "faculty": 7, "researchStaff": null, "beneficiaries": 30, "rawCounts": {"students": "", "faculty": "7", "researchStaff": "", "beneficiaries": "30"}, "extensionType": "Research-based", "ledBy": "Joint", "document": "https://tinyurl.com/ytb6te7a"}, {"id": 45, "campus": "Santiago Campus", "researchType": "Others", "title": "2024 Skills Training on Advanced Skills and Competencies in Dressmaking and Tailoring", "year": 2024, "researchOutput": "Adela G. Estranero-Trainor    Venus D. Sabado-Trainor,          Jona A. Rante-Facilitator,      Katherine F. Soriano-Facilitator, Jennifer Lagera-Facilitator", "objectives": "To train clients in advanced skills and competencies on dressmaking and tailoring.", "community": "Suyo Cooperative Members", "duration": "October 2024- December 2024 (22 days)", "deliverables": "Womens dresses such walking shorts and sleeveless blouse, casual dresses such as blouse with variations of colors/ and blazer and tailored pants with slide pocket.", "students": 2, "faculty": 5, "researchStaff": null, "beneficiaries": 15, "rawCounts": {"students": "2", "faculty": "5", "researchStaff": "", "beneficiaries": "15"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1k2wFU82jn6_REXqZ6z94LcBvbLmXp0GM/view?usp=sharing"}, {"id": 46, "campus": "Santiago Campus", "researchType": "Others", "title": "2024 Skills Training in Dressmaking", "year": 2024, "researchOutput": "Adela G. Estranero-Trainor    Venus D. Sabado-Trainor,          Jona A. Rante-Facilitator,      Estela Marie R. Supnet-Facilitator, Jennifer Lagera-Facilitator", "objectives": "Equip trainees with knowledge and skills in dressmaking", "community": "Go Go Go ladies of Santiago", "duration": "(7 days)", "deliverables": "House dresses (walking shorts and sleeveless blouse) skirt blouse with ordinary sleeves and tailored colar.", "students": 5, "faculty": 5, "researchStaff": null, "beneficiaries": 24, "rawCounts": {"students": "5", "faculty": "5", "researchStaff": "", "beneficiaries": "24"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/16lgbamyjpimAdfHo3HpHoGFFGcaEWEnn/view?usp=sharing"}, {"id": 47, "campus": "Santiago Campus", "researchType": "Others", "title": "2024 Graphic Design Training", "year": 2024, "researchOutput": "Jennifer Lagera- Trainor,                              Jona A. Rante-Facilitator,      Estela Marie R. Supnet-Facilitator", "objectives": "Equip trainees with knowledge and skills in graphic design", "community": "LGBTQ Community of Santiago", "duration": "December 5, 2024", "deliverables": "To design various print and digital materials relevant to personal and community advoicary within the LGBTQ+ spectrum.", "students": 2, "faculty": 3, "researchStaff": null, "beneficiaries": 24, "rawCounts": {"students": "2", "faculty": "3", "researchStaff": "", "beneficiaries": "24"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1nuEcmBuBzsV6rpjGSwyjhReeozIUD0EQ/view?usp=sharing"}, {"id": 48, "campus": "Santiago Campus", "researchType": "Others", "title": "2024 Computer Operations Literacy Training", "year": 2024, "researchOutput": "Jennifer Lagera- Trainor,                              Jona A. Rante-Facilitator,      Estela Marie R. Supnet-Facilitator", "objectives": "Equip trainees with knowledge and skills in bread and pastry production", "community": "Barangay Secretary, Treasurer of LGU Santiago", "duration": "December 6-7, 2024", "deliverables": "Practical application of Adobe Photoshop", "students": 2, "faculty": 3, "researchStaff": null, "beneficiaries": 48, "rawCounts": {"students": "2", "faculty": "3", "researchStaff": "", "beneficiaries": "48"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1VRJHModszOxelNBvKO4UBDXD14U5VYW5/view?usp=sharing"}, {"id": 49, "campus": "Santiago Campus", "researchType": "Others", "title": "2023 Skills Training on Domestic Appliance Repair and Maintenace.", "year": 2023, "researchOutput": "Jennifer Lagera\n Facilitator\n\n Temy Bambico\n Roderick Valdez\n Electronics Tech. And Mechatronics Instructors/Trainers\n\n Jona A. Rante\n Facilitator", "objectives": "", "community": "unemployed/ farmers/OSY", "duration": "(4 days) December 19-22, 2023", "deliverables": "", "students": null, "faculty": 4, "researchStaff": null, "beneficiaries": 15, "rawCounts": {"students": "", "faculty": "4", "researchStaff": "", "beneficiaries": "15"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1sxOwjbE7NCER9HDpn_7X5qofGUG40vaZ/view?usp=sharing"}, {"id": 50, "campus": "Santiago Campus", "researchType": "Others", "title": "2023 2-Day Training in Meat Poultry Processing", "year": 2023, "researchOutput": "Jennifer Lagera\n Facilitator\n\n Jona A. Rante\n Daphne Sophia L. Abesamis\n Food Tech. Instructors/Trainers, LGU San Esteban, Ilocos Sur", "objectives": "provide an opportunity to acquire practical skills in food procesing; introduce skills related to the processing of meat and poultry; promote the diversification of livelihood among beneficiaries", "community": "members Puso ng kababaihan", "duration": "(2 days) December 20-21, 2023", "deliverables": "technical skills in food processing", "students": null, "faculty": 3, "researchStaff": null, "beneficiaries": 15, "rawCounts": {"students": "", "faculty": "3", "researchStaff": "", "beneficiaries": "15"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1sKCLxULPrZqDeqVv_f1PNqYd0uXDRWPZ/view?usp=sharing"}, {"id": 51, "campus": "Santiago Campus", "researchType": "Others", "title": "2023 Skills Training on Making Yellowfin Tuna Embutido and Mungbean Pastillas", "year": 2023, "researchOutput": "Adela G. Estranero                                                                    Leonida F. Bides                                                                                        Jona A. Rante                                                                                Andre Soriano                                                                                                 LGU Santiago", "objectives": "a) To develop skills training on vegetable, fruit, fish, and meat processing;  enhance entreprenurial skills in food processing; to creat better opportunities and employment", "community": "LGBTQA+ Community of Santiago, Ilocos Sur", "duration": "December 19 and 21, 2023", "deliverables": "Trainees will be able to process food for business and home consumption such as malunggay chips, squash chips, yellowfin tuna tocino, chicken burger patty, and chicken shomai.", "students": null, "faculty": 4, "researchStaff": null, "beneficiaries": 20, "rawCounts": {"students": "", "faculty": "4", "researchStaff": "", "beneficiaries": "20"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1HF-F1K69-RaaTASls1OPy0qKKE17V0WM/view?usp=drive_link"}, {"id": 52, "campus": "Santiago Campus", "researchType": "Others", "title": "2022 Skills Training on Peanut Processing", "year": 2022, "researchOutput": "Lecturer, Financial Literacy", "objectives": "a) Equip trainees with knowledge and skills in peanut processing,                                                                                b) Enhance entrepreneurial skills in food processing, promote employment, and provide additional income for the family", "community": "peanut grower/farmer from Municipality of Santiago, Ilocos Sur", "duration": "(2 days) October 5-6, 2022", "deliverables": "Finished products from Peanut: Brittle, Turones de mani, and Peanut Butter", "students": null, "faculty": 2, "researchStaff": null, "beneficiaries": 15, "rawCounts": {"students": "", "faculty": "2", "researchStaff": "", "beneficiaries": "15"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1gTl6J4A7mEaW1mYdwrUAfkB4tmQPmwmu/view?usp=sharing"}, {"id": 53, "campus": "Santiago Campus", "researchType": "Others", "title": "2022 Skills Training in Basic Housewiring Installation", "year": 2022, "researchOutput": "Adela G. Estranero, Rogelio C. Hidalgo, Joel P. Agsi, LGU Santiago, Ilocos Sur", "objectives": "a) Enhance livelihood skills and develop knowledge and skills competencies in electrical installation", "community": "unemployed male adults from the municipality of Ilocos Sur", "duration": "(3 days) October 5-8, 2022", "deliverables": "Competencies in preparing tools and materials, technical drawing and plans, actual performance on installation of different lighting circuits and convenience outlet.", "students": null, "faculty": 2, "researchStaff": null, "beneficiaries": 15, "rawCounts": {"students": "", "faculty": "2", "researchStaff": "", "beneficiaries": "15"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1w32G4Md2VI6yidxgi-pCmYRQ_3IZxNxm/view?usp=sharing"}, {"id": 54, "campus": "Santiago Campus", "researchType": "Others", "title": "2021 Skills Training on Food Processing", "year": 2021, "researchOutput": "Adela G. Estranero                                                                    Leonida F. Bides                                                                                        Jona A. Rante                                                                                Andre Soriano                                                                                                 LGU Santiago", "objectives": "a) To develop skills training on vegetable, fruit, fish, and meat processing;  enhance entreprenurial skills in food processing; to creat better opportunities and employment", "community": "LGBTQA+ Community of Santiago, Ilocos Sur", "duration": "June 16-17, 2021", "deliverables": "Trainees will be able to process food for business and home consumption such as malunggay chips, squash chips, yellowfin tuna tocino, chicken burger patty, and chicken shomai.", "students": null, "faculty": 4, "researchStaff": null, "beneficiaries": 20, "rawCounts": {"students": "", "faculty": "4", "researchStaff": "", "beneficiaries": "20"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1HF-F1K69-RaaTASls1OPy0qKKE17V0WM/view?usp=drive_link"}, {"id": 55, "campus": "Santiago Campus", "researchType": "Others", "title": "2021 Skills Training on Small Engine Repair, Maintenance, and Servicing", "year": 2021, "researchOutput": "Alwin Morales, LGU Santiago", "objectives": "a) Enhance livelihood skills and develop knowledge and skills competencies in Small Engine Repair", "community": "Tricycle drivers and Famers of the community", "duration": "(2 days) June 16-17, 2021", "deliverables": "Trained Small Engine Mechanics", "students": null, "faculty": 2, "researchStaff": null, "beneficiaries": 24, "rawCounts": {"students": "", "faculty": "2", "researchStaff": "", "beneficiaries": "24"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1r0trQNJMn6dw28fr5TcZSc3pjJV3TpNM/view?usp=sharing"}, {"id": 56, "campus": "Santiago Campus", "researchType": "Others", "title": "2019 PRODUCT DIVERSIFICATION ON COCONUT PROCESSING", "year": 2019, "researchOutput": "DTI, LGU San Esteban", "objectives": "To impart processing technologies to our constituent to produce other related products such as Coconut Vinegar, Coconut cookies, Pande coco, Coconut Candy Balls and Sweetened Coconut Flakes that may serve as their livelihood and help aigment their meager income and at the same time  can resolve the problem of the locality.", "community": "RIC of San Esteban", "duration": "September 24, 2019", "deliverables": "Products out of Coconut such as Coconut Vinegar, Coconut cookies, Pande coco, Coconut Candy Balls and Sweetened Coconut Flakes", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": 14, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": "14"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1xL6RmiaoQQA3joIM7MTTu-mj--dlMkA8/view?usp=sharing"}, {"id": 57, "campus": "Santiago Campus", "researchType": "Others", "title": "2017 SKills Training on Microenterprise Development Project of Sustainable Development Program for Automotive", "year": 2017, "researchOutput": "Alwin Morales, DSWD", "objectives": "a) To equip the participants with the new knowledge and skills necessary for enterprise establishment, operation, and management.                                                                                                                    b) To train participants in Automotive servicing, ready and competent to take NC II assessment", "community": "SLP eligible participants", "duration": "November-December 2017 (45 days)", "deliverables": "NC II Certification in Automotive Servicing                              Trained SLP Beneficiaries", "students": null, "faculty": 2, "researchStaff": null, "beneficiaries": 20, "rawCounts": {"students": "", "faculty": "2", "researchStaff": "", "beneficiaries": "20"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1YkQIJfl0556ewwKOR5I8XdQ1v0lqSItN/view?usp=drive_link"}, {"id": 58, "campus": "Santiago Campus", "researchType": "Others", "title": "2017 SKills Training on Microenterprise Development Project of Sustainable Development Program for Dressmaking", "year": 2017, "researchOutput": "Adela G. Estranero,  DSWD", "objectives": "a) To equip the participants with the new knowledge and skills necessary to enterprise development operations and management.                                                                                                                        b) To train participants in dressmaking skills and be ready/competent to take NCII Assessment", "community": "SLP eligible participants", "duration": "November-December 2017 (20 days)", "deliverables": "NC II Certification in Dressmaking", "students": null, "faculty": 2, "researchStaff": null, "beneficiaries": 20, "rawCounts": {"students": "", "faculty": "2", "researchStaff": "", "beneficiaries": "20"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1wA86jjuYNChzo_2Y7LmJ7aGS49gXszit/view?usp=sharing"}, {"id": 59, "campus": "Santiago Campus", "researchType": "Others", "title": "2017 SKills Training on Microenterprise Development Project for Service Consumer Electric Product and Services", "year": 2017, "researchOutput": "Temy Bambico                                                                          DSWD", "objectives": "a) To equip the participants with the new knowledge and skills necessary for enterprise establishment, operation, and management                                                                       *To certify participants as qualified/competent workers in the area / NC II.", "community": "SLP eligible participants", "duration": "November-December 2017 (15 days)", "deliverables": "NC II Certification                               Trained SLP Beneficiaries", "students": null, "faculty": 2, "researchStaff": null, "beneficiaries": 20, "rawCounts": {"students": "", "faculty": "2", "researchStaff": "", "beneficiaries": "20"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1KuKMMYLw2xH2Fm1-62qyGgF_vHr_fa_n/view?usp=drive_link"}, {"id": 60, "campus": "Santiago Campus", "researchType": "Others", "title": "2017 Training on Meat and Fish Processing leading to NC II", "year": 2017, "researchOutput": "Leonida F. Bides, ISPSC Santiago, Sta. Cruz", "objectives": "a) To conduct training on Meat and Fish Processing and provide alternative livelihood and employment sources", "community": "Identified participants from Sta. Cruz, Ilocos Sur", "duration": "(11 days) Nov. 16-28, 2017", "deliverables": "Smoked Bangus, Skinless Longanisa, NC II on food processing", "students": null, "faculty": 1, "researchStaff": null, "beneficiaries": 29, "rawCounts": {"students": "", "faculty": "1", "researchStaff": "", "beneficiaries": "29"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1rRaQIo7x_Uu1K6XvdDPJq8dPgNXi_spJ/view?usp=drive_link"}, {"id": 61, "campus": "Santiago Campus", "researchType": "Others", "title": "2017 Skills Training on Fruit Ice Cream and Jam Making", "year": 2017, "researchOutput": "Leonida F. Bides, ISPSC Santiago, DTI, Lidlidda", "objectives": "a) To conduct capacity building for DTI beneficiaries with skills in business and to provide employment opportunities", "community": "DTI identified beneficiaries", "duration": "(1 day) October 27, 2017", "deliverables": "Dragon Fruit Ice Cream and Jam, Papaya Ice Cream and Jam", "students": null, "faculty": 1, "researchStaff": null, "beneficiaries": 15, "rawCounts": {"students": "", "faculty": "1", "researchStaff": "", "beneficiaries": "15"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1ITwUnctvZuYm2LZADTOxt30g8iiR1jKv/view?usp=drive_link"}, {"id": 62, "campus": "Santiago Campus", "researchType": "Others", "title": "2017 Skills Training on Rice Cracker Processing", "year": 2017, "researchOutput": "Leonida F. Bides, ISPSC Santiago, DTI, Cabugao", "objectives": "a) To introduce the rice processing technology and provide alternative livelihood and employment sources", "community": "Identified participants from Brgy. Arnap, Cabugao, Ilocos Sur", "duration": "(1 day) September 5, 2017", "deliverables": "Rice Crackers and Rice Chips", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": null, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": ""}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1ULUxyWwW2-k1M28dkP0qZNbwHCjiONfm/view?usp=drive_link"}, {"id": 63, "campus": "Santiago Campus", "researchType": "Others", "title": "2017 Livelihood Training Program in Fish Smoking", "year": 2017, "researchOutput": "Leonida F. Bides, ISPSC Santiago, LGU Santiago", "objectives": "a) To enhance the livelihood and entrepreneurial skills, and provide additional income", "community": "Identified participants from Santiago, Ilocos Sur", "duration": "(4 days) July 18-21, 2017", "deliverables": "Transferred Technology", "students": null, "faculty": 3, "researchStaff": null, "beneficiaries": 20, "rawCounts": {"students": "", "faculty": "3", "researchStaff": "", "beneficiaries": "20"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1L-9OI3lcGB235eQBY0oTIILCL0j9VVOf/view?usp=drive_link"}, {"id": 64, "campus": "Santiago Campus", "researchType": "Others", "title": "2017 Skills Training on Meat and Fish Processing Leading to Food Processing", "year": 2017, "researchOutput": "Leonida F. Bides, ISPSC Santiago, DTI, Sta. Cruz", "objectives": "a) To enhance the livelihood and entrepreneurial skills, and provide additional income", "community": "Identified participants from Sta. Cruz, Ilocos Sur", "duration": "(5 days) July 3-7, 2017", "deliverables": "Tomato Jam, Pineapple Jam, Mixed Ampalaya Pickles, Smoked bangus, Skinless Longanisa, Wine and Vinegar , NC II on Food Processing", "students": null, "faculty": 1, "researchStaff": null, "beneficiaries": 28, "rawCounts": {"students": "", "faculty": "1", "researchStaff": "", "beneficiaries": "28"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1AB7w8uCYkhDuFgicLWZs-ry-633i_ucp/view?usp=drive_link"}, {"id": 65, "campus": "Santiago Campus", "researchType": "Others", "title": "2016  Special Training for Employment Program in Pastry Making  Leading to Bread and Pastry Production leading to NC II", "year": 2016, "researchOutput": "", "objectives": "", "community": "Unemployed individuals from the different towns of second district of Ilocos Sur", "duration": "July 20, 2016- August 3, 2016", "deliverables": "skills on production of bread and pastry products", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": null, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": ""}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1KRVPJS0JHOai8kkLVfi28reRHNCwuGXY/view?usp=sharing"}, {"id": 66, "campus": "Sta. Maria Campus", "researchType": "Based on Faculty Research", "title": "2025 HEALTHY INNOVATONS-EMPOWERING COMMUNITIES THROUGH WATERMELON-Based Food Products, Livelihood Development,and Waste  Management", "year": 2025, "researchOutput": "TANYA SUE D. BARRAYUGA, JHON S. MANUEL, RYLE F. DAGDAG, RICCI ELAINE V. GAMMAD, ANNA MARIE D. BARROGA, FLORENCE D. SEMBRANO, ZOSIMO LIBERATO, DESA D. ABAYA, JENNIFER C. CHAVEZ, JAMES BRYAN B. MINA, ROMEO A. TAN", "objectives": "", "community": "Poblacion Sur, Sta. Maria, Ilocos Sur", "duration": "October 25 to December 2024", "deliverables": "", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": 38, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": "38"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1AaSn_43_pUhgyOU69XbqcmBBOkHHtVdV/view"}, {"id": 67, "campus": "Sta. Maria Campus", "researchType": "Based on Faculty Research", "title": "2025 EMPOWERING COMMUNITIES THROUGH INTEGRATED FINANCIAL LITERACY AND SKILLS TRAINING INITIATIVES GENDER AND DEVELOPMENT SKILLS TRAINING ON BAKING CAKES", "year": 2025, "researchOutput": "AVP, MARLY A. ESTRABILLO, JOANNA MARIE T. GUARIN, JOANNA ANTOLIN,AES TEACHER", "objectives": "To be able to integrate gender concerns in their personal and professional undertakings", "community": "Elementary Teachers at Ag-agrao elementary School", "duration": "December 7 and 8, 2024", "deliverables": "", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": 10, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": "10"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1zk7XiSxhagHYxuJsmnKDYBApK1_Yanxo/view?usp=sharing"}, {"id": 68, "campus": "Sta. Maria Campus", "researchType": "Based on Student Research", "title": "2025 ACADEMIC UPSCALING FOR THE LEARNERS OF BAYUBAY ELEMENTARY SCHOOL,  VICENTE, ILOCOS SUR THROUGH LITERACY AND NUMERACY ENHANCEMENT PROGRAM (PHASE 2: NUMERACY PROGRAM)", "year": 2025, "researchOutput": "Requested by the Principal of Bayubay Elementary School", "objectives": "To enrich the learner's knowledge of the subjects of English, Math, Science, and Social Science by employing various strategies and techniques.", "community": "Learners of Bayubay Elementary School", "duration": "August 2024 to March 2025", "deliverables": "", "students": 1, "faculty": 8, "researchStaff": null, "beneficiaries": 100, "rawCounts": {"students": "1", "faculty": "8", "researchStaff": "", "beneficiaries": "100"}, "extensionType": "Research-based", "ledBy": "Joint", "document": "https://drive.google.com/file/d/1b6WqA6DOaXphdbRo5b0FrWszrs39CbM5/view?usp=sharing"}, {"id": 69, "campus": "Sta. Maria Campus", "researchType": "Others", "title": "2024 ACADEMIC UPSCALING FOR THE LEARNERS OF BAYUBAY ELEMENTARY SCHOOL, SAN VICENTE, ILOCOS SUR THROUGH LITERACY AND NUMERACY ENHANCEMENT PROGRAM", "year": 2024, "researchOutput": "Request by the Principal of Bayubay Elementary School", "objectives": "To enrich the learners' knowledge of the subjects of English, Math, Science, and Social Science by employing various strategies and techniques.", "community": "Bayubay Elementary School", "duration": "October 21, 2024, November 9-10, 2024", "deliverables": "", "students": 1, "faculty": 8, "researchStaff": null, "beneficiaries": 100, "rawCounts": {"students": "1", "faculty": "8", "researchStaff": "", "beneficiaries": "100"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/10JP9ShZfiy8DlLNvXRObKeQ9JAhqu7nU/view?usp=drive_link"}, {"id": 70, "campus": "Sta. Maria Campus", "researchType": "Based on Faculty Research", "title": "2024 UNVEILING THE CULTURAL DYNAMICS OF KOMEDYA AND ITS EDUCATIONAL SIGNIFICANCE: A TRAINING AND SEMINAR INITIATIVE TO THE MUNICIPALITY OF STA. CATALINA", "year": 2024, "researchOutput": "(2021) A Narrative Study of Komedya and Its Impact on the Locals of Sta. Catalina Ilocos Sur", "objectives": "To preserve, promote, and advance the traditional Filipino art form of Komedya.", "community": "Sta. Catalina, Ilocos Sur", "duration": "Phase 1: April 12-13, 2024 Phase 2: May 2-3, 2024 Phase 3: August 9-10, 2024 Phase 4: October 30-31, 2024", "deliverables": "Written stories, acting performances, prepared costumes and skills in make-up", "students": null, "faculty": 7, "researchStaff": null, "beneficiaries": 50, "rawCounts": {"students": "", "faculty": "7", "researchStaff": "", "beneficiaries": "50"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/19T7ZA_LEw3vGvKQA0ZNKcYeekfLg7k7r/view?usp=drive_link"}, {"id": 71, "campus": "Sta. Maria Campus", "researchType": "Based on Faculty Research", "title": "2022 Training on Propagation on Bugnay and White Yam", "year": 2022, "researchOutput": "Cresencio Tumalip", "objectives": "a) Increase awareness on the available biodiversity among resident in Bigbiga Protected Landscape,                                                                    b) Intensify the importance of indigenous plants and their propagation to be used as planting materials", "community": "Brgy. Marozo and Cadacad of Narvacan, Ilocos Sur", "duration": "Dec. 23, 2021 & May 5, 2022 (2 days)", "deliverables": "Technology transfer", "students": null, "faculty": 1, "researchStaff": null, "beneficiaries": 58, "rawCounts": {"students": "", "faculty": "1", "researchStaff": "", "beneficiaries": "58"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://tinyurl.com/47yb2mcw"}, {"id": 72, "campus": "Sta. Maria Campus", "researchType": "Others", "title": "2024 TRAINING ON POULTRY MANAGEMENT AND POULTRY PRODUCTS PROCESSING", "year": 2024, "researchOutput": "DOST CEST Program at San Emilio, Ilocos Sur. Proponents: John Genesson C. Omo, Mark Reagan B. Ablog, Alicia G. Ellorin, Maribel R. Raguindin", "objectives": "To address the meat industry of San emilio and introduce entrepreneurial activity to incraese household income.", "community": "San Emilio, Ilocos Sur", "duration": "November 20 and 22, 2024", "deliverables": "Skills in modern poultry farming and product processing. \"Manukang Walang amoy\" technology", "students": null, "faculty": 4, "researchStaff": null, "beneficiaries": 31, "rawCounts": {"students": "", "faculty": "4", "researchStaff": "", "beneficiaries": "31"}, "extensionType": "Community-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1RM79dBgidfJ2c59mZRJQJmprXk_yIkQh/view?usp=drive_link"}, {"id": 73, "campus": "Sta. Maria Campus", "researchType": "Others", "title": "2023 TRAINING ON MUSHROOM  PRODUCTION FOR ILOCOS SUR INCUBATEES (TD)", "year": 2023, "researchOutput": "Anabelle B. Francisco, Christian C. Gandeza, Ranec A. Azarias, Peter Paul Lazo,Cherisse May Hayohay and Jennifer V. Andrada", "objectives": "To evaluate the mushroom production practices adopted by Malakas Farm, to provide information on the status of the mushroom industry in the Philippines, to provide knowledge and technical skills on mushroom production, such as substrate preparation, management, and harvesting, and to determine the level of knowledge and skills acquired by the incubatees after the training", "community": "Staff of MALAKS Farm", "duration": "September 11-13, 2023", "deliverables": "", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": 12, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": "12"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1eqOpPz8yBy9rf9B9-8fxHRouYIHUyf9W/view"}, {"id": 74, "campus": "Sta. Maria Campus", "researchType": "Based on Faculty Research", "title": "2023 SUSTAINING COMMUNITY-BASED TECHNO-PRENEURIAL AND LITERACY ENABLING (CTE) PROGRAM AND ASSESSING ITS SOCIAL IMPACT TO THE COMMUNITIES OF STA. MARIA, ILOCOS SUR", "year": 2023, "researchOutput": "Jeanno M. Manzano and Benny B. Derige", "objectives": "Sustain and assess the impact of Community Based Techno-prenurial and Literacy Enabling (CTE) Program for the communities of Sta. Maria, Ilocos Sur", "community": "Community Development Center in the Different Barangays of Sta. Maria, Ilocos Sur", "duration": "2021-2023", "deliverables": "", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": 204, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": "204"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1fzELl8hf_BuXwnShEEGcQ1YXvXC-59bN/view"}, {"id": 75, "campus": "Sta. Maria Campus", "researchType": "Based on Student Research", "title": "2023 RESEARCH CAPABILITY TRAINING: AN EXTENSION PROGRAM", "year": 2023, "researchOutput": "Cherie B. Orpia, Maria Teresa T. Garcia, GS-SM Campus", "objectives": "a) To provide research training capabilities for the teacher and students", "community": "Students and Teachers of Mabilbila integrated School ( MIS)", "duration": "(1day) March 03,2023", "deliverables": "Trained and equipped students and teachers in the fundamentals of proposal-making and conducting reseacrh", "students": 56, "faculty": 36, "researchStaff": null, "beneficiaries": null, "rawCounts": {"students": "56", "faculty": "36", "researchStaff": "", "beneficiaries": ""}, "extensionType": "Research-based", "ledBy": "Joint", "document": "https://tinyurl.com/3e3mdt73"}, {"id": 76, "campus": "Sta. Maria Campus", "researchType": "Based on Faculty Research", "title": "2023 READ and SPELL (VIETNAM EDITION): EFL Teaching Post Pandemic", "year": 2023, "researchOutput": "*READ AND SPELL RDE by: Dr. Apolo S. Francisco", "objectives": "a) Train the basic education teachers in teaching the four macroskills", "community": "Higher eductaion and Basic Education teachers in Vietnam", "duration": "5 days", "deliverables": "training design", "students": null, "faculty": 4, "researchStaff": null, "beneficiaries": 40, "rawCounts": {"students": "", "faculty": "4", "researchStaff": "", "beneficiaries": "40"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://tinyurl.com/26j4jkxj"}, {"id": 77, "campus": "Sta. Maria Campus", "researchType": "Based on Student Research", "title": "2022 Technology Transfer on Oyster Mushroom Production and Utilization of Substrate Bagging Machine", "year": 2022, "researchOutput": "Fabrication and Performance Evaluation of Oyster Mushroom Substrate Bagging Machine/Kevin Bugtong, Maemhar Alay-ay, Analyn Bodano, Chummy Raguindin, Jessa Valdez and Allyson Mina", "objectives": "a) To gain new knowledge in oyster mushroom production                                                                                                             b) To increase the bagging preparation capacity of substrates, make bagging more efficient, and improve operation timeliness", "community": "Mushroom Growers\n\nISPSC Luntiang Pamayanan Project Beneficiaries in the\nSecond District of Ilocos Sur", "duration": "November 17, 2022 (1 day)", "deliverables": "Technology Transfer", "students": 10, "faculty": 4, "researchStaff": null, "beneficiaries": 25, "rawCounts": {"students": "10", "faculty": "4", "researchStaff": "", "beneficiaries": "25"}, "extensionType": "Research-based", "ledBy": "Joint", "document": "https://tinyurl.com/4h8v5nmb"}, {"id": 78, "campus": "Sta. Maria Campus", "researchType": "Based on Student Research", "title": "2021-2022FARMERS LITERACY TRAINING ON UNBANKED MUNICIPALITY OF ILOCOS SUR", "year": 2021, "researchOutput": "Commissioned Extension: Landbank Countryside Development Foundation Incorporated", "objectives": "a) To teach the practical methods of managing finances and income which includes savings and credit; b) To understand the value chain of their crops and its impact to their income; c) To develop agripreneurship among farmers and fisherfolks; d) To impart the importance of crop insurance in risk mitigation", "community": "Unbanked Municipality of Ilocos Sur: Municipality of Alilem, Sigay, Gregorio del Pilar, Quirino", "duration": "2020-2022 (straggered basis)", "deliverables": "Training Design", "students": 562, "faculty": 8, "researchStaff": 7, "beneficiaries": 7560, "rawCounts": {"students": "562", "faculty": "8", "researchStaff": "7", "beneficiaries": "7,560"}, "extensionType": "Research-based", "ledBy": "Joint", "document": "https://tinyurl.com/27y9kh88"}, {"id": 79, "campus": "Sta. Maria Campus", "researchType": "Based on Student Research", "title": "2022 Research Mentoring Program for Dinaratan National High School: An Extension Program", "year": 2022, "researchOutput": "Jonathan Dela Cruz, Maria Teresa Garcia, Marites Peralta, Enhelyn Morla, Cherie Orpia, Jocelyn Absolor, Orlando Batara, Marites Yacap, Reagan Funtanilla", "objectives": "a) To equip the teachers and students of Dinaratan National High School with the necessary knowledge and skills in the conduct of research", "community": "Students and teachers from Dinaratan National High School", "duration": "(2 days  )December6-7, 2022", "deliverables": "Research Proposals", "students": 134, "faculty": 19, "researchStaff": null, "beneficiaries": null, "rawCounts": {"students": "134", "faculty": "19", "researchStaff": "", "beneficiaries": ""}, "extensionType": "Research-based", "ledBy": "Joint", "document": "https://tinyurl.com/nhzceutc"}, {"id": 80, "campus": "Sta. Maria Campus", "researchType": "Based on Student Research", "title": "2022 Training on  Financial Literacy for NICE-NAFES Beneficiaries (Business Plan Preparation)", "year": 2022, "researchOutput": "Nurturing Inclusive Community Empowerment througt the promotion of Agri-Fishery Technoprenuership: Armando D. Diga, Venus Ragon, Maribel Raguindin", "objectives": "a) Provide basic understanding of \"how money works in the world\". b) Help students discover the world of finance in a concrete manner, c) Explain the purpose and future of their business in easy to understand terms d) Develop skills to create a business plan for different audiences, including investors, banks, and other stakeholders; and e) Encourages other faculty and staff to produce IEC materials worth copyrightable.", "community": "Students and potential NICE-NAFES", "duration": "March 15,2022 (1 day)", "deliverables": "Developed a business plan", "students": 8, "faculty": 50, "researchStaff": 1, "beneficiaries": 59, "rawCounts": {"students": "8", "faculty": "50", "researchStaff": "1", "beneficiaries": "59"}, "extensionType": "Research-based", "ledBy": "Joint", "document": "https://tinyurl.com/ydwett6c"}, {"id": 81, "campus": "Sta. Maria Campus", "researchType": "Based on Student Research", "title": "2022 Major Crop-Based Block Farm Productivity Enhancement Project", "year": 2022, "researchOutput": "Milagros Liberato, Zosimo Liberato, Peter Paul Lazo, DAR Ilocos Sur", "objectives": "a)To contibute to poverty alleviation through the empowerment of disadvantaged individuals and families to improve their quality to life", "community": "Members of the MACATI Rang-Ay Farmers  Agraraian Reform Cooperative", "duration": "June-December 2022 (Staggered Basis)", "deliverables": "Technology Transferred", "students": null, "faculty": 2, "researchStaff": 1, "beneficiaries": 50, "rawCounts": {"students": "", "faculty": "2", "researchStaff": "1", "beneficiaries": "50"}, "extensionType": "Research-based", "ledBy": "Joint", "document": "https://tinyurl.com/349wafsy"}, {"id": 82, "campus": "Sta. Maria Campus", "researchType": "Based on Student Research", "title": "2022  Information Dissemination on Financial Assistance for Women in Agriculture (AGRIPINAY)", "year": 2022, "researchOutput": "Armando Diga", "objectives": "a) To inform women specially the member of IFED the program of government to avail financial assistance (DA AgriPinay Load Found)", "community": "Innovative Family Enterprise Development (IFED) Beneficiaries", "duration": "", "deliverables": "Loan/Financial Assistance", "students": null, "faculty": null, "researchStaff": 1, "beneficiaries": 15, "rawCounts": {"students": "", "faculty": "", "researchStaff": "1", "beneficiaries": "15"}, "extensionType": "Research-based", "ledBy": "Joint", "document": "https://tinyurl.com/2p8kc6e4"}, {"id": 83, "campus": "Sta. Maria Campus", "researchType": "Based on Faculty Research", "title": "2021 Seminar-workshop on the management of pest and diseases", "year": 2021, "researchOutput": "*The potential of Cassia didymobotrya Popcorn cassia) and Cassia fistula (Golden shower) leaf extract as organic pesticides in eggplant production by Milagros/Zosimo Liberato", "objectives": "a) To train and empower 150 seed grower farmers in the province of Abra on how to identify pests and diseases brought about by climate change and farming practices", "community": "Farmers of Abra", "duration": "Nov. 2, 3, 4, 5, 8, 2021 (5 days)", "deliverables": "transferred technology", "students": null, "faculty": 2, "researchStaff": null, "beneficiaries": 150, "rawCounts": {"students": "", "faculty": "2", "researchStaff": "", "beneficiaries": "150"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://tinyurl.com/3cxbwf33"}, {"id": 84, "campus": "Sta. Maria Campus", "researchType": "Based on Faculty Research", "title": "2021 Product Launching and Promotion", "year": 2021, "researchOutput": "*Commercialization of Mango Juice Technologies, by Gloria Tuzon, Joanna Marie Barroga, Dominador Ayson", "objectives": "a) To promote awareness of people in the community on the availability of the product Hawaiian Mango Juice in the local market,                                                                                     b) To get possible support from the provincial/LGU, and prospective retailers/buyers for the sustanability of the mango processing enterprise", "community": "Stakeholders, TSMPSC, LGUs", "duration": "1 day (July 6, 2021)", "deliverables": "Transferred technology", "students": null, "faculty": 3, "researchStaff": null, "beneficiaries": 150, "rawCounts": {"students": "", "faculty": "3", "researchStaff": "", "beneficiaries": "150"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://tinyurl.com/229m5f35"}, {"id": 85, "campus": "Sta. Maria Campus", "researchType": "Based on Faculty Research", "title": "2021 Improving the Teaching and Learning Environment", "year": 2021, "researchOutput": "*Community-Based Technoprenuerial and Literacy Enabling (CTE) Program for the Communities of Sta. Maria, Ilocos Sur by: Jeanno M. Manzano, Benny Derige, Victor Sanidad, Vicente Raras, Emed Manzano, Daniel Juan B. Ramirez", "objectives": "a) Improve the Teaching and Learning Environment at the selected basic education schools", "community": "Daycare Pupils of Sta. Maria, Ilocos Sur", "duration": "2021 (9 days)", "deliverables": "technology tranferred", "students": 555, "faculty": 6, "researchStaff": null, "beneficiaries": null, "rawCounts": {"students": "555", "faculty": "6", "researchStaff": "", "beneficiaries": ""}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://tinyurl.com/bddbzsp9"}, {"id": 86, "campus": "Sta. Maria Campus", "researchType": "Based on Faculty Research", "title": "2021 Empowering Mothers through Techno-prenuerial Seminars", "year": 2021, "researchOutput": "", "objectives": "a) Provide techno-prenuerial Workshops and seminars for the mothers in the selected barangays of Sta. Maria, Ilocos Sur", "community": "Selected mothers of selected barangays of Sta. Maria", "duration": "2021 (11 days)", "deliverables": "", "students": 41, "faculty": 6, "researchStaff": null, "beneficiaries": null, "rawCounts": {"students": "41", "faculty": "6", "researchStaff": "", "beneficiaries": ""}, "extensionType": "Research-based", "ledBy": "Faculty", "document": ""}, {"id": 87, "campus": "Sta. Maria Campus", "researchType": "Based on Faculty Research", "title": "2021 Symposia for Health Literacy for the Community", "year": 2021, "researchOutput": "", "objectives": "a) Conduct seminars/workshops in improving technological, pedagogical, and content knowledge for community teachers in selected brgy. of Sta. Maria, Ilocos Sur", "community": "Daycare Pupils of selected barangay Sta. Maria, Ilocos Sur", "duration": "2021 (4 days)", "deliverables": "", "students": 204, "faculty": 6, "researchStaff": null, "beneficiaries": null, "rawCounts": {"students": "204", "faculty": "6", "researchStaff": "", "beneficiaries": ""}, "extensionType": "Research-based", "ledBy": "Faculty", "document": ""}, {"id": 88, "campus": "Sta. Maria Campus", "researchType": "Based on Faculty Research", "title": "2021 READ ALOUD: Session for Children", "year": 2021, "researchOutput": "", "objectives": "a) Provide reading-aloud sessions to children selected brgy. of Sta. Maria, Ilocos Sur", "community": "Daycare Pupils of selected barangay Sta. Maria, Ilocos Sur", "duration": "2021 (2 days)", "deliverables": "", "students": 20, "faculty": 6, "researchStaff": null, "beneficiaries": null, "rawCounts": {"students": "20", "faculty": "6", "researchStaff": "", "beneficiaries": ""}, "extensionType": "Research-based", "ledBy": "Faculty", "document": ""}, {"id": 89, "campus": "Sta. Maria Campus", "researchType": "Based on Faculty Research", "title": "2021 Enhancing Technology Pedagogical and Content Knowledge (TPACK) of Teachers", "year": 2021, "researchOutput": "", "objectives": "a) Provide Symposia on Health Awareness for Day Care Pupils at selected brgy. of Sta. Maria, Ilocos Sur", "community": "Day care workers of Sta. Maria", "duration": "2021 (2 days)", "deliverables": "", "students": null, "faculty": 6, "researchStaff": null, "beneficiaries": 40, "rawCounts": {"students": "", "faculty": "6", "researchStaff": "", "beneficiaries": "40"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": ""}, {"id": 90, "campus": "Sta. Maria Campus", "researchType": "Based on Faculty Research", "title": "2017 Skills demonstration on Fish marinating, deboning and smoking", "year": 2017, "researchOutput": "FISH PROCESSING R4DE: *Study 1. Enzymatic activity of natural herb fruit juices in prickly milkfish R.A.Sanidad, V.G. Sanidad, V C. Funtanilla, K. Sarazawa", "objectives": "a) Conduct skills demo on marinating and fish smoking                                                                                           a) provide the necessary technical support for the operation of the micro-enterprise as best practice", "community": "Out of school youth, housewifes,4P's", "duration": "4 days", "deliverables": "technology transfer", "students": null, "faculty": 5, "researchStaff": null, "beneficiaries": 118, "rawCounts": {"students": "", "faculty": "5", "researchStaff": "", "beneficiaries": "118"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://tinyurl.com/2bcpkeuw"}, {"id": 91, "campus": "Sta. Maria Campus", "researchType": "Based on Faculty Research", "title": "2017 Program Research Dissemination", "year": 2017, "researchOutput": "*Study 2. Acceptability of different fruit tree leaves as an enhancer in Fish Tilapia, smoking: R.A.Sanidad, V.G. Sanidad, V C. Funtanilla, K. Sarazawa", "objectives": "a) Equipt the housewives, out of school youth and 4P's members on the technical know-how of smoked Bangus                                                                                                b) Enhanced the livelihood of the clientele", "community": "Out of school youth, housewifes,4P's", "duration": "2 days", "deliverables": "technology transfer", "students": null, "faculty": 5, "researchStaff": null, "beneficiaries": 118, "rawCounts": {"students": "", "faculty": "5", "researchStaff": "", "beneficiaries": "118"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": ""}, {"id": 92, "campus": "Sta. Maria Campus", "researchType": "Based on Faculty Research", "title": "2017 Community-based on fish smoking", "year": 2017, "researchOutput": "*Study 4. Canned fish with different Natural Ingredients: R.A.Sanidad, V.G. Sanidad, V C. Funtanilla, K. Sarazawa", "objectives": "a) Equipt the housewives, out of school youth and 4P,s members on the technical-know-how of smoked Bangus.                                                                                                     b) Enhanced the livelihood of the clientele", "community": "Out of school youth, housewifes,4P's", "duration": "2 days", "deliverables": "technology transfer", "students": null, "faculty": 5, "researchStaff": null, "beneficiaries": 118, "rawCounts": {"students": "", "faculty": "5", "researchStaff": "", "beneficiaries": "118"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": ""}, {"id": 93, "campus": "Sta. Maria Campus", "researchType": "Based on Faculty Research", "title": "2017 Skills demonstration on fish deboning (Marinating) and Smoking", "year": 2017, "researchOutput": "*Study 6. Fish processing Extension program and IEC materials development: R.A.Sanidad, V.G. Sanidad, V C. Funtanilla, K. Sarazawa", "objectives": "a) To empower the clients in the processing of skills demo, fish marinating and smoking as an application of research output", "community": "DEP-ED teachers , faculty", "duration": "1 day", "deliverables": "technology transfer", "students": null, "faculty": 5, "researchStaff": null, "beneficiaries": 43, "rawCounts": {"students": "", "faculty": "5", "researchStaff": "", "beneficiaries": "43"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": ""}, {"id": 94, "campus": "Sta. Maria Campus", "researchType": "Based on Faculty Research", "title": "2017 Regional Science and Technology Week Celebration", "year": 2017, "researchOutput": "*Study 3. Acceptability of different fruit tree leaves as an enhancer in Fish Tilapia, smoking: R.A.Sanidad, V.G. Sanidad, V C. Funtanilla, K. Sarazawa", "objectives": "a) To exhibit or showcase the ISPSC Technologies particularly  on fish smoking", "community": "Stakeholders, Students, community folks", "duration": "4 days", "deliverables": "product development", "students": 33, "faculty": 5, "researchStaff": null, "beneficiaries": 59, "rawCounts": {"students": "33", "faculty": "5", "researchStaff": "", "beneficiaries": "59"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": ""}, {"id": 95, "campus": "Sta. Maria Campus", "researchType": "Based on Faculty Research", "title": "2017 Nutrition Intervention and LIteracy Program for Sustainable Development", "year": 2017, "researchOutput": "*Supplemental Feeding Program: A Nutrition Intervention to Promote in School Children: Anna Marie D. Barroga", "objectives": "a) To implement the extension program through the provision of a supplemental feeding program to under-malnourished children at Baballasioan, Nagsayaoan, Gusing, Laslasong, and Silag Elementary School,  disseminate results of the research conducted about nutrition intervention                                                                               b)Conduct edible landscaping.", "community": "Under malnourished school children of the five identified elementary schools in Sta. Maria, Ilocos Sur", "duration": "Nov. 7, 2016 - March 17, 2017 (Staggered basis)", "deliverables": "Safe & healthful environment", "students": null, "faculty": 5, "researchStaff": null, "beneficiaries": 160, "rawCounts": {"students": "", "faculty": "5", "researchStaff": "", "beneficiaries": "160 (school children)"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://tinyurl.com/4ra4xhfp"}, {"id": 96, "campus": "Sta. Maria Campus", "researchType": "Based on Faculty Research", "title": "2017 Fish Processing RDE Research Result Disseminates on Marinating and Smoking : Research based Extension and Verification Trial on Fish Smoking Chamber", "year": 2017, "researchOutput": "*Verification Trial/Performance Evaluation and Fabricated Smoking Chamber", "objectives": "a) To extent the performance capacity of smoking chamber and to demonstrate the technique on how to marinate and smoke fish following the prescribed procedures", "community": "fisherfolks", "duration": "1 day", "deliverables": "fish processing / technology development", "students": 44, "faculty": 2, "researchStaff": null, "beneficiaries": null, "rawCounts": {"students": "44", "faculty": "2", "researchStaff": "", "beneficiaries": ""}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://tinyurl.com/y2w52daz"}, {"id": 97, "campus": "Sta. Maria Campus", "researchType": "Based on Student Research", "title": "2015 Training on Groundnut and Pigeon Pea Production Practices  as Resilient  Crops for Climate Change Adoption", "year": 2015, "researchOutput": "Bernadette Calibuso, Edith Castillo, Armando Diga, Milagros Liberato, Alicia Ellorin, Ricardo Raguindin", "objectives": "*To disseminate information on climate Change Issues and Concerns,  *Appreciate the benefits of growing groundnut and pigeon pea in climate change adaption; *Discuss Cultural Management Practices of groundnut and pigeon pea; *Identify the differen commercial utilization of groundnut and pigeon peas, and *Discuss soil Conservation methods for a climate resilient agriculture", "community": "Selected farmers in 1st disrict of Ilocos Sur", "duration": "(2days) July 15-16, 2015", "deliverables": "Trained farmers on Pigeon Pea Farming", "students": null, "faculty": 6, "researchStaff": 5, "beneficiaries": 28, "rawCounts": {"students": "", "faculty": "6", "researchStaff": "5", "beneficiaries": "28"}, "extensionType": "Research-based", "ledBy": "Joint", "document": "https://tinyurl.com/j48atzh2"}, {"id": 98, "campus": "Sta. Maria Campus", "researchType": "Based on Student Research", "title": "2014 FOOD PROCESSING AND BAKING", "year": 2014, "researchOutput": "K. SARAZAWA, V. FUNTANILLA, M. CABINTE, ISPSC, LGU Narvacan, DOLE", "objectives": "*Provide Capacity building opportunities technical assisance. And give financial capital", "community": "Affected workers by habagat and typhoon maring", "duration": "(5 days) August 4-8, 2014", "deliverables": "Self employed individuals. Trained beneficiaries. Start up kits", "students": null, "faculty": 3, "researchStaff": null, "beneficiaries": 25, "rawCounts": {"students": "", "faculty": "3", "researchStaff": "", "beneficiaries": "25"}, "extensionType": "Research-based", "ledBy": "Joint", "document": "https://tinyurl.com/mr2u9ryw"}, {"id": 99, "campus": "Tagudin Campus", "researchType": "Others", "title": "2026 PROJECT ARALEN-ENGLISH: Enhancing English Language Proficiency through Tutorial Intervention", "year": 2026, "researchOutput": "Jonalyn S. Lacambra, Joy G. Bea, Rhoda Concepcion O. Villamor, Femarie M. Capistrano, Queenie Rose T. Caslangen", "objectives": "1. Improve learners' English language proficiency through structured tutorial interventions.\n2. Strengthen reading comprehension, vocabulary, grammar, writing, and oral communication skills.\n3. Reinforce classroom instruction and support learners who need additional academic assistance.\n4. Improve learners' confidence in using English and support their academic performance.\n5. Develop and use contextualized instructional materials to support English language learning.\n6. Strengthen collaboration between ISPSC and Dili National High School in addressing educational needs.", "community": "Dili National High School", "duration": "September 2025 – February 2026", "deliverables": "Learners of Dili National High School", "students": 50, "faculty": 5, "researchStaff": null, "beneficiaries": 34, "rawCounts": {"students": "50", "faculty": "5", "researchStaff": "", "beneficiaries": "34"}, "extensionType": "Community-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1csopQhNbk-Val_xexWGUEWrRnNqZpGK1/view?usp=drive_link"}, {"id": 100, "campus": "Tagudin Campus", "researchType": "Others", "title": "2026 Project ARALEN-MATHEMATICS: Academic Recovery Through Assistance in Learning Numeracy at Dili National High School", "year": 2026, "researchOutput": "Joy G. Bea, Portugal A. Carbonel, Phoebe Chloe F. Ramos, Myrna L. Valdez, Emily M. Vizcarra", "objectives": "1. Strengthen learners' foundational mathematical competencies and numeracy skills.\n2. Address identified learning gaps through structured mathematics tutorial sessions.\n3. Improve learners' conceptual understanding, computational skills, mathematical reasoning, and problem-solving abilities.\n4. Enhance learners' confidence, classroom participation, and academic performance in Mathematics.\n5. Provide supplementary, learner-centered academic support that complements regular classroom instruction.\n6. Strengthen collaboration between ISPSC's Bachelor of Science in Mathematics Program and Dili National High School.", "community": "Dili National High School", "duration": "September 2025 – February 2026", "deliverables": "Learners of Dili National High School", "students": 18, "faculty": 5, "researchStaff": null, "beneficiaries": 35, "rawCounts": {"students": "18", "faculty": "5", "researchStaff": "", "beneficiaries": "35"}, "extensionType": "Community-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1PCj0TVxYmQOs5VraVzScc1xMWjYhswiI/view?usp=drive_link"}, {"id": 101, "campus": "Tagudin Campus", "researchType": "Based on Faculty Research", "title": "2025 THE UNHEARD VOICE OF A FATHER:DUNGNGOK IYABRASAK", "year": 2025, "researchOutput": "Chrisitian Gandeza, Marvin Galano, Maria Ana Ilagan, Imelda Binay-an, Marjorie Pandedan, Claire Antonette V. Santisteban,Tricis Gundran, Kim Carlo Rayray, Jemar Nabubos", "objectives": "1.To establish a partnership with the LGU Sta.Cruz in the implementation of the extension program 2. To extend the result of the study entitled Dungngo: the unheard voice of a father at the Municipality of Sta. Cruz", "community": "ISPSC, MSDWDO, PNP", "duration": "", "deliverables": "", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": 4, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": "4ps Fathers of Sta.Cruz Ilocos Sur"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1glKvZ9nyobSYqqNMtHdNzrlscTD973d6/view?usp=sharing"}, {"id": 102, "campus": "Tagudin Campus", "researchType": "Based on Faculty Research", "title": "2025 Training on Language Fillers As A FRET Strategy at Sta. Cruz Institute", "year": 2025, "researchOutput": "*RDE Language Fillers an Ehancement Language - Christian Gandeza", "objectives": "Enhance language skills for students and professionals who are language teachers and it can also be to other specialized disciplines.", "community": "Sta. Cruz Institute Students and Faculty", "duration": "October 19, 2024 - January 25, 2025", "deliverables": "Strategy", "students": null, "faculty": 4, "researchStaff": null, "beneficiaries": 825, "rawCounts": {"students": "", "faculty": "4", "researchStaff": "", "beneficiaries": "825"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1JDTuTnOfcjMtxvj7xAbkM9D53hGO-L2M/view?usp=drive_link"}, {"id": 103, "campus": "Tagudin Campus", "researchType": "Based on Faculty Research", "title": "2025 Training on Language Fillers As A FRET Strategy at DILI National High School", "year": 2025, "researchOutput": "*RDE Language Fillers an Ehancement Language- Christian Gandeza", "objectives": "Enhance language skills for students and professionals who are language teachers and it can also be to other specialized disciplines.", "community": "DILI National High School", "duration": "October 5, 2024 - February 2025", "deliverables": "Strategy", "students": null, "faculty": 4, "researchStaff": null, "beneficiaries": 671, "rawCounts": {"students": "", "faculty": "4", "researchStaff": "", "beneficiaries": "671"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1ecq9oJ8vul1ijhD0_VnUs0K2T_Tf_hee/view?usp=drive_link"}, {"id": 104, "campus": "Tagudin Campus", "researchType": "Based on Faculty Research", "title": "2025 Project TEACH and CONTENT: INNOVATE AND LEARN, CRAFT AND TEACH, EXPAND AND REACH", "year": 2025, "researchOutput": "Scanning the Pages:Struggles and Successes of Learners in the Reading Literacy Program (RLP) - Binay-an, 2022", "objectives": "Enhance teachers' skills in instructional material development", "community": "Tallaoen Elementary School Faculty", "duration": "August 2024 - January 2025", "deliverables": "Instructional Materials like Big Books", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": 124, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": "124"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1dWqbX7GWliR-BMk6QVGQ1DZ_JhnX_vuy/view?usp=drive_link"}, {"id": 105, "campus": "Tagudin Campus", "researchType": "Based on Faculty Research", "title": "2025  MAY KWENTO ANG BAWAT KWENTA", "year": 2025, "researchOutput": "Felix M. Del Rosario", "objectives": "a) help MSEs of Tagudin, Ilocos Sur in building an entrepreneurial mindset; acquire knowledge on entrepreneurial process; and discover their entrepreneurial skills and competencies. b) provide MSEs of Tagudin, Ilocos Sur the necessary marketing strategies applicable to their produces and processed products, thus help them design their own marketing strategies fitted to the integrated marketing environment. c) demonstrate the basics of bookkeeping and financial management that is necessary in micro, small and medium enterprises. d) to enhance the bookkeeping capabilities., awareness to legal compliance and updates of knowledge to TRAIN LAW (Tax REform for Acceleration and Inclusion)", "community": "SME's owners and clients of Tagudin, Ilocos Sur, SHS Product Development Participants and Coach", "duration": "September 18-20, 2024", "deliverables": "Strategy", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": null, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": ""}, "extensionType": "Research-based", "ledBy": "Joint", "document": "https://drive.google.com/file/d/1GqpcbgYLMWzlCCa7Q4A9Rqm6DM2MTZz6/view?usp=sharing"}, {"id": 106, "campus": "Tagudin Campus", "researchType": "Based on Faculty Research", "title": "2023 Training/Workshop on Creation of School Website", "year": 2023, "researchOutput": "*Myschoolsite: Development of School Website: Content, Structure and Responsiveness by: Dr. George Villanueva", "objectives": "a) To provide technical assistance to educational institutions in setting up their school website.                                                                        b) Design, develop and implement the school website and Provide technical training in managing the school website.", "community": "DEPED Tagudin District", "duration": "April-June 2023 (Staggered Basis)", "deliverables": "School Website of the 3 Private Schools of Tagudin, 1 Private School of Sta. Cruz, 1 Private School of Bangar, La UNion", "students": null, "faculty": 2, "researchStaff": null, "beneficiaries": 5, "rawCounts": {"students": "", "faculty": "2", "researchStaff": "", "beneficiaries": "5 schools"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1E1lGItAeptLBfG-rmHxs5ODs0I9PNud6/view?usp=drive_link"}, {"id": 107, "campus": "Tagudin Campus", "researchType": "Based on Faculty Research", "title": "2023 Language Fillers as a Strategy", "year": 2023, "researchOutput": "*RDE Language Fillers an Ehancement Language- Christian Gandeza", "objectives": "a) Enhance language skills for students and professionals who are language teachers and it can also be to other specialized disciplines.", "community": "Students and Faculty", "duration": "2 days", "deliverables": "Strategy", "students": 7, "faculty": 10, "researchStaff": null, "beneficiaries": 98, "rawCounts": {"students": "7", "faculty": "10", "researchStaff": "", "beneficiaries": "98"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1JDTuTnOfcjMtxvj7xAbkM9D53hGO-L2M/view?usp=drive_link"}, {"id": 108, "campus": "Tagudin Campus", "researchType": "Others", "title": "2023 Distribution of Supplemental Learning Material in General Mathematics", "year": 2023, "researchOutput": "*Supplemental Learning Material in General Mathematics by: Dr. Agnes G. Torres\nDr. Ederlina M. SUmail", "objectives": "a) To enhance the mathematics performance in General Mathematics likewise to upgrade the learners understanding  and competencies through  the use of the supplemental learning materials.", "community": "Tagudin Integrated Schools", "duration": "April –May 2023 (Staggered Basis)", "deliverables": "Supplemental Learning Material", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": 200, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": "200"}, "extensionType": "Request-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1su4rGWU4589YBzu--3-7aqQ9yoHhHzQK/view?usp=drive_link"}, {"id": 109, "campus": "Tagudin Campus", "researchType": "Based on Faculty Research", "title": "2023  Lectures Series for Senior High School on Data Analysis", "year": 2023, "researchOutput": "*Data Analysis Lectures Series for Senior High School by: Jacqueline Gumallaoi", "objectives": "a) To conduct lectures in descriptive and inferential statistics and to Provide Statistical software assistance in analyzing students' research data", "community": "Garitan Integrated School", "duration": "January-December 2023 (staggered basis)", "deliverables": "Learners", "students": null, "faculty": 2, "researchStaff": null, "beneficiaries": 76, "rawCounts": {"students": "", "faculty": "2", "researchStaff": "", "beneficiaries": "76"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1-HrR6JANTvNUCUiFULyxxWvzwr3PoipC/view?usp=drive_link"}, {"id": 110, "campus": "Tagudin Campus", "researchType": "Based on Faculty Research", "title": "2023 MY SCHOOL SITE: DEVELOPMENT OF SCHOOL WEBSITES, CONTENT, STRUCTURE, AND RESPONSIVENESS", "year": 2023, "researchOutput": "George R. Villanueva", "objectives": "1.Design,Develop and Implement the School Website                                                                                                      2.Provide technical training in managing the school website", "community": "UCCP,ASTC,CSAT,SCA", "duration": "February 2023- December 2023", "deliverables": "", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": 21, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": "21"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1rLmKhvMwOYsnRWpEAH6NzRHEf_gcJs9a/view?usp=sharing"}, {"id": 111, "campus": "Tagudin Campus", "researchType": "Based on Faculty Research", "title": "2023 DATA ANALYSIS LECTURE SERIES FOR SENIOR HIGH SCHOOL STRUDENT OF GARITAN INTEGRATED SCHOOL", "year": 2023, "researchOutput": "Gumallaoi Jacqueline, Ernest D. Padiwan, Phoebe Ramos, George Villanueva", "objectives": "Conduct Lectures in Descriptive and Interential statistics.", "community": "Garitan Integrated School", "duration": "January-December 2023", "deliverables": "", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": 31, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": "31"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1TJ-uiQWIaBcw8MtjOghQHf1dBw-lAFcj/view?usp=sharing"}, {"id": 112, "campus": "Tagudin Campus", "researchType": "Based on Faculty Research", "title": "2023 LECTURE ON CHILD PROTECTION POLICY", "year": 2023, "researchOutput": "Richard Peter A. Andaya", "objectives": "To continue provide learners to continue and educate the students", "community": "", "duration": "2022-2023", "deliverables": "", "students": null, "faculty": null, "researchStaff": null, "beneficiaries": null, "rawCounts": {"students": "", "faculty": "", "researchStaff": "", "beneficiaries": ""}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1_w2Xk2n8IiUa-yBPT5iWnWxj4GcTmddA/view?usp=sharing"}, {"id": 113, "campus": "Tagudin Campus", "researchType": "Based on Faculty Research", "title": "2023 Training-workshop on retooling and upskilling of ICT skills", "year": 2023, "researchOutput": "*Zesting Cybergogy: Bracing the IT Way toward Tech4Ed Reengineering and Revolutionizing Instruction through eLearning by Maria Ana N. Ilagan,", "objectives": "a) To provide training in sharpening ICT skills of teachers and students through retooling, upskilling and reskilling digital literacy", "community": "All teachers and Grade 11 students of Pudoc West Integrated School and teachers and selected students of Man-atong Elementary School", "duration": "(4 days) May 26, June 2, 3 and 4, 2022", "deliverables": "Transferred technology", "students": 5, "faculty": 13, "researchStaff": null, "beneficiaries": 94, "rawCounts": {"students": "5", "faculty": "13", "researchStaff": "", "beneficiaries": "94"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1c_huNgmKhaClHyiqIDPe3uWM4d2NKjI-/view?usp=drive_link"}, {"id": 114, "campus": "Tagudin Campus", "researchType": "Based on Faculty Research", "title": "2022 MS ACESS TRAINING WORKSHOP FOR THE 7th INFANTRY (KAUGNAY) DIVISION PHILIPPINE ARMY", "year": 2022, "researchOutput": "Dr. Agnes G. Torres, Dr. Ernest D. Padiwan, Dr. George R. Villanueva Jr., Dr. Joy G. Bea, Jimmar F. Delos Reyes, Carlben Dominique A. Bea, Engr. Zeus Vincent Mendoza, Mary Jane Jaramilla, Mary jane Hipol Jonaline Eustaquio, Juliet Paulo", "objectives": "a) To conduct MS Acess Training Workshop For the 7th Infantry (KAUGNAY) Division Philippine Army", "community": "7th Infantry (kaugnay) Division Philippine Army, Brgy. Bugbuga, Sta. Cruz, Ilocos Sur", "duration": "August 22-24, 2022", "deliverables": "Philippine Army Personnels", "students": null, "faculty": 11, "researchStaff": null, "beneficiaries": 23, "rawCounts": {"students": "", "faculty": "11", "researchStaff": "", "beneficiaries": "23"}, "extensionType": "Research-based", "ledBy": "Faculty", "document": "https://drive.google.com/file/d/1wC7iHAaUtcXCzVyGZDAnTFuYl_tAUju6/view?usp=drive_link"}, {"id": 115, "campus": "Tagudin Campus", "researchType": "Based on Student Research", "title": "2022 I-READ PHASE II PROGRAM", "year": 2022, "researchOutput": "Jonaline S. Lacambra (Instructor II), Rhoda Conception O. Villamor (Instructor)", "objectives": "a) To improve the reading ability of the learners and to help in development of confidence of the pupils to read loud with their classmates through the aid of the big books", "community": "Garitan, Tagudin Ilocos Sur", "duration": "Jan. 17, 2020- March 17, 2020", "deliverables": "Grade 1-3 pupils of Garitan Integrated School", "students": 73, "faculty": 2, "researchStaff": null, "beneficiaries": null, "rawCounts": {"students": "73", "faculty": "2", "researchStaff": "", "beneficiaries": ""}, "extensionType": "Research-based", "ledBy": "Student", "document": "https://drive.google.com/file/d/1PYI-N1BN2yKNuZPSpyj64G6uc8YR15-z/view?usp=drive_link"}]};
+const SOURCE_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSBWi9zh6G8WDTiPkmPAng5uFuigpxp7LSVwMpvlEXssdFNMH2JtHz91zRkgxt1P_jcTVVpxi8KhU2i/pubhtml?gid=102814479&single=true";
+document.getElementById("srcLink").href = SOURCE_URL;
+
+const programs = DATA.programs;
+const ALL = "All";
+
+/* Safe storage: localStorage throws SecurityError on opaque origins
+   (sandboxed preview iframes, some file:// contexts), so fall back to memory. */
+const safeStore = (() => {
+  try {
+    localStorage.getItem("__storage_test__");
+    localStorage.setItem("__storage_test__", "1");
+    localStorage.removeItem("__storage_test__");
+    return {
+      getItem: k => localStorage.getItem(k),
+      setItem: (k,v) => localStorage.setItem(k,v),
+      removeItem: k => localStorage.removeItem(k),
+    };
+  } catch (e) {
+    const mem = new Map();
+    return {
+      getItem: k => mem.has(k) ? mem.get(k) : null,
+      setItem: (k,v) => mem.set(k, String(v)),
+      removeItem: k => mem.delete(k),
+    };
+  }
+})();
+
+/* Selectable fields — one canonical registry drives the table, print report and CSV.
+   w = suggested print column width; num = numeric participant field. */
+const FIELDS = [
+  {key:"year", label:"Year", pv:"Year", w:"8%"},
+  {key:"campus", label:"Campus", pv:"Campus", w:"14%"},
+  {key:"title", label:"Program title", pv:"Program / extension activity", w:"26%"},
+  {key:"extensionType", label:"Extension type", pv:"Type", w:"9%"},
+  {key:"researchType", label:"Research basis", pv:"Research basis", w:"10%"},
+  {key:"ledBy", label:"Led by", pv:"Led by", w:"7%"},
+  {key:"community", label:"Target community / beneficiaries", pv:"Target community", w:"14%"},
+  {key:"duration", label:"Duration & frequency", pv:"Duration", w:"11%"},
+  {key:"objectives", label:"Objectives", pv:"Objectives", w:"15%"},
+  {key:"researchOutput", label:"Research output applied", pv:"Research output", w:"13%"},
+  {key:"deliverables", label:"Expected deliverables", pv:"Deliverables", w:"13%"},
+  {key:"students", label:"Students", pv:"Stud.", num:true, cls:"num-cell", w:"6%"},
+  {key:"faculty", label:"Faculty", pv:"Fac.", num:true, cls:"num-cell", w:"5%"},
+  {key:"researchStaff", label:"Research staff", pv:"Res.", num:true, cls:"num-cell", w:"5%"},
+  {key:"beneficiaries", label:"Beneficiaries", pv:"Ben.", num:true, cls:"num-cell", w:"6%"},
+  {key:"document", label:"Document link", pv:"Document", w:"9%"},
+];
+const DEFAULT_COLS = ["year","campus","title","extensionType","researchType","ledBy",
+  "students","faculty","researchStaff","beneficiaries","document"];
+const MINIMAL_COLS = ["year","campus","title"];
+const stripYear = t => t.replace(/^\d{4}(?:\s*[-–]\s*\d{4})?\s*/,"");
+
+function loadCols(){
+  try {
+    const saved = JSON.parse(safeStore.getItem("ispsc-cols") || "null");
+    if(Array.isArray(saved) && saved.length && saved.every(k=>FIELDS.some(f=>f.key===k)))
+      return new Set(saved);
+  } catch(e){}
+  return new Set(DEFAULT_COLS);
+}
+
+const state = {
+  q:"",
+  campus:new Set(), year:new Set(), ext:new Set(), basis:new Set(), led:new Set(),
+  hasDoc:ALL, minBen:"", minStu:"",
+  sortKey:"year", sortDir:"desc",
+  view: safeStore.getItem("ispsc-view") === "table" ? "table" : "cards",
+  cols: loadCols()
+};
+const persistCols = () => safeStore.setItem("ispsc-cols", JSON.stringify([...state.cols]));
+const visibleFields = () => FIELDS.filter(f => state.cols.has(f.key));
+
+const uniq = key => [...new Set(programs.map(p=>p[key]).filter(Boolean))].sort();
+const CAMPUSES = uniq("campus");
+const YEARS = [...new Set(programs.map(p=>p.year).filter(Boolean))].sort((a,b)=>b-a);
+const EXTS = uniq("extensionType");
+const BASES = ["Based on Faculty Research","Based on Student Research","Others"];
+const LEDS = uniq("ledBy");
+
+const EXT_COLORS = {"Research-based":"#2563eb","Community-based":"#11846b","Request-based":"#c9831b"};
+const BASIS_COLORS = {"Based on Faculty Research":"#7c3aed","Based on Student Research":"#0891b2","Others":"#6b7280"};
+const LED_COLORS = {"Faculty":"#4f46e5","Joint":"#9333ea","Student":"#db2777"};
+const CAMPUS_COLORS = ["#0e6b57","#0891b2","#7c3aed","#c9a227","#2563eb","#db2777","#b45309"];
+
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const nf = n => (n===null || n===undefined) ? null : n.toLocaleString("en-US");
+function countLabel(p, key){
+  const n = nf(p[key]);
+  if(n !== null) return n;
+  const raw = p.rawCounts && p.rawCounts[key];
+  return raw ? esc(raw) : "—";
+}
+const basisShort = b => b === "Based on Faculty Research" ? "Faculty Research"
+  : b === "Based on Student Research" ? "Student Research" : b;
+const toggleIn = (set,v) => set.has(v) ? set.delete(v) : set.add(v);
+
+/* ---------------- search: every word must match, quoted phrases kept intact ---------------- */
+function searchTokens(q){
+  const phrases = [...q.matchAll(/"([^"]+)"/g)].map(m => m[1].toLowerCase());
+  const bare = q.replace(/"[^"]*"/g, " ").split(/\s+/).filter(Boolean).map(s => s.toLowerCase());
+  return [...phrases, ...bare];
+}
+
+/* ---------------- filtering ---------------- */
+function filtered(){
+  const tokens = searchTokens(state.q);
+  const minBen = state.minBen === "" ? null : Number(state.minBen);
+  const minStu = state.minStu === "" ? null : Number(state.minStu);
+  let out = programs.filter(p => {
+    if(state.campus.size && !state.campus.has(p.campus)) return false;
+    if(state.year.size && !state.year.has(p.year)) return false;
+    if(state.ext.size && !state.ext.has(p.extensionType)) return false;
+    if(state.basis.size && !state.basis.has(p.researchType)) return false;
+    if(state.led.size && !state.led.has(p.ledBy)) return false;
+    if(state.hasDoc === "yes" && !p.document) return false;
+    if(state.hasDoc === "no" && p.document) return false;
+    if(minBen !== null && !(p.beneficiaries !== null && p.beneficiaries >= minBen)) return false;
+    if(minStu !== null && !(p.students !== null && p.students >= minStu)) return false;
+    if(tokens.length){
+      const hay = [p.title,p.objectives,p.community,p.researchOutput,p.deliverables,p.duration,p.campus,
+                   p.extensionType,p.researchType,p.ledBy].join(" ").toLowerCase();
+      if(!tokens.every(t => hay.includes(t))) return false;
+    }
+    return true;
+  });
+  const numericKeys = new Set(["year","beneficiaries","students","faculty","researchStaff"]);
+  const k = state.sortKey, dir = state.sortDir === "asc" ? 1 : -1;
+  out.sort((a,b) => {
+    let va = a[k], vb = b[k];
+    if(numericKeys.has(k)){ va = va === null || va === undefined ? -Infinity : va; vb = vb === null || vb === undefined ? -Infinity : vb; }
+    else { va = String(va ?? ""); vb = String(vb ?? ""); }
+    if(va < vb) return -1*dir;
+    if(va > vb) return 1*dir;
+    return a.id - b.id;
+  });
+  return out;
+}
+
+/* ---------------- KPIs ---------------- */
+const ICONS = {
+  doc:'<path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>',
+  school:'<path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-5h6v5"/>',
+  users:'<circle cx="9" cy="8" r="3.2"/><path d="M3.5 20a5.5 5.5 0 0111 0M16 5.2a3.2 3.2 0 010 6M17.5 20a5.5 5.5 0 00-3-4.9"/>',
+  cap:'<path d="M22 9L12 4 2 9l10 5 10-5zM6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/>',
+  faculty:'<path d="M20 7h-3V5a2 2 0 00-2-2H9a2 2 0 00-2 2v2H4a1 1 0 00-1 1v11a1 1 0 001 1h16a1 1 0 001-1V8a1 1 0 00-1-1zM9 5h6v2H9V5z"/>',
+  research:'<path d="M9 3h6M10 3v6.5L4.8 18a2 2 0 001.8 3h10.8a2 2 0 001.8-3L14 9.5V3M7.5 14h9"/>'
+};
+function svgIcon(name){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]}</svg>`;}
+
+function renderKpis(rows){
+  const sum = k => rows.reduce((a,p)=>a+(p[k]||0),0);
+  const campuses = new Set(rows.map(p=>p.campus)).size;
+  const items = [
+    {ic:"doc", n:rows.length, lbl:"Extension Programs", of:`of ${programs.length} total`},
+    {ic:"school", n:campuses, lbl:"Campuses Reached", of:"of 7 ISPSC campuses"},
+    {ic:"users", n:sum("beneficiaries"), lbl:"Beneficiary Participants", of:"community members served"},
+    {ic:"cap", n:sum("students"), lbl:"Student Participants", of:"across all programs"},
+    {ic:"faculty", n:sum("faculty"), lbl:"Faculty Participants", of:"faculty involved"},
+    {ic:"research", n:sum("researchStaff"), lbl:"Research Staff", of:"research personnel"},
+  ];
+  document.getElementById("kpis").innerHTML = items.map(k=>`
+    <div class="kpi"><div class="ic">${svgIcon(k.ic)}</div>
+      <div class="num">${k.n.toLocaleString()}</div><div class="lbl">${k.lbl}</div>
+      <div class="of">${k.of}</div></div>`).join("");
+}
+
+/* ---------------- Year bar chart ---------------- */
+function renderYearChart(){
+  const yearsAsc = [...YEARS].sort((a,b)=>a-b);
+  const counts = {};
+  yearsAsc.forEach(y=>counts[y]=0);
+  programs.forEach(p=>{if(p.year) counts[p.year]++;});
+  const W=680,H=250,padL=8,padB=26,padT=22,padR=8;
+  const max = Math.max(...Object.values(counts));
+  const n = yearsAsc.length;
+  const slot = (W-padL-padR)/n;
+  const bw = Math.min(34, slot*0.62);
+  const scale = v => (H-padT-padB)*(v/max);
+  let bars = "";
+  yearsAsc.forEach((y,i)=>{
+    const v = counts[y];
+    const x = padL + i*slot + (slot-bw)/2;
+    const h = scale(v);
+    const bx = H-padB-h;
+    const cls = "bar" + (state.year.size ? (state.year.has(y) ? " active" : " dim") : "");
+    bars += `<rect class="${cls}" x="${x}" y="${bx}" width="${bw}" height="${Math.max(h,2)}" rx="5"
+       fill="#0e6b57" data-year="${y}"><title>${y}: ${v} program${v===1?"":"s"}</title></rect>`;
+    bars += `<text class="bar-val" x="${x+bw/2}" y="${bx-5}">${v}</text>`;
+    bars += `<text class="bar-lbl" x="${x+bw/2}" y="${H-8}">${String(y).slice(2)}</text>`;
+  });
+  document.getElementById("yearChart").innerHTML =
+    `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Programs per year">
+      <line class="axis" x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}"/>${bars}</svg>`;
+  document.querySelectorAll("#yearChart .bar").forEach(el=>
+    el.addEventListener("click",()=>{ toggleIn(state.year, Number(el.dataset.year)); sync(); }));
+}
+
+/* ---------------- Donut charts ---------------- */
+function donut(elId, entries, colors, stateSet){
+  const total = entries.reduce((a,e)=>a+e.count,0);
+  const r=58,c=2*Math.PI*r, cx=80,cy=80;
+  let off=0,segs="";
+  entries.forEach(e=>{
+    const frac=e.count/total, len=frac*c;
+    const dim = stateSet.size && !stateSet.has(e.key);
+    segs += `<circle class="donut-seg${dim?" dim":""}" cx="${cx}" cy="${cy}" r="${r}" fill="none"
+       stroke="${colors[e.key]}" stroke-width="22"
+       stroke-dasharray="${len-2.5} ${c-len+2.5}" stroke-dashoffset="${-off}"
+       data-key="${esc(e.key)}"><title>${esc(e.key)}: ${e.count} (${Math.round(frac*100)}%)</title></circle>`;
+    off += len;
+  });
+  const legend = entries.map(e=>{
+    const pct=Math.round(e.count/total*100);
+    const on = stateSet.has(e.key);
+    return `<button data-key="${esc(e.key)}" class="${on?"active":""}">
+      <span class="dot" style="background:${colors[e.key]}"></span>
+      <span class="nm">${esc(basisShort(e.key))}</span>
+      <span class="ct">${e.count}</span><span class="pc">${pct}%</span></button>`;
+  }).join("");
+  document.getElementById(elId).innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px">
+      <svg viewBox="0 0 160 160" width="150" height="150" style="flex:none">
+        ${segs}
+        <text class="donut-center" x="80" y="75"><tspan x="80" style="font-size:23px;font-weight:750;fill:#06352c">${total}</tspan><tspan x="80" dy="18" style="font-size:11px;fill:#5f717b;font-weight:600">programs</tspan></text>
+      </svg>
+      <div class="legend" style="flex:1">${legend}</div>
+    </div>`;
+  document.querySelectorAll(`#${elId} .donut-seg, #${elId} .legend button`).forEach(el=>
+    el.addEventListener("click",()=>{ stateSet.has(el.dataset.key) ? stateSet.delete(el.dataset.key) : stateSet.add(el.dataset.key); sync(); }));
+}
+
+/* ---------------- Campus horizontal bars ---------------- */
+function renderCampusBars(){
+  const counts = CAMPUSES.map((c,i)=>({key:c,count:programs.filter(p=>p.campus===c).length,color:CAMPUS_COLORS[i%7]}));
+  counts.sort((a,b)=>b.count-a.count);
+  const max = Math.max(...counts.map(c=>c.count));
+  document.getElementById("campusBars").innerHTML = counts.map(c=>{
+    const dim = state.campus.size && !state.campus.has(c.key);
+    const on = state.campus.has(c.key);
+    return `<div class="hbar-row ${dim?"dim":""} ${on?"active":""}" data-key="${esc(c.key)}">
+      <span class="hbar-name">${esc(c.key)}</span>
+      <span class="hbar-track"><span class="hbar-fill" style="width:${Math.round(c.count/max*100)}%;
+        background:${on?"":`linear-gradient(90deg,${c.color},${c.color}cc)`}"></span></span>
+      <span class="hbar-ct">${c.count}</span></div>`;
+  }).join("");
+  document.querySelectorAll("#campusBars .hbar-row").forEach(el=>
+    el.addEventListener("click",()=>{ toggleIn(state.campus, el.dataset.key); sync(); }));
+}
+
+/* ---------------- Multi-select dropdowns ---------------- */
+const MS_CONFIG = [
+  {id:"ms-campus", label:"Campuses", set:state.campus, options:CAMPUSES, fmt:v=>v},
+  {id:"ms-year", label:"Years", set:state.year, options:YEARS, fmt:v=>String(v)},
+  {id:"ms-ext", label:"Extension types", set:state.ext, options:EXTS, fmt:v=>v},
+  {id:"ms-basis", label:"Research bases", set:state.basis, options:BASES, fmt:basisShort},
+  {id:"ms-led", label:"Proponents", set:state.led, options:LEDS, fmt:v=>v},
+];
+function countFor(cfg, v){
+  const key = {campus:"campus",year:"year",ext:"extensionType",basis:"researchType",led:"ledBy"}[cfg.id.split("-")[1]];
+  return programs.filter(p => p[key] === v).length;
+}
+function buildMultiSelects(){
+  MS_CONFIG.forEach(cfg => {
+    const root = document.getElementById(cfg.id);
+    root.innerHTML = `
+      <button class="ms-btn" type="button"><span class="lbl">${cfg.label}: All</span>
+        <span class="ms-badge" hidden>0</span>
+        <svg class="ms-caret" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></button>
+      <div class="ms-pop">
+        <div class="ms-actions"><button type="button" data-act="all">Select all</button><button type="button" data-act="clear">Clear</button></div>
+        ${cfg.options.map(v=>`
+          <label class="ms-opt"><input type="checkbox" value="${esc(v)}">
+            <span class="nm">${esc(cfg.fmt(v))}</span><span class="ct">${countFor(cfg,v)}</span></label>`).join("")}
+      </div>`;
+    const btn = root.querySelector(".ms-btn");
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      const wasOpen = root.classList.contains("open");
+      document.querySelectorAll(".ms.open").forEach(m=>m.classList.remove("open"));
+      root.classList.toggle("open", !wasOpen);
+    });
+    root.querySelectorAll("input[type=checkbox]").forEach(cb=>
+      cb.addEventListener("change",()=>{
+        const v = cfg.id === "ms-year" ? Number(cb.value) : cb.value;
+        cb.checked ? cfg.set.add(v) : cfg.set.delete(v);
+        sync();
+      }));
+    root.querySelector('[data-act=all]').addEventListener("click",()=>{
+      cfg.options.forEach(v=>cfg.set.add(cfg.id==="ms-year"?Number(v):v)); sync();
+    });
+    root.querySelector('[data-act=clear]').addEventListener("click",()=>{ cfg.set.clear(); sync(); });
+  });
+  document.addEventListener("click", e => {
+    if(!e.target.closest(".ms")) document.querySelectorAll(".ms.open").forEach(m=>m.classList.remove("open"));
+  });
+}
+function syncMultiSelects(){
+  MS_CONFIG.forEach(cfg => {
+    const root = document.getElementById(cfg.id);
+    root.querySelectorAll("input[type=checkbox]").forEach(cb=>{
+      const v = cfg.id === "ms-year" ? Number(cb.value) : cb.value;
+      cb.checked = cfg.set.has(v);
+    });
+    const btn = root.querySelector(".ms-btn");
+    const badge = root.querySelector(".ms-badge");
+    const n = cfg.set.size;
+    btn.classList.toggle("on", n>0);
+    badge.hidden = n===0;
+    badge.textContent = n;
+    root.querySelector(".lbl").textContent = n ? `${cfg.label}: ${n} selected` : `${cfg.label}: All`;
+  });
+}
+
+/* ---------------- Column / field picker ---------------- */
+const isDefaultCols = () => state.cols.size === DEFAULT_COLS.length && DEFAULT_COLS.every(k=>state.cols.has(k));
+function buildColumnPicker(){
+  const root = document.getElementById("ms-cols");
+  root.innerHTML = `
+    <button class="ms-btn" type="button"><span class="lbl">Columns: Default</span>
+      <span class="ms-badge" hidden>0</span>
+      <svg class="ms-caret" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></button>
+    <div class="ms-pop" style="width:300px">
+      <div class="ms-presets">
+        <button type="button" data-preset="minimal" title="Year, Campus, Program title">Minimal</button>
+        <button type="button" data-preset="default">Default</button>
+        <button type="button" data-preset="all">All 16</button>
+      </div>
+      <div class="ms-note">Selected fields appear in the Table view, the Print/PDF report and the CSV export. At least one field is required.</div>
+      ${FIELDS.map(f=>`
+        <label class="ms-opt"><input type="checkbox" value="${f.key}">
+          <span class="nm">${esc(f.label)}</span></label>`).join("")}
+    </div>`;
+  const btn = root.querySelector(".ms-btn");
+  btn.addEventListener("click", e => {
+    e.stopPropagation();
+    const wasOpen = root.classList.contains("open");
+    document.querySelectorAll(".ms.open").forEach(m=>m.classList.remove("open"));
+    root.classList.toggle("open", !wasOpen);
+  });
+  root.querySelectorAll("input[type=checkbox]").forEach(cb=>
+    cb.addEventListener("change",()=>{
+      if(cb.checked) state.cols.add(cb.value);
+      else {
+        if(state.cols.size <= 1){ cb.checked = true; return; } // keep at least one field
+        state.cols.delete(cb.value);
+      }
+      persistCols(); sync();
+    }));
+  root.querySelectorAll("[data-preset]").forEach(b=>
+    b.addEventListener("click",()=>{
+      const keys = b.dataset.preset === "minimal" ? MINIMAL_COLS
+        : b.dataset.preset === "all" ? FIELDS.map(f=>f.key)
+        : DEFAULT_COLS;
+      state.cols = new Set(keys);
+      persistCols(); sync();
+    }));
+}
+function syncColumnPicker(){
+  const root = document.getElementById("ms-cols");
+  if(!root || !root.querySelector("input")) return;
+  root.querySelectorAll("input[type=checkbox]").forEach(cb=>{ cb.checked = state.cols.has(cb.value); });
+  const badge = root.querySelector(".ms-badge");
+  const n = state.cols.size;
+  const custom = !isDefaultCols();
+  badge.hidden = !custom;
+  badge.textContent = n;
+  root.querySelector(".ms-btn").classList.toggle("on", custom);
+  root.querySelector(".lbl").textContent = custom ? `Columns: ${n} selected` : "Columns: Default";
+}
+
+/* ---------------- Active filter chips & description ---------------- */
+function activeChips(){
+  const out = [];
+  state.campus.forEach(v=>out.push({k:"campus", label:"Campus", val:v}));
+  state.year.forEach(v=>out.push({k:"year", label:"Year", val:v}));
+  state.ext.forEach(v=>out.push({k:"ext", label:"Type", val:v}));
+  state.basis.forEach(v=>out.push({k:"basis", label:"Research basis", val:basisShort(v)}));
+  state.led.forEach(v=>out.push({k:"led", label:"Led by", val:v}));
+  if(state.hasDoc!=="All") out.push({k:"hasDoc", label:"Document", val: state.hasDoc==="yes"?"With linked document":"No document"});
+  if(state.minBen!=="") out.push({k:"minBen", label:"Min beneficiaries", val:Number(state.minBen).toLocaleString()});
+  if(state.minStu!=="") out.push({k:"minStu", label:"Min students", val:Number(state.minStu).toLocaleString()});
+  if(state.q.trim()) out.push({k:"q", label:"Search", val:`“${state.q.trim()}”`});
+  return out;
+}
+function renderChips(){
+  document.getElementById("chips").innerHTML = activeChips().map(c=>
+    `<span class="chip">${esc(c.label)}: ${esc(String(c.val))}<button data-k="${c.k}" data-v="${esc(String(c.val))}" aria-label="Remove">✕</button></span>`
+  ).join("");
+  document.querySelectorAll("#chips button").forEach(b=>b.addEventListener("click",()=>{
+    const k=b.dataset.k;
+    if(k==="q"){state.q="";document.getElementById("q").value="";}
+    else if(k==="hasDoc") state.hasDoc=ALL;
+    else if(k==="minBen"){state.minBen="";document.getElementById("minBen").value="";}
+    else if(k==="minStu"){state.minStu="";document.getElementById("minStu").value="";}
+    else state[({campus:"campus",year:"year",ext:"ext",basis:"basis",led:"led"})[k]].delete(
+      k==="year" ? Number(b.dataset.v) : b.dataset.v);
+    sync();
+  }));
+}
+function describeFilters(){
+  const parts = activeChips().map(c=>`${c.label}: ${c.val}`);
+  return parts.length ? parts.join("  ·  ") : "No filters applied — complete catalogue";
+}
+
+/* ---------------- Cards ---------------- */
+const pinSvg = '<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 21s-7-6.3-7-11a7 7 0 1114 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>';
+const clockSvg = '<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+const targetSvg = '<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg>';
+const docIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5"/></svg>';
+
+function renderCards(rows){
+  if(!rows.length){
+    document.getElementById("cards").innerHTML = `<div class="empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M8 11h6"/></svg>
+      <b>No programs match your filters</b>Try removing a filter or resetting to see all ${programs.length} extension programs.</div>`;
+    return;
+  }
+  document.getElementById("cards").innerHTML = rows.map(p=>`
+    <article class="pcard">
+      <div class="pc-top">
+        <span class="yr">${p.year ?? "—"}</span>
+        <span class="campus-tag">${pinSvg}${esc(p.campus)}</span>
+      </div>
+      <h3>${esc(p.title.replace(/^\d{4}(?:\s*[-–]\s*\d{4})?\s*/,""))}</h3>
+      <div class="badges">
+        <span class="badge b-ext-${esc(p.extensionType)}">${esc(p.extensionType)}</span>
+        <span class="badge b-basis-${p.researchType==="Based on Faculty Research"?"Faculty":p.researchType==="Based on Student Research"?"Student":"Others"}">${esc(basisShort(p.researchType))}</span>
+        <span class="badge b-led">Led by: ${esc(p.ledBy)}</span>
+      </div>
+      <div class="pc-info">
+        ${p.community?`<div class="row">${pinSvg}<span>${esc(p.community)}</span></div>`:""}
+        ${p.duration?`<div class="row">${clockSvg}<span>${esc(p.duration)}</span></div>`:""}
+      </div>
+      ${p.objectives?`<div class="pc-obj">${targetSvg} ${esc(p.objectives)}</div>`:""}
+      <div class="stats">
+        <div class="stat"><b>${countLabel(p,"students")}</b><span>Students</span></div>
+        <div class="stat"><b>${countLabel(p,"faculty")}</b><span>Faculty</span></div>
+        <div class="stat"><b>${countLabel(p,"researchStaff")}</b><span>Research</span></div>
+        <div class="stat"><b>${countLabel(p,"beneficiaries")}</b><span>Beneficiaries</span></div>
+      </div>
+      <div class="pc-foot">
+        <button class="btn btn-detail" data-id="${p.id}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          Full details</button>
+        ${p.document
+          ? `<a class="btn btn-doc" href="${esc(p.document)}" target="_blank" rel="noopener">${docIcon}Document</a>`
+          : `<span class="btn btn-doc none" title="No supporting document linked in the source sheet">No document</span>`}
+      </div>
+    </article>`).join("");
+  document.querySelectorAll(".btn-detail").forEach(b=>
+    b.addEventListener("click",()=>openModal(programs.find(p=>p.id===Number(b.dataset.id)))));
+}
+
+/* ---------------- Table view (columns driven by the field picker) ---------------- */
+function screenCell(p, f){
+  const dash = '<span style="color:#b6c2c8">—</span>';
+  switch(f.key){
+    case "year": return `<td class="num-cell">${p.year ?? "—"}</td>`;
+    case "campus": return `<td>${esc(p.campus)}</td>`;
+    case "title": return `<td class="t-title">${esc(stripYear(p.title))}</td>`;
+    case "extensionType":
+      return `<td><span class="badge b-ext-${esc(p.extensionType)}">${esc(p.extensionType)}</span></td>`;
+    case "researchType":
+      return `<td><span class="badge b-basis-${p.researchType==="Based on Faculty Research"?"Faculty":p.researchType==="Based on Student Research"?"Student":"Others"}">${esc(basisShort(p.researchType))}</span></td>`;
+    case "ledBy": return `<td>${esc(p.ledBy)}</td>`;
+    case "document":
+      return `<td class="num-cell">${p.document
+        ? `<a class="t-doc" href="${esc(p.document)}" target="_blank" rel="noopener" title="Open document">${docIcon}Link</a>`
+        : `<span class="t-doc no" title="No document">—</span>`}</td>`;
+    default:
+      if(f.num) return `<td class="num-cell ${p[f.key]===null?'muted':''}">${countLabel(p,f.key)}</td>`;
+      return `<td class="t-text">${p[f.key] ? esc(p[f.key]) : dash}</td>`;
+  }
+}
+function renderTable(rows){
+  const fields = visibleFields();
+  document.getElementById("tableHead").innerHTML = fields.map(f=>{
+    const active = state.sortKey === f.key;
+    const arr = active ? (state.sortDir==="asc" ? "▲" : "▼") : "";
+    return `<th data-key="${f.key}">${esc(f.label)}<span class="arr">${arr}</span></th>`;
+  }).join("");
+  document.querySelectorAll("#tableHead th").forEach(th=>th.addEventListener("click",()=>{
+    const key = th.dataset.key;
+    if(state.sortKey === key) state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
+    else {
+      state.sortKey = key;
+      const def = FIELDS.find(f=>f.key===key);
+      state.sortDir = (def && def.num) ? "desc" : key==="year" ? "desc" : "asc";
+    }
+    syncSortSelect(); sync();
+  }));
+  if(!fields.length){
+    document.getElementById("tableBody").innerHTML =
+      `<tr><td style="padding:30px;text-align:center;color:var(--muted)">No columns selected — open the <b>Columns</b> picker and choose at least one field.</td></tr>`;
+  } else {
+    document.getElementById("tableBody").innerHTML = rows.map(p=>
+      `<tr data-id="${p.id}">${fields.map(f=>screenCell(p,f)).join("")}</tr>`).join("");
+  }
+  document.querySelectorAll("#tableBody tr").forEach(tr=>tr.addEventListener("click",e=>{
+    if(e.target.closest("a")) return;
+    openModal(programs.find(p=>p.id===Number(tr.dataset.id)));
+  }));
+  const sum = k => rows.reduce((a,p)=>a+(p[k]||0),0);
+  document.getElementById("tableFoot").innerHTML = `
+    <span><b>${rows.length}</b> program${rows.length===1?"":"s"}</span>
+    <span>Students: <b>${sum("students").toLocaleString()}</b></span>
+    <span>Faculty: <b>${sum("faculty").toLocaleString()}</b></span>
+    <span>Research staff: <b>${sum("researchStaff").toLocaleString()}</b></span>
+    <span>Beneficiaries: <b>${sum("beneficiaries").toLocaleString()}</b></span>
+    <span style="margin-left:auto">Click a row for full details · click a column header to sort</span>`;
+}
+function syncSortSelect(){
+  const val = `${state.sortKey}_${state.sortDir}`;
+  const sel = document.getElementById("fSort");
+  if([...sel.options].some(o=>o.value===val)) sel.value = val;
+}
+
+/* ---------------- Modal ---------------- */
+function field(label, val, full=false){
+  return `<div class="m-field ${full?"full":""}"><label>${esc(label)}</label>
+    <div class="val">${val && String(val).trim() ? esc(val) : '<span style="color:#9aa8af">Not specified</span>'}</div></div>`;
+}
+function openModal(p){
+  document.getElementById("mTitle").textContent = p.title;
+  document.getElementById("mTags").innerHTML = `
+    <span class="yr">${p.year ?? "—"}</span>
+    <span class="badge b-ext-${esc(p.extensionType)}" style="font-size:12px">${esc(p.extensionType)}</span>
+    <span class="badge b-basis-${p.researchType==="Based on Faculty Research"?"Faculty":p.researchType==="Based on Student Research"?"Student":"Others"}" style="font-size:12px">${esc(basisShort(p.researchType))}</span>
+    <span class="badge b-led" style="font-size:12px">Led by ${esc(p.ledBy)}</span>
+    <span class="badge" style="background:rgba(255,255,255,.15);color:#fff;font-size:12px">${esc(p.campus)}</span>`;
+  const stat = (lbl,key)=>`<div class="m-stat"><b>${countLabel(p,key)}</b><span>${lbl}</span></div>`;
+  document.getElementById("mBody").innerHTML = `
+    <div class="m-stats">
+      ${stat("Students","students")}${stat("Faculty","faculty")}
+      ${stat("Research Staff","researchStaff")}${stat("Beneficiaries","beneficiaries")}
+    </div>
+    <div class="m-grid">
+      ${field("Target community / beneficiaries", p.community)}
+      ${field("Duration & frequency", p.duration)}
+      ${field("Objectives", p.objectives, true)}
+      ${field("Research output applied (title & authors)", p.researchOutput, true)}
+      ${field("Expected deliverables / outputs", p.deliverables, true)}
+    </div>
+    ${p.document
+      ? `<a class="btn btn-primary m-doc" href="${esc(p.document)}" target="_blank" rel="noopener">
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>
+         Open supporting document (Google Drive)</a>`
+      : `<div class="m-doc"><span class="btn btn-doc none" style="justify-content:center">No supporting document linked in the source sheet</span></div>`}`;
+  document.getElementById("modal").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function closeModal(){
+  document.getElementById("modal").classList.remove("open");
+  document.body.style.overflow="";
+}
+document.getElementById("mClose").addEventListener("click",closeModal);
+document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal();});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){ closeModal(); document.querySelectorAll(".ms.open").forEach(m=>m.classList.remove("open")); }
+});
+
+/* ---------------- CSV export ---------------- */
+document.getElementById("btnCsv").addEventListener("click",()=>{
+  const rows = filtered();
+  const cols = visibleFields().map(f=>[f.key,f.label]);
+  const csvCell = v => `"${String(v??"").replace(/"/g,'""').replace(/\r?\n/g," ")}"`;
+  const lines = [cols.map(c=>csvCell(c[1])).join(",")]
+    .concat(rows.map(p=>cols.map(c=>csvCell(p[c[0]])).join(",")));
+  const blob = new Blob(["\uFEFF"+lines.join("\r\n")],{type:"text/csv;charset=utf-8"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=`ISPSC_extension_programs_${rows.length}.csv`;
+  a.click();URL.revokeObjectURL(a.href);
+});
+
+/* ---------------- Print report: grouped by campus then year ---------------- */
+function printCell(p, f){
+  switch(f.key){
+    case "year": return `<td class="pv-counts">${p.year ?? "—"}</td>`;
+    case "title": return `<td class="pv-title">${esc(p.title)}</td>`;
+    case "document":
+      return `<td>${p.document ? `<a class="p-doc" href="${esc(p.document)}" target="_blank" rel="noopener">Linked</a>` : '<span class="pv-nodoc">—</span>'}</td>`;
+    default:
+      if(f.num) return `<td class="pv-counts">${countLabel(p,f.key)}</td>`;
+      return `<td>${p[f.key] ? esc(p[f.key]) : '<span class="pv-nodoc">—</span>'}</td>`;
+  }
+}
+function buildPrint(rows){
+  const sum = k => rows.reduce((a,p)=>a+(p[k]||0),0);
+  const fields = visibleFields().length ? visibleFields()
+    : MINIMAL_COLS.map(k=>FIELDS.find(f=>f.key===k));
+  const pvHead = fields.map(f=>`<th style="width:${f.w||"auto"}">${esc(f.pv)}</th>`).join("");
+  const pvRow = p => `<tr>${fields.map(f=>printCell(p,f)).join("")}</tr>`;
+  const byCampus = new Map();
+  rows.forEach(p=>{
+    if(!byCampus.has(p.campus)) byCampus.set(p.campus, new Map());
+    const ym = byCampus.get(p.campus);
+    const y = p.year ?? "Undated";
+    if(!ym.has(y)) ym.set(y, []);
+    ym.get(y).push(p);
+  });
+  const campusNames = [...byCampus.keys()].sort((a,b)=>a.localeCompare(b));
+  const campusSection = cName => {
+    const ym = byCampus.get(cName);
+    const years = [...ym.keys()].sort((a,b)=>{
+      if(a==="Undated") return 1;
+      if(b==="Undated") return -1;
+      return b - a;
+    });
+    const total = [...ym.values()].reduce((a,l)=>a+l.length,0);
+    return `<section class="pv-campus">
+      <h2><span>${esc(cName)}</span><span>${total} program${total===1?"":"s"}</span></h2>
+      ${years.map(y=>`
+        <div class="pv-year">
+          <h3>School year ${esc(String(y))} — ${ym.get(y).length} program${ym.get(y).length===1?"":"s"}</h3>
+          <table class="pv">
+            <thead><tr>${pvHead}</tr></thead>
+            <tbody>${ym.get(y).map(pvRow).join("")}</tbody>
+          </table>
+        </div>`).join("")}
+    </section>`;
+  };
+  document.getElementById("printView").innerHTML = `
+    <div class="pv-head">
+      <h1>Ilocos Sur Polytechnic State College — Extension &amp; Outreach Programs</h1>
+      <div class="pv-sub">CHED Form U8 · Complete Listing and Description of Outreach Programs · Region I · San Nicolas, Candon City, Ilocos Sur</div>
+      <div class="pv-sub">Printed ${new Date().toLocaleString()}</div>
+      <div class="pv-kpis">
+        <span><b>${rows.length}</b> programs</span>
+        <span><b>${campusNames.length}</b> campuses</span>
+        <span><b>${sum("students").toLocaleString()}</b> student participants</span>
+        <span><b>${sum("faculty").toLocaleString()}</b> faculty participants</span>
+        <span><b>${sum("researchStaff").toLocaleString()}</b> research staff</span>
+        <span><b>${sum("beneficiaries").toLocaleString()}</b> beneficiary participants</span>
+      </div>
+      <div class="pv-filters"><b>Active filters:</b> ${esc(describeFilters())}</div>
+      <div class="pv-filters"><b>Fields in report (${fields.length}):</b> ${esc(fields.map(f=>f.label).join(" · "))}</div>
+    </div>
+    ${rows.length ? campusNames.map(campusSection).join("") : "<p>No programs match the active filters.</p>"}
+    <div class="pv-foot">Generated from the ISPSC University Conversion (UIP 2026) Form U8 published Google Sheet.
+      Full program details and supporting documents are available in the digital dashboard. “—” indicates data not specified in the source.</div>`;
+}
+document.getElementById("btnPrint").addEventListener("click",()=>{
+  buildPrint(filtered());
+  window.print();
+});
+
+/* ---------------- View toggle ---------------- */
+function applyView(){
+  const isTable = state.view === "table";
+  document.getElementById("tableWrap").hidden = !isTable;
+  document.getElementById("cards").style.display = isTable ? "none" : "";
+  document.querySelectorAll("#viewSeg button").forEach(b=>
+    b.classList.toggle("on", b.dataset.view === state.view));
+  safeStore.setItem("ispsc-view", state.view);
+}
+document.querySelectorAll("#viewSeg button").forEach(b=>
+  b.addEventListener("click",()=>{ state.view = b.dataset.view; applyView(); }));
+
+/* ---------------- Wiring ---------------- */
+let qTimer;
+document.getElementById("q").addEventListener("input",e=>{
+  clearTimeout(qTimer);
+  qTimer=setTimeout(()=>{state.q=e.target.value;sync();},160);
+});
+document.getElementById("fDoc").addEventListener("change",e=>{state.hasDoc=e.target.value;sync();});
+document.getElementById("minBen").addEventListener("input",e=>{
+  state.minBen = e.target.value; clearTimeout(qTimer); qTimer=setTimeout(sync,250);
+});
+document.getElementById("minStu").addEventListener("input",e=>{
+  state.minStu = e.target.value; clearTimeout(qTimer); qTimer=setTimeout(sync,250);
+});
+document.getElementById("fSort").addEventListener("change",e=>{
+  [state.sortKey,state.sortDir] = e.target.value.split("_"); sync();
+});
+document.getElementById("btnReset").addEventListener("click",()=>{
+  state.q=""; state.campus.clear(); state.year.clear(); state.ext.clear(); state.basis.clear();
+  state.led.clear(); state.hasDoc=ALL; state.minBen=""; state.minStu="";
+  state.sortKey="year"; state.sortDir="desc";
+  document.getElementById("q").value="";
+  document.getElementById("minBen").value=""; document.getElementById("minStu").value="";
+  document.getElementById("fDoc").value=ALL;
+  syncSortSelect(); sync();
+});
+document.getElementById("btnTop").addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+
+function sync(){
+  const rows = filtered();
+  renderKpis(rows);
+  renderYearChart();
+  donut("extDonut", EXTS.map(k=>({key:k,count:programs.filter(p=>p.extensionType===k).length})), EXT_COLORS, state.ext);
+  donut("basisDonut", BASES.map(k=>({key:k,count:programs.filter(p=>p.researchType===k).length})), BASIS_COLORS, state.basis);
+  donut("ledDonut", LEDS.map(k=>({key:k,count:programs.filter(p=>p.ledBy===k).length})), LED_COLORS, state.led);
+  renderCampusBars();
+  syncMultiSelects();
+  syncColumnPicker();
+  document.getElementById("fDoc").classList.toggle("on", state.hasDoc!==ALL);
+  document.getElementById("minBen").classList.toggle("on", state.minBen!=="");
+  document.getElementById("minStu").classList.toggle("on", state.minStu!=="");
+  syncSortSelect();
+  renderChips();
+  renderCards(rows);
+  renderTable(rows);
+  document.getElementById("resCount").textContent = rows.length;
+  document.getElementById("resOf").textContent = `of ${programs.length} total`;
+}
+
+document.getElementById("hTotal").textContent = programs.length;
+buildMultiSelects();
+buildColumnPicker();
+applyView();
+sync();
+</script>
+</body>
+</html>

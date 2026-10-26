@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISPSC Extension Programs Dashboard — CHED Form U8</title>
+<style>
+:root{
+  --g900:#06352c; --g800:#0b5345; --g700:#0e6b57; --g600:#11846b; --g50:#e9f4f1;
+  --gold:#c9a227; --gold-l:#e7c65b;
+  --ink:#16242b; --muted:#5f717b; --line:#e3e8eb; --bg:#f3f6f7; --card:#ffffff;
+  --blue:#2563eb; --blue-bg:#e9f0fe;
+  --teal:#0891b2; --teal-bg:#e2f6fa;
+  --amber:#b45309; --amber-bg:#fdf1e1;
+  --violet:#7c3aed; --violet-bg:#f2ebfe;
+  --purple:#9333ea; --purple-bg:#f6ebfd;
+  --pink:#db2777; --pink-bg:#fdeaf3;
+  --gray:#4b5563; --gray-bg:#eef0f2;
+  --shadow:0 1px 2px rgba(16,40,48,.06),0 6px 18px rgba(16,40,48,.07);
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5}
+a{color:var(--g700)}
+.wrap{max-width:1420px;margin:0 auto;padding:0 22px}
+
+/* ---------- Header ---------- */
+header{background:linear-gradient(135deg,var(--g900) 0%,var(--g800) 55%,var(--g700) 100%);color:#fff;
+  padding:30px 0 26px;position:relative;overflow:hidden}
+header::after{content:"";position:absolute;right:-90px;top:-90px;width:330px;height:330px;border-radius:50%;
+  background:radial-gradient(circle,rgba(201,162,39,.28),transparent 65%)}
+header::before{content:"";position:absolute;left:-60px;bottom:-120px;width:280px;height:280px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.08),transparent 65%)}
+.h-grid{position:relative;z-index:1;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.seal{width:74px;height:74px;border-radius:50%;background:rgba(255,255,255,.12);border:2px solid rgba(231,198,91,.75);
+  display:flex;align-items:center;justify-content:center;flex:none}
+.seal svg{width:44px;height:44px}
+.h-text h1{font-size:25px;letter-spacing:.2px;font-weight:700}
+.h-text .sub{color:var(--gold-l);font-weight:600;font-size:14px;margin-top:3px;letter-spacing:.6px;text-transform:uppercase}
+.h-text .meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:9px;font-size:13.5px;color:#cfe3dd}
+.h-text .meta span{display:inline-flex;align-items:center;gap:6px}
+.h-text .meta svg{width:15px;height:15px;opacity:.85}
+.h-badge{margin-left:auto;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);
+  padding:10px 16px;border-radius:12px;font-size:13px;text-align:center;backdrop-filter:blur(4px)}
+.h-badge b{display:block;font-size:22px;color:var(--gold-l)}
+
+/* ---------- Section titles ---------- */
+.sec-title{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700;margin:26px 2px 12px;color:var(--g900)}
+.sec-title::before{content:"";width:5px;height:19px;border-radius:3px;background:var(--gold)}
+.sec-title small{font-weight:500;color:var(--muted);font-size:12.5px;margin-left:4px}
+
+/* ---------- KPI cards ---------- */
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:22px}
+.kpi{background:var(--card);border-radius:var(--radius);padding:16px 16px 14px;box-shadow:var(--shadow);
+  border-top:3px solid var(--g600);position:relative;overflow:hidden}
+.kpi:nth-child(2){border-top-color:var(--teal)}
+.kpi:nth-child(3){border-top-color:var(--gold)}
+.kpi:nth-child(4){border-top-color:var(--blue)}
+.kpi:nth-child(5){border-top-color:var(--violet)}
+.kpi:nth-child(6){border-top-color:var(--pink)}
+.kpi .ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:var(--g50);margin-bottom:10px}
+.kpi .ic svg{width:20px;height:20px;stroke:var(--g700)}
+.kpi:nth-child(2) .ic{background:var(--teal-bg)} .kpi:nth-child(2) .ic svg{stroke:var(--teal)}
+.kpi:nth-child(3) .ic{background:#faf3dc} .kpi:nth-child(3) .ic svg{stroke:#a8841d}
+.kpi:nth-child(4) .ic{background:var(--blue-bg)} .kpi:nth-child(4) .ic svg{stroke:var(--blue)}
+.kpi:nth-child(5) .ic{background:var(--violet-bg)} .kpi:nth-child(5) .ic svg{stroke:var(--violet)}
+.kpi:nth-child(6) .ic{background:var(--pink-bg)} .kpi:nth-child(6) .ic svg{stroke:var(--pink)}
+.kpi .num{font-size:26px;font-weight:750;letter-spacing:-.5px}
+.kpi .lbl{font-size:12.5px;color:var(--muted);font-weight:600;margin-top:1px}
+.kpi .of{font-size:11px;color:#94a3ad;margin-top:3px}
+
+/* ---------- Charts ---------- */
+.charts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.panel{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px}
+.panel h3{font-size:14px;font-weight:700;color:var(--g900);margin-bottom:2px}
+.panel .hint{font-size:11.5px;color:#94a3ad;margin-bottom:8px}
+.span2{grid-column:span 2}.span3{grid-column:span 3}
+svg text{font-family:inherit}
+.bar{cursor:pointer;transition:opacity .15s,fill .15s}
+.bar:hover{opacity:.82}
+.bar.dim{opacity:.28}
+.bar.active{fill:var(--gold)}
+.bar-val{font-size:10.5px;font-weight:700;fill:var(--g900);text-anchor:middle;pointer-events:none}
+.bar-lbl{font-size:11px;fill:var(--muted);text-anchor:middle;pointer-events:none}
+.axis{stroke:var(--line);stroke-width:1}
+.donut-seg{cursor:pointer;transition:opacity .15s;stroke:#fff;stroke-width:2.5px}
+.donut-seg:hover{opacity:.82}.donut-seg.dim{opacity:.25}
+.donut-center{text-anchor:middle;pointer-events:none}
+.legend{margin-top:6px;display:flex;flex-direction:column;gap:7px}
+.legend button{display:flex;align-items:center;gap:9px;width:100%;background:none;border:1px solid transparent;
+  border-radius:9px;padding:5px 8px;cursor:pointer;font:inherit;text-align:left;color:var(--ink)}
+.legend button:hover{background:var(--bg)}
+.legend button.active{border-color:var(--line);background:var(--g50)}
+.legend .dot{width:11px;height:11px;border-radius:3px;flex:none}
+.legend .nm{flex:1;font-size:13px;font-weight:600}
+.legend .ct{font-size:12.5px;color:var(--muted);font-weight:700}
+.legend .pc{font-size:11.5px;color:#94a3ad;width:42px;text-align:right}
+.hbar-row{display:flex;align-items:center;gap:10px;margin-bottom:11px;cursor:pointer;border-radius:8px;padding:2px 4px}
+.hbar-row:hover{background:var(--bg)}
+.hbar-row.active{background:var(--g50)}
+.hbar-row.dim{opacity:.4}
+.hbar-name{width:128px;flex:none;font-size:12.8px;font-weight:600;color:var(--ink)}
+.hbar-track{flex:1;height:17px;background:#f0f3f4;border-radius:6px;overflow:hidden}
+.hbar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--g700),var(--g600));transition:width .5s ease}
+.hbar-row.active .hbar-fill{background:linear-gradient(90deg,var(--gold),var(--gold-l))}
+.hbar-ct{width:34px;text-align:right;font-size:12.5px;font-weight:700;color:var(--muted);flex:none}
+
+/* ---------- Filter card ---------- */
+.filter-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;margin-top:14px}
+.search-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.search{position:relative;flex:1;min-width:250px}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:17px;height:17px;stroke:#94a3ad;pointer-events:none}
+.search input{width:100%;padding:11px 14px 11px 39px;border:1.5px solid var(--line);border-radius:11px;
+  font:inherit;font-size:14px;background:var(--bg);outline:none;transition:border .15s}
+.search input:focus{border-color:var(--g600);background:#fff;box-shadow:0 0 0 3px rgba(17,132,107,.12)}
+.search .hint-q{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;color:#a7b4bb;pointer-events:none}
+
+select,.plain-input{padding:11px 32px 11px 12px;border:1.5px solid var(--line);border-radius:11px;font:inherit;font-size:13.5px;
+  background:var(--bg);color:var(--ink);cursor:pointer;outline:none;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235f717b' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 11px center}
+.plain-input{background-image:none;cursor:text}
+select:focus,.plain-input:focus{border-color:var(--g600);background-color:#fff}
+select.on{border-color:var(--g600);background-color:var(--g50);font-weight:600}
+.plain-input.on{border-color:var(--g600);background-color:var(--g50)}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:11px 17px;border-radius:11px;font:inherit;font-size:13.5px;
+  font-weight:650;cursor:pointer;border:1.5px solid transparent;transition:filter .15s,background .15s;white-space:nowrap}
+.btn svg{width:15px;height:15px}
+.btn-primary{background:var(--g700);color:#fff}
+.btn-primary:hover{background:var(--g800)}
+.btn-ghost{background:#fff;border-color:var(--line);color:var(--gray)}
+.btn-ghost:hover{background:var(--bg)}
+.btn-gold{background:#faf3dc;color:#8a6d17;border-color:#ecd99a}
+.btn-gold:hover{background:#f5e8c0}
+
+/* segmented view toggle */
+.seg{display:inline-flex;background:var(--bg);border:1.5px solid var(--line);border-radius:11px;padding:3px;gap:2px}
+.seg button{border:none;background:transparent;padding:8px 14px;border-radius:8px;font:inherit;font-weight:650;font-size:13px;
+  color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.seg button.on{background:#fff;color:var(--g800);box-shadow:0 1px 4px rgba(16,40,48,.14)}
+.seg svg{width:15px;height:15px}
+
+/* multi-select dropdowns */
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.ms{position:relative}
+.ms-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border:1.5px solid var(--line);border-radius:11px;
+  background:var(--bg);font:inherit;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;max-width:240px}
+.ms-btn.on{border-color:var(--g600);background:var(--g50)}
+.ms-btn .lbl{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ms-badge{background:var(--g700);color:#fff;border-radius:999px;font-size:11px;font-weight:700;padding:1px 7px;flex:none}
+.ms-caret{width:11px;height:11px;stroke:#5f717b;flex:none}
+.ms-pop{position:absolute;top:calc(100% + 6px);left:0;z-index:60;background:#fff;border:1px solid var(--line);
+  border-radius:12px;box-shadow:0 14px 34px rgba(16,40,48,.18);width:272px;max-height:340px;overflow:auto;padding:8px;display:none}
+.ms.open .ms-pop{display:block}
+.ms-actions{display:flex;justify-content:space-between;padding:3px 6px 8px;border-bottom:1px solid var(--line);margin-bottom:6px;position:sticky;top:0;background:#fff}
+.ms-actions button{border:none;background:none;color:var(--g700);font:inherit;font-weight:700;font-size:12px;cursor:pointer;padding:0}
+.ms-actions button:hover{text-decoration:underline}
+.ms-opt{display:flex;align-items:center;gap:9px;padding:6px 7px;border-radius:8px;cursor:pointer;font-size:13px}
+.ms-opt:hover{background:var(--bg)}
+.ms-opt input{accent-color:var(--g700);width:15px;height:15px;flex:none}
+.ms-opt .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ms-opt .ct{color:var(--muted);font-size:12px;font-weight:700;flex:none}
+.ms-note{font-size:10.5px;color:#8ba0a9;padding:2px 7px 8px;line-height:1.45}
+.ms-presets{display:flex;gap:5px;padding:0 6px 8px;border-bottom:1px solid var(--line);margin-bottom:6px}
+.ms-presets button{flex:1;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:5px 4px;
+  font:inherit;font-size:11px;font-weight:700;color:var(--g800);cursor:pointer}
+.ms-presets button:hover{background:var(--g50);border-color:#b9d6ce}
+.min-input{width:175px;padding:10px 12px}
+
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.chips:empty{display:none}
+.chip{display:inline-flex;align-items:center;gap:7px;background:var(--g50);color:var(--g800);border:1px solid #cde3dc;
+  font-size:12.5px;font-weight:650;padding:5px 7px 5px 11px;border-radius:999px}
+.chip button{border:none;background:var(--g800);color:#fff;width:17px;height:17px;border-radius:50%;cursor:pointer;
+  font-size:11px;line-height:1;display:flex;align-items:center;justify-content:center}
+.chip button:hover{background:var(--g900)}
+
+/* ---------- Result header ---------- */
+.res-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:22px 2px 12px}
+.res-head h2{font-size:16px;color:var(--g900)}
+.res-head h2 b{color:var(--g700)}
+.res-head .spacer{flex:1}
+
+/* ---------- Cards ---------- */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding-bottom:30px}
+.pcard{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:17px 18px;
+  display:flex;flex-direction:column;gap:10px;transition:transform .15s,box-shadow .15s;border:1px solid transparent}
+.pcard:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(16,40,48,.13);border-color:#d7e5e0}
+.pc-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.yr{background:var(--g800);color:#fff;font-weight:750;font-size:12.5px;padding:3px 10px;border-radius:999px}
+.campus-tag{font-size:12px;font-weight:700;color:var(--teal);display:inline-flex;align-items:center;gap:4px}
+.campus-tag svg{width:13px;height:13px}
+.pcard h3{font-size:14.8px;line-height:1.4;color:var(--ink);font-weight:700}
+.badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;letter-spacing:.2px}
+.b-ext-Research-based{background:var(--blue-bg);color:var(--blue)}
+.b-ext-Community-based{background:var(--g50);color:var(--g700)}
+.b-ext-Request-based{background:var(--amber-bg);color:var(--amber)}
+.b-basis-Faculty{background:var(--violet-bg);color:var(--violet)}
+.b-basis-Student{background:var(--teal-bg);color:var(--teal)}
+.b-basis-Others{background:var(--gray-bg);color:var(--gray)}
+.b-led{background:var(--purple-bg);color:var(--purple)}
+.pc-info{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:5px}
+.pc-info .row{display:flex;gap:8px}
+.pc-info .row svg{width:15px;height:15px;flex:none;margin-top:2px;stroke:#8ba0a9}
+.pc-obj{font-size:13px;color:#3d4f58;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:auto}
+.stat{background:var(--bg);border-radius:10px;padding:8px 4px;text-align:center}
+.stat b{display:block;font-size:15.5px;font-weight:750;color:var(--g800)}
+.stat span{font-size:10.5px;color:var(--muted);font-weight:650;text-transform:uppercase;letter-spacing:.3px}
+.pc-foot{display:flex;gap:9px;margin-top:2px}
+.pc-foot .btn{flex:1;justify-content:center;padding:9px 10px;font-size:12.8px}
+.btn-detail{background:var(--g50);color:var(--g800)}
+.btn-detail:hover{background:#dcefe9}
+.btn-doc{background:#fff;border-color:var(--line);color:var(--gray)}
+.btn-doc:hover{background:var(--bg)}
+.btn-doc.none{opacity:.55;cursor:not-allowed}
+.empty{grid-column:1/-1;text-align:center;padding:70px 20px;color:var(--muted)}
+.empty svg{width:56px;height:56px;stroke:#c3cfd5;margin-bottom:14px}
+.empty b{display:block;font-size:17px;color:var(--ink);margin-bottom:5px}
+
+/* ---------- Table view ---------- */
+.table-wrap{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:30px}
+.table-wrap[hidden]{display:none}
+.table-scroll{overflow-x:auto;max-height:760px;overflow-y:auto}
+table.data{border-collapse:collapse;width:100%;font-size:13px;min-width:720px}
+table.data thead th{position:sticky;top:0;z-index:2;background:var(--g800);color:#fff;font-size:11px;
+  text-transform:uppercase;letter-spacing:.5px;padding:11px 12px;text-align:left;white-space:nowrap;
+  cursor:pointer;user-select:none;font-weight:700}
+table.data thead th:hover{background:var(--g700)}
+table.data thead th .arr{font-size:9px;margin-left:4px}
+table.data td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+table.data tbody tr{cursor:pointer}
+table.data tbody tr:hover{background:var(--g50)}
+td.t-title{font-weight:650;min-width:240px;color:var(--ink)}
+td.t-text{min-width:200px;max-width:340px;color:#3d4f58;font-weight:400;line-height:1.45}
+td.t-title .sub{font-weight:400;font-size:11.5px;color:var(--muted);margin-top:4px;display:flex;flex-direction:column;gap:2px}
+td.num-cell{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:650}
+td.num-cell.muted{color:#9aa8af;font-weight:500}
+td .mini-badges{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+.t-doc{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700}
+.t-doc svg{width:14px;height:14px}
+.t-doc.no{color:#b6c2c8;cursor:default}
+.table-foot{padding:11px 16px;font-size:12.5px;color:var(--muted);background:#fafcfc;border-top:1px solid var(--line);
+  display:flex;gap:18px;flex-wrap:wrap}
+.table-foot b{color:var(--g800)}
+
+/* ---------- Modal ---------- */
+.modal-overlay{position:fixed;inset:0;background:rgba(6,32,27,.55);backdrop-filter:blur(3px);z-index:100;
+  display:none;align-items:flex-start;justify-content:center;padding:45px 18px;overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:18px;max-width:860px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.3);
+  animation:pop .22s ease}
+@keyframes pop{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+.m-head{background:linear-gradient(135deg,var(--g900),var(--g700));color:#fff;padding:22px 26px;border-radius:18px 18px 0 0;position:relative}
+.m-head h2{font-size:18px;line-height:1.45;padding-right:38px}
+.m-head .m-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+.m-head .yr{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3)}
+.m-close{position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:50%;border:none;
+  background:rgba(255,255,255,.15);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.m-close:hover{background:rgba(255,255,255,.28)}
+.m-body{padding:22px 26px 26px}
+.m-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px 22px}
+.m-field{display:flex;flex-direction:column;gap:4px}
+.m-field.full{grid-column:1/-1}
+.m-field label{font-size:11px;font-weight:750;text-transform:uppercase;letter-spacing:.7px;color:var(--g700)}
+.m-field .val{font-size:13.8px;color:#2c3e46;white-space:pre-line}
+.m-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:6px 0 4px}
+.m-stat{background:var(--g50);border-radius:12px;padding:13px 8px;text-align:center}
+.m-stat b{display:block;font-size:21px;color:var(--g800)}
+.m-stat span{font-size:11px;color:var(--muted);font-weight:650}
+.m-doc{margin-top:18px;display:flex}
+.m-doc .btn{width:100%;justify-content:center;padding:13px}
+
+/* ---------- Footer ---------- */
+footer{background:var(--g900);color:#bcd4cd;padding:24px 0;margin-top:10px;font-size:13px}
+footer .wrap{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+footer a{color:var(--gold-l);word-break:break-all}
+
+/* ---------- Print report (screen-hidden) ---------- */
+#printView{display:none}
+@media print{
+  @page{size:A4 landscape;margin:11mm}
+  body{background:#fff !important}
+  header.app, main.app, footer.app, .modal-overlay{display:none !important}
+  #printView{display:block !important;color:#111}
+  .pv-head{border-bottom:3px solid #0b5345;padding-bottom:10px;margin-bottom:12px}
+  .pv-head h1{font-size:19px;color:#06352c}
+  .pv-head .pv-sub{font-size:12px;color:#334;margin-top:4px}
+  .pv-kpis{display:flex;gap:26px;flex-wrap:wrap;margin:10px 0 4px;font-size:12px}
+  .pv-kpis b{font-size:15px;color:#0b5345}
+  .pv-filters{font-size:11px;color:#555;background:#f2f6f5;padding:7px 10px;border-radius:6px;margin:8px 0 14px}
+  .pv-campus{break-inside:auto;margin-bottom:16px}
+  .pv-campus > h2{font-size:14px;background:#0b5345;color:#fff;padding:5px 10px;border-radius:5px;
+    display:flex;justify-content:space-between;break-after:avoid}
+  .pv-year{break-inside:avoid-page;margin:10px 0 6px}
+  .pv-year > h3{font-size:12.5px;color:#0b5345;border-bottom:1px solid #9db8b1;padding-bottom:3px;
+    margin-bottom:5px;break-after:avoid}
+  table.pv{width:100%;border-collapse:collapse;font-size:10.5px}
+  table.pv th{background:#e9f4f1;color:#06352c;text-align:left;padding:5px 7px;border:1px solid #c9dbd6;
+    font-size:10px;text-transform:uppercase;letter-spacing:.3px}
+  table.pv td{padding:5px 7px;border:1px solid #d5e0dd;vertical-align:top;break-inside:avoid}
+  table.pv tr{break-inside:avoid}
+  td.pv-title{width:30%;font-weight:700}
+  td.pv-title .pv-meta{font-weight:400;color:#445;font-size:9.5px;margin-top:2px}
+  td.pv-counts{text-align:center;white-space:nowrap}
+  .p-doc{color:#0b5345;font-weight:600;text-decoration:none;word-break:break-all}
+  .p-doc::after{content:" (" attr(href) ")";font-weight:400;color:#667;font-size:9px}
+  .pv-nodoc{color:#99a}
+  .pv-foot{margin-top:14px;border-top:1px solid #9db8b1;padding-top:8px;font-size:10px;color:#556}
+}
+
+/* ---------- Responsive ---------- */
+@media(max-width:1150px){.kpis{grid-template-columns:repeat(3,1fr)}.charts{grid-template-columns:repeat(2,1fr)}
+  .span2,.span3{grid-column:span 2}.cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){
+  .h-badge{margin-left:0;width:100%}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .charts{grid-template-columns:1fr}.span2,.span3{grid-column:span 1}
+  .cards{grid-template-columns:1fr}
+  .m-grid{grid-template-columns:1fr}.m-stats{grid-template-columns:repeat(2,1fr)}
+  .hbar-name{width:96px}
+  .ms-pop{left:0;right:auto;width:min(86vw,272px)}
+  .search{width:100%}
+  .search .hint-q{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="app">
+  <div class="wrap h-grid">
+    <div class="seal" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#e7c65b" stroke-width="1.7">
+        <path d="M12 3l8 4v5c0 4.6-3.2 7.8-8 9-4.8-1.2-8-4.4-8-9V7l8-4z"/>
+        <path d="M9 12l2 2 4-4.5"/>
+      </svg>
+    </div>
+    <div class="h-text">
+      <h1>Extension &amp; Outreach Programs Dashboard</h1>
+      <div class="sub">CHED Form U8 · University Conversion Document · UIP 2026</div>
+      <div class="meta">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>Ilocos Sur Polytechnic State College</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.3-7-11a7 7 0 1114 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>San Nicolas, Candon City, Ilocos Sur · Region I</span>
+      </div>
+    </div>
+    <div class="h-badge"><b id="hTotal">—</b>programs catalogued</div>
+  </div>
+</header>
+
+<main class="wrap app">
+
+  <div class="sec-title">Key Performance Indicators <small>figures update with active filters</small></div>
+  <section class="kpis" id="kpis"></section>
+
+  <div class="sec-title">Visual Summary <small>click any bar, segment or campus to toggle filters</small></div>
+  <section class="charts">
+    <div class="panel span2">
+      <h3>Programs per Year</h3>
+      <div class="hint">Outreach activities documented across school years 2014–2026</div>
+      <div id="yearChart"></div>
+    </div>
+    <div class="panel">
+      <h3>By Type of Extension</h3>
+      <div class="hint">Click a segment to toggle filter</div>
+      <div id="extDonut"></div>
+    </div>
+    <div class="panel">
+      <h3>By Research Basis</h3>
+      <div class="hint">Faculty research, student research or others</div>
+      <div id="basisDonut"></div>
+    </div>
+    <div class="panel span3">
+      <h3>Programs by Campus</h3>
+      <div class="hint">Seven ISPSC campuses · click a row to toggle filter</div>
+      <div id="campusBars"></div>
+    </div>
+    <div class="panel">
+      <h3>By Proponent</h3>
+      <div class="hint">Who led the extension activity</div>
+      <div id="ledDonut"></div>
+    </div>
+  </section>
+
+  <div class="sec-title">Advanced Search &amp; Filters</div>
+  <section class="filter-card">
+    <div class="search-row">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" id="q" placeholder="Search title, objective, community, research output, deliverable…" autocomplete="off">
+        <span class="hint-q">all words must match · “quotes” = exact phrase</span>
+      </div>
+      <div class="seg" id="viewSeg" role="group" aria-label="View mode">
+        <button data-view="cards" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          Cards</button>
+        <button data-view="table" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16M15 4v16"/></svg>
+          Table</button>
+      </div>
+      <button class="btn btn-gold" id="btnPrint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V3h12v6M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="7" rx="1"/></svg>
+        Print / PDF</button>
+      <button class="btn btn-ghost" id="btnCsv">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+        Export CSV</button>
+      <button class="btn btn-ghost" id="btnReset">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 109-9 9 9 0 00-6.7 3M3 4v5h5"/></svg>
+        Reset</button>
+    </div>
+
+    <div class="controls">
+      <div class="ms" id="ms-campus"></div>
+      <div class="ms" id="ms-year"></div>
+      <div class="ms" id="ms-ext"></div>
+      <div class="ms" id="ms-basis"></div>
+      <div class="ms" id="ms-led"></div>
+      <div class="ms" id="ms-cols"></div>
+      <select id="fDoc" class="on-when-active">
+        <option value="All">Documents: All</option>
+        <option value="yes">With linked document</option>
+        <option value="no">No document</option>
+      </select>
+      <input type="number" min="0" class="plain-input min-input" id="minBen" placeholder="Min beneficiaries">
+      <input type="number" min="0" class="plain-input min-input" id="minStu" placeholder="Min students">
+      <select id="fSort">
+        <option value="year_desc">Sort: Newest first</option>
+        <option value="year_asc">Sort: Oldest first</option>
+        <option value="title_asc">Sort: Title A–Z</option>
+        <option value="beneficiaries_desc">Sort: Most beneficiaries</option>
+        <option value="students_desc">Sort: Most students</option>
+        <option value="campus_asc">Sort: Campus A–Z</option>
+      </select>
+    </div>
+    <div class="chips" id="chips"></div>
+  </section>
+
+  <div class="res-head">
+    <h2><b id="resCount">0</b> extension programs found <span id="resOf" style="color:#94a3ad;font-weight:500;font-size:13.5px"></span></h2>
+    <div class="spacer"></div>
+    <button class="btn btn-primary" id="btnTop">Back to dashboard</button>
+  </div>
+
+  <section class="cards" id="cards"></section>
+  <section class="table-wrap" id="tableWrap" hidden>
+    <div class="table-scroll">
+      <table class="data" id="dataTable">
+        <thead><tr id="tableHead"></tr></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+    <div class="table-foot" id="tableFoot"></div>
+  </section>
+</main>
+
+<footer class="app">
+  <div class="wrap">
+    <div>
+      <b style="color:#fff">Ilocos Sur Polytechnic State College</b> — Complete Listing and Description of Outreach Programs (CHED Form U8)<br>
+      Data covers school years 2014–2026 across seven campuses. Dashboard generated for university-conversion documentation.
+    </div>
+    <div>Source: <a id="srcLink" href="#" target="_blank" rel="noopener">Published Google Sheet</a></div>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="m-head">
+      <button class="m-close" id="mClose" aria-label="Close">✕</button>
+      <h2 id="mTitle"></h2>
+      <div class="m-tags" id="mTags"></div>
+    </div>
+    <div class="m-body" id="mBody"></div>
+  </div>
+</div>
+
+<div id="printView"></div>
+
+<script>
+const DATA = __DATA__;
+const SOURCE_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSBWi9zh6G8WDTiPkmPAng5uFuigpxp7LSVwMpvlEXssdFNMH2JtHz91zRkgxt1P_jcTVVpxi8KhU2i/pubhtml?gid=102814479&single=true";
+document.getElementById("srcLink").href = SOURCE_URL;
+
+const programs = DATA.programs;
+const ALL = "All";
+
+/* Safe storage: localStorage throws SecurityError on opaque origins
+   (sandboxed preview iframes, some file:// contexts), so fall back to memory. */
+const safeStore = (() => {
+  try {
+    localStorage.getItem("__storage_test__");
+    localStorage.setItem("__storage_test__", "1");
+    localStorage.removeItem("__storage_test__");
+    return {
+      getItem: k => localStorage.getItem(k),
+      setItem: (k,v) => localStorage.setItem(k,v),
+      removeItem: k => localStorage.removeItem(k),
+    };
+  } catch (e) {
+    const mem = new Map();
+    return {
+      getItem: k => mem.has(k) ? mem.get(k) : null,
+      setItem: (k,v) => mem.set(k, String(v)),
+      removeItem: k => mem.delete(k),
+    };
+  }
+})();
+
+/* Selectable fields — one canonical registry drives the table, print report and CSV.
+   w = suggested print column width; num = numeric participant field. */
+const FIELDS = [
+  {key:"year", label:"Year", pv:"Year", w:"8%"},
+  {key:"campus", label:"Campus", pv:"Campus", w:"14%"},
+  {key:"title", label:"Program title", pv:"Program / extension activity", w:"26%"},
+  {key:"extensionType", label:"Extension type", pv:"Type", w:"9%"},
+  {key:"researchType", label:"Research basis", pv:"Research basis", w:"10%"},
+  {key:"ledBy", label:"Led by", pv:"Led by", w:"7%"},
+  {key:"community", label:"Target community / beneficiaries", pv:"Target community", w:"14%"},
+  {key:"duration", label:"Duration & frequency", pv:"Duration", w:"11%"},
+  {key:"objectives", label:"Objectives", pv:"Objectives", w:"15%"},
+  {key:"researchOutput", label:"Research output applied", pv:"Research output", w:"13%"},
+  {key:"deliverables", label:"Expected deliverables", pv:"Deliverables", w:"13%"},
+  {key:"students", label:"Students", pv:"Stud.", num:true, cls:"num-cell", w:"6%"},
+  {key:"faculty", label:"Faculty", pv:"Fac.", num:true, cls:"num-cell", w:"5%"},
+  {key:"researchStaff", label:"Research staff", pv:"Res.", num:true, cls:"num-cell", w:"5%"},
+  {key:"beneficiaries", label:"Beneficiaries", pv:"Ben.", num:true, cls:"num-cell", w:"6%"},
+  {key:"document", label:"Document link", pv:"Document", w:"9%"},
+];
+const DEFAULT_COLS = ["year","campus","title","extensionType","researchType","ledBy",
+  "students","faculty","researchStaff","beneficiaries","document"];
+const MINIMAL_COLS = ["year","campus","title"];
+const stripYear = t => t.replace(/^\d{4}(?:\s*[-–]\s*\d{4})?\s*/,"");
+
+function loadCols(){
+  try {
+    const saved = JSON.parse(safeStore.getItem("ispsc-cols") || "null");
+    if(Array.isArray(saved) && saved.length && saved.every(k=>FIELDS.some(f=>f.key===k)))
+      return new Set(saved);
+  } catch(e){}
+  return new Set(DEFAULT_COLS);
+}
+
+const state = {
+  q:"",
+  campus:new Set(), year:new Set(), ext:new Set(), basis:new Set(), led:new Set(),
+  hasDoc:ALL, minBen:"", minStu:"",
+  sortKey:"year", sortDir:"desc",
+  view: safeStore.getItem("ispsc-view") === "table" ? "table" : "cards",
+  cols: loadCols()
+};
+const persistCols = () => safeStore.setItem("ispsc-cols", JSON.stringify([...state.cols]));
+const visibleFields = () => FIELDS.filter(f => state.cols.has(f.key));
+
+const uniq = key => [...new Set(programs.map(p=>p[key]).filter(Boolean))].sort();
+const CAMPUSES = uniq("campus");
+const YEARS = [...new Set(programs.map(p=>p.year).filter(Boolean))].sort((a,b)=>b-a);
+const EXTS = uniq("extensionType");
+const BASES = ["Based on Faculty Research","Based on Student Research","Others"];
+const LEDS = uniq("ledBy");
+
+const EXT_COLORS = {"Research-based":"#2563eb","Community-based":"#11846b","Request-based":"#c9831b"};
+const BASIS_COLORS = {"Based on Faculty Research":"#7c3aed","Based on Student Research":"#0891b2","Others":"#6b7280"};
+const LED_COLORS = {"Faculty":"#4f46e5","Joint":"#9333ea","Student":"#db2777"};
+const CAMPUS_COLORS = ["#0e6b57","#0891b2","#7c3aed","#c9a227","#2563eb","#db2777","#b45309"];
+
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const nf = n => (n===null || n===undefined) ? null : n.toLocaleString("en-US");
+function countLabel(p, key){
+  const n = nf(p[key]);
+  if(n !== null) return n;
+  const raw = p.rawCounts && p.rawCounts[key];
+  return raw ? esc(raw) : "—";
+}
+const basisShort = b => b === "Based on Faculty Research" ? "Faculty Research"
+  : b === "Based on Student Research" ? "Student Research" : b;
+const toggleIn = (set,v) => set.has(v) ? set.delete(v) : set.add(v);
+
+/* ---------------- search: every word must match, quoted phrases kept intact ---------------- */
+function searchTokens(q){
+  const phrases = [...q.matchAll(/"([^"]+)"/g)].map(m => m[1].toLowerCase());
+  const bare = q.replace(/"[^"]*"/g, " ").split(/\s+/).filter(Boolean).map(s => s.toLowerCase());
+  return [...phrases, ...bare];
+}
+
+/* ---------------- filtering ---------------- */
+function filtered(){
+  const tokens = searchTokens(state.q);
+  const minBen = state.minBen === "" ? null : Number(state.minBen);
+  const minStu = state.minStu === "" ? null : Number(state.minStu);
+  let out = programs.filter(p => {
+    if(state.campus.size && !state.campus.has(p.campus)) return false;
+    if(state.year.size && !state.year.has(p.year)) return false;
+    if(state.ext.size && !state.ext.has(p.extensionType)) return false;
+    if(state.basis.size && !state.basis.has(p.researchType)) return false;
+    if(state.led.size && !state.led.has(p.ledBy)) return false;
+    if(state.hasDoc === "yes" && !p.document) return false;
+    if(state.hasDoc === "no" && p.document) return false;
+    if(minBen !== null && !(p.beneficiaries !== null && p.beneficiaries >= minBen)) return false;
+    if(minStu !== null && !(p.students !== null && p.students >= minStu)) return false;
+    if(tokens.length){
+      const hay = [p.title,p.objectives,p.community,p.researchOutput,p.deliverables,p.duration,p.campus,
+                   p.extensionType,p.researchType,p.ledBy].join(" ").toLowerCase();
+      if(!tokens.every(t => hay.includes(t))) return false;
+    }
+    return true;
+  });
+  const numericKeys = new Set(["year","beneficiaries","students","faculty","researchStaff"]);
+  const k = state.sortKey, dir = state.sortDir === "asc" ? 1 : -1;
+  out.sort((a,b) => {
+    let va = a[k], vb = b[k];
+    if(numericKeys.has(k)){ va = va === null || va === undefined ? -Infinity : va; vb = vb === null || vb === undefined ? -Infinity : vb; }
+    else { va = String(va ?? ""); vb = String(vb ?? ""); }
+    if(va < vb) return -1*dir;
+    if(va > vb) return 1*dir;
+    return a.id - b.id;
+  });
+  return out;
+}
+
+/* ---------------- KPIs ---------------- */
+const ICONS = {
+  doc:'<path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>',
+  school:'<path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-5h6v5"/>',
+  users:'<circle cx="9" cy="8" r="3.2"/><path d="M3.5 20a5.5 5.5 0 0111 0M16 5.2a3.2 3.2 0 010 6M17.5 20a5.5 5.5 0 00-3-4.9"/>',
+  cap:'<path d="M22 9L12 4 2 9l10 5 10-5zM6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/>',
+  faculty:'<path d="M20 7h-3V5a2 2 0 00-2-2H9a2 2 0 00-2 2v2H4a1 1 0 00-1 1v11a1 1 0 001 1h16a1 1 0 001-1V8a1 1 0 00-1-1zM9 5h6v2H9V5z"/>',
+  research:'<path d="M9 3h6M10 3v6.5L4.8 18a2 2 0 001.8 3h10.8a2 2 0 001.8-3L14 9.5V3M7.5 14h9"/>'
+};
+function svgIcon(name){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]}</svg>`;}
+
+function renderKpis(rows){
+  const sum = k => rows.reduce((a,p)=>a+(p[k]||0),0);
+  const campuses = new Set(rows.map(p=>p.campus)).size;
+  const items = [
+    {ic:"doc", n:rows.length, lbl:"Extension Programs", of:`of ${programs.length} total`},
+    {ic:"school", n:campuses, lbl:"Campuses Reached", of:"of 7 ISPSC campuses"},
+    {ic:"users", n:sum("beneficiaries"), lbl:"Beneficiary Participants", of:"community members served"},
+    {ic:"cap", n:sum("students"), lbl:"Student Participants", of:"across all programs"},
+    {ic:"faculty", n:sum("faculty"), lbl:"Faculty Participants", of:"faculty involved"},
+    {ic:"research", n:sum("researchStaff"), lbl:"Research Staff", of:"research personnel"},
+  ];
+  document.getElementById("kpis").innerHTML = items.map(k=>`
+    <div class="kpi"><div class="ic">${svgIcon(k.ic)}</div>
+      <div class="num">${k.n.toLocaleString()}</div><div class="lbl">${k.lbl}</div>
+      <div class="of">${k.of}</div></div>`).join("");
+}
+
+/* ---------------- Year bar chart ---------------- */
+function renderYearChart(){
+  const yearsAsc = [...YEARS].sort((a,b)=>a-b);
+  const counts = {};
+  yearsAsc.forEach(y=>counts[y]=0);
+  programs.forEach(p=>{if(p.year) counts[p.year]++;});
+  const W=680,H=250,padL=8,padB=26,padT=22,padR=8;
+  const max = Math.max(...Object.values(counts));
+  const n = yearsAsc.length;
+  const slot = (W-padL-padR)/n;
+  const bw = Math.min(34, slot*0.62);
+  const scale = v => (H-padT-padB)*(v/max);
+  let bars = "";
+  yearsAsc.forEach((y,i)=>{
+    const v = counts[y];
+    const x = padL + i*slot + (slot-bw)/2;
+    const h = scale(v);
+    const bx = H-padB-h;
+    const cls = "bar" + (state.year.size ? (state.year.has(y) ? " active" : " dim") : "");
+    bars += `<rect class="${cls}" x="${x}" y="${bx}" width="${bw}" height="${Math.max(h,2)}" rx="5"
+       fill="#0e6b57" data-year="${y}"><title>${y}: ${v} program${v===1?"":"s"}</title></rect>`;
+    bars += `<text class="bar-val" x="${x+bw/2}" y="${bx-5}">${v}</text>`;
+    bars += `<text class="bar-lbl" x="${x+bw/2}" y="${H-8}">${String(y).slice(2)}</text>`;
+  });
+  document.getElementById("yearChart").innerHTML =
+    `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Programs per year">
+      <line class="axis" x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}"/>${bars}</svg>`;
+  document.querySelectorAll("#yearChart .bar").forEach(el=>
+    el.addEventListener("click",()=>{ toggleIn(state.year, Number(el.dataset.year)); sync(); }));
+}
+
+/* ---------------- Donut charts ---------------- */
+function donut(elId, entries, colors, stateSet){
+  const total = entries.reduce((a,e)=>a+e.count,0);
+  const r=58,c=2*Math.PI*r, cx=80,cy=80;
+  let off=0,segs="";
+  entries.forEach(e=>{
+    const frac=e.count/total, len=frac*c;
+    const dim = stateSet.size && !stateSet.has(e.key);
+    segs += `<circle class="donut-seg${dim?" dim":""}" cx="${cx}" cy="${cy}" r="${r}" fill="none"
+       stroke="${colors[e.key]}" stroke-width="22"
+       stroke-dasharray="${len-2.5} ${c-len+2.5}" stroke-dashoffset="${-off}"
+       data-key="${esc(e.key)}"><title>${esc(e.key)}: ${e.count} (${Math.round(frac*100)}%)</title></circle>`;
+    off += len;
+  });
+  const legend = entries.map(e=>{
+    const pct=Math.round(e.count/total*100);
+    const on = stateSet.has(e.key);
+    return `<button data-key="${esc(e.key)}" class="${on?"active":""}">
+      <span class="dot" style="background:${colors[e.key]}"></span>
+      <span class="nm">${esc(basisShort(e.key))}</span>
+      <span class="ct">${e.count}</span><span class="pc">${pct}%</span></button>`;
+  }).join("");
+  document.getElementById(elId).innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px">
+      <svg viewBox="0 0 160 160" width="150" height="150" style="flex:none">
+        ${segs}
+        <text class="donut-center" x="80" y="75"><tspan x="80" style="font-size:23px;font-weight:750;fill:#06352c">${total}</tspan><tspan x="80" dy="18" style="font-size:11px;fill:#5f717b;font-weight:600">programs</tspan></text>
+      </svg>
+      <div class="legend" style="flex:1">${legend}</div>
+    </div>`;
+  document.querySelectorAll(`#${elId} .donut-seg, #${elId} .legend button`).forEach(el=>
+    el.addEventListener("click",()=>{ stateSet.has(el.dataset.key) ? stateSet.delete(el.dataset.key) : stateSet.add(el.dataset.key); sync(); }));
+}
+
+/* ---------------- Campus horizontal bars ---------------- */
+function renderCampusBars(){
+  const counts = CAMPUSES.map((c,i)=>({key:c,count:programs.filter(p=>p.campus===c).length,color:CAMPUS_COLORS[i%7]}));
+  counts.sort((a,b)=>b.count-a.count);
+  const max = Math.max(...counts.map(c=>c.count));
+  document.getElementById("campusBars").innerHTML = counts.map(c=>{
+    const dim = state.campus.size && !state.campus.has(c.key);
+    const on = state.campus.has(c.key);
+    return `<div class="hbar-row ${dim?"dim":""} ${on?"active":""}" data-key="${esc(c.key)}">
+      <span class="hbar-name">${esc(c.key)}</span>
+      <span class="hbar-track"><span class="hbar-fill" style="width:${Math.round(c.count/max*100)}%;
+        background:${on?"":`linear-gradient(90deg,${c.color},${c.color}cc)`}"></span></span>
+      <span class="hbar-ct">${c.count}</span></div>`;
+  }).join("");
+  document.querySelectorAll("#campusBars .hbar-row").forEach(el=>
+    el.addEventListener("click",()=>{ toggleIn(state.campus, el.dataset.key); sync(); }));
+}
+
+/* ---------------- Multi-select dropdowns ---------------- */
+const MS_CONFIG = [
+  {id:"ms-campus", label:"Campuses", set:state.campus, options:CAMPUSES, fmt:v=>v},
+  {id:"ms-year", label:"Years", set:state.year, options:YEARS, fmt:v=>String(v)},
+  {id:"ms-ext", label:"Extension types", set:state.ext, options:EXTS, fmt:v=>v},
+  {id:"ms-basis", label:"Research bases", set:state.basis, options:BASES, fmt:basisShort},
+  {id:"ms-led", label:"Proponents", set:state.led, options:LEDS, fmt:v=>v},
+];
+function countFor(cfg, v){
+  const key = {campus:"campus",year:"year",ext:"extensionType",basis:"researchType",led:"ledBy"}[cfg.id.split("-")[1]];
+  return programs.filter(p => p[key] === v).length;
+}
+function buildMultiSelects(){
+  MS_CONFIG.forEach(cfg => {
+    const root = document.getElementById(cfg.id);
+    root.innerHTML = `
+      <button class="ms-btn" type="button"><span class="lbl">${cfg.label}: All</span>
+        <span class="ms-badge" hidden>0</span>
+        <svg class="ms-caret" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></button>
+      <div class="ms-pop">
+        <div class="ms-actions"><button type="button" data-act="all">Select all</button><button type="button" data-act="clear">Clear</button></div>
+        ${cfg.options.map(v=>`
+          <label class="ms-opt"><input type="checkbox" value="${esc(v)}">
+            <span class="nm">${esc(cfg.fmt(v))}</span><span class="ct">${countFor(cfg,v)}</span></label>`).join("")}
+      </div>`;
+    const btn = root.querySelector(".ms-btn");
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      const wasOpen = root.classList.contains("open");
+      document.querySelectorAll(".ms.open").forEach(m=>m.classList.remove("open"));
+      root.classList.toggle("open", !wasOpen);
+    });
+    root.querySelectorAll("input[type=checkbox]").forEach(cb=>
+      cb.addEventListener("change",()=>{
+        const v = cfg.id === "ms-year" ? Number(cb.value) : cb.value;
+        cb.checked ? cfg.set.add(v) : cfg.set.delete(v);
+        sync();
+      }));
+    root.querySelector('[data-act=all]').addEventListener("click",()=>{
+      cfg.options.forEach(v=>cfg.set.add(cfg.id==="ms-year"?Number(v):v)); sync();
+    });
+    root.querySelector('[data-act=clear]').addEventListener("click",()=>{ cfg.set.clear(); sync(); });
+  });
+  document.addEventListener("click", e => {
+    if(!e.target.closest(".ms")) document.querySelectorAll(".ms.open").forEach(m=>m.classList.remove("open"));
+  });
+}
+function syncMultiSelects(){
+  MS_CONFIG.forEach(cfg => {
+    const root = document.getElementById(cfg.id);
+    root.querySelectorAll("input[type=checkbox]").forEach(cb=>{
+      const v = cfg.id === "ms-year" ? Number(cb.value) : cb.value;
+      cb.checked = cfg.set.has(v);
+    });
+    const btn = root.querySelector(".ms-btn");
+    const badge = root.querySelector(".ms-badge");
+    const n = cfg.set.size;
+    btn.classList.toggle("on", n>0);
+    badge.hidden = n===0;
+    badge.textContent = n;
+    root.querySelector(".lbl").textContent = n ? `${cfg.label}: ${n} selected` : `${cfg.label}: All`;
+  });
+}
+
+/* ---------------- Column / field picker ---------------- */
+const isDefaultCols = () => state.cols.size === DEFAULT_COLS.length && DEFAULT_COLS.every(k=>state.cols.has(k));
+function buildColumnPicker(){
+  const root = document.getElementById("ms-cols");
+  root.innerHTML = `
+    <button class="ms-btn" type="button"><span class="lbl">Columns: Default</span>
+      <span class="ms-badge" hidden>0</span>
+      <svg class="ms-caret" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></button>
+    <div class="ms-pop" style="width:300px">
+      <div class="ms-presets">
+        <button type="button" data-preset="minimal" title="Year, Campus, Program title">Minimal</button>
+        <button type="button" data-preset="default">Default</button>
+        <button type="button" data-preset="all">All 16</button>
+      </div>
+      <div class="ms-note">Selected fields appear in the Table view, the Print/PDF report and the CSV export. At least one field is required.</div>
+      ${FIELDS.map(f=>`
+        <label class="ms-opt"><input type="checkbox" value="${f.key}">
+          <span class="nm">${esc(f.label)}</span></label>`).join("")}
+    </div>`;
+  const btn = root.querySelector(".ms-btn");
+  btn.addEventListener("click", e => {
+    e.stopPropagation();
+    const wasOpen = root.classList.contains("open");
+    document.querySelectorAll(".ms.open").forEach(m=>m.classList.remove("open"));
+    root.classList.toggle("open", !wasOpen);
+  });
+  root.querySelectorAll("input[type=checkbox]").forEach(cb=>
+    cb.addEventListener("change",()=>{
+      if(cb.checked) state.cols.add(cb.value);
+      else {
+        if(state.cols.size <= 1){ cb.checked = true; return; } // keep at least one field
+        state.cols.delete(cb.value);
+      }
+      persistCols(); sync();
+    }));
+  root.querySelectorAll("[data-preset]").forEach(b=>
+    b.addEventListener("click",()=>{
+      const keys = b.dataset.preset === "minimal" ? MINIMAL_COLS
+        : b.dataset.preset === "all" ? FIELDS.map(f=>f.key)
+        : DEFAULT_COLS;
+      state.cols = new Set(keys);
+      persistCols(); sync();
+    }));
+}
+function syncColumnPicker(){
+  const root = document.getElementById("ms-cols");
+  if(!root || !root.querySelector("input")) return;
+  root.querySelectorAll("input[type=checkbox]").forEach(cb=>{ cb.checked = state.cols.has(cb.value); });
+  const badge = root.querySelector(".ms-badge");
+  const n = state.cols.size;
+  const custom = !isDefaultCols();
+  badge.hidden = !custom;
+  badge.textContent = n;
+  root.querySelector(".ms-btn").classList.toggle("on", custom);
+  root.querySelector(".lbl").textContent = custom ? `Columns: ${n} selected` : "Columns: Default";
+}
+
+/* ---------------- Active filter chips & description ---------------- */
+function activeChips(){
+  const out = [];
+  state.campus.forEach(v=>out.push({k:"campus", label:"Campus", val:v}));
+  state.year.forEach(v=>out.push({k:"year", label:"Year", val:v}));
+  state.ext.forEach(v=>out.push({k:"ext", label:"Type", val:v}));
+  state.basis.forEach(v=>out.push({k:"basis", label:"Research basis", val:basisShort(v)}));
+  state.led.forEach(v=>out.push({k:"led", label:"Led by", val:v}));
+  if(state.hasDoc!=="All") out.push({k:"hasDoc", label:"Document", val: state.hasDoc==="yes"?"With linked document":"No document"});
+  if(state.minBen!=="") out.push({k:"minBen", label:"Min beneficiaries", val:Number(state.minBen).toLocaleString()});
+  if(state.minStu!=="") out.push({k:"minStu", label:"Min students", val:Number(state.minStu).toLocaleString()});
+  if(state.q.trim()) out.push({k:"q", label:"Search", val:`“${state.q.trim()}”`});
+  return out;
+}
+function renderChips(){
+  document.getElementById("chips").innerHTML = activeChips().map(c=>
+    `<span class="chip">${esc(c.label)}: ${esc(String(c.val))}<button data-k="${c.k}" data-v="${esc(String(c.val))}" aria-label="Remove">✕</button></span>`
+  ).join("");
+  document.querySelectorAll("#chips button").forEach(b=>b.addEventListener("click",()=>{
+    const k=b.dataset.k;
+    if(k==="q"){state.q="";document.getElementById("q").value="";}
+    else if(k==="hasDoc") state.hasDoc=ALL;
+    else if(k==="minBen"){state.minBen="";document.getElementById("minBen").value="";}
+    else if(k==="minStu"){state.minStu="";document.getElementById("minStu").value="";}
+    else state[({campus:"campus",year:"year",ext:"ext",basis:"basis",led:"led"})[k]].delete(
+      k==="year" ? Number(b.dataset.v) : b.dataset.v);
+    sync();
+  }));
+}
+function describeFilters(){
+  const parts = activeChips().map(c=>`${c.label}: ${c.val}`);
+  return parts.length ? parts.join("  ·  ") : "No filters applied — complete catalogue";
+}
+
+/* ---------------- Cards ---------------- */
+const pinSvg = '<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 21s-7-6.3-7-11a7 7 0 1114 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>';
+const clockSvg = '<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+const targetSvg = '<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg>';
+const docIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5"/></svg>';
+
+function renderCards(rows){
+  if(!rows.length){
+    document.getElementById("cards").innerHTML = `<div class="empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M8 11h6"/></svg>
+      <b>No programs match your filters</b>Try removing a filter or resetting to see all ${programs.length} extension programs.</div>`;
+    return;
+  }
+  document.getElementById("cards").innerHTML = rows.map(p=>`
+    <article class="pcard">
+      <div class="pc-top">
+        <span class="yr">${p.year ?? "—"}</span>
+        <span class="campus-tag">${pinSvg}${esc(p.campus)}</span>
+      </div>
+      <h3>${esc(p.title.replace(/^\d{4}(?:\s*[-–]\s*\d{4})?\s*/,""))}</h3>
+      <div class="badges">
+        <span class="badge b-ext-${esc(p.extensionType)}">${esc(p.extensionType)}</span>
+        <span class="badge b-basis-${p.researchType==="Based on Faculty Research"?"Faculty":p.researchType==="Based on Student Research"?"Student":"Others"}">${esc(basisShort(p.researchType))}</span>
+        <span class="badge b-led">Led by: ${esc(p.ledBy)}</span>
+      </div>
+      <div class="pc-info">
+        ${p.community?`<div class="row">${pinSvg}<span>${esc(p.community)}</span></div>`:""}
+        ${p.duration?`<div class="row">${clockSvg}<span>${esc(p.duration)}</span></div>`:""}
+      </div>
+      ${p.objectives?`<div class="pc-obj">${targetSvg} ${esc(p.objectives)}</div>`:""}
+      <div class="stats">
+        <div class="stat"><b>${countLabel(p,"students")}</b><span>Students</span></div>
+        <div class="stat"><b>${countLabel(p,"faculty")}</b><span>Faculty</span></div>
+        <div class="stat"><b>${countLabel(p,"researchStaff")}</b><span>Research</span></div>
+        <div class="stat"><b>${countLabel(p,"beneficiaries")}</b><span>Beneficiaries</span></div>
+      </div>
+      <div class="pc-foot">
+        <button class="btn btn-detail" data-id="${p.id}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          Full details</button>
+        ${p.document
+          ? `<a class="btn btn-doc" href="${esc(p.document)}" target="_blank" rel="noopener">${docIcon}Document</a>`
+          : `<span class="btn btn-doc none" title="No supporting document linked in the source sheet">No document</span>`}
+      </div>
+    </article>`).join("");
+  document.querySelectorAll(".btn-detail").forEach(b=>
+    b.addEventListener("click",()=>openModal(programs.find(p=>p.id===Number(b.dataset.id)))));
+}
+
+/* ---------------- Table view (columns driven by the field picker) ---------------- */
+function screenCell(p, f){
+  const dash = '<span style="color:#b6c2c8">—</span>';
+  switch(f.key){
+    case "year": return `<td class="num-cell">${p.year ?? "—"}</td>`;
+    case "campus": return `<td>${esc(p.campus)}</td>`;
+    case "title": return `<td class="t-title">${esc(stripYear(p.title))}</td>`;
+    case "extensionType":
+      return `<td><span class="badge b-ext-${esc(p.extensionType)}">${esc(p.extensionType)}</span></td>`;
+    case "researchType":
+      return `<td><span class="badge b-basis-${p.researchType==="Based on Faculty Research"?"Faculty":p.researchType==="Based on Student Research"?"Student":"Others"}">${esc(basisShort(p.researchType))}</span></td>`;
+    case "ledBy": return `<td>${esc(p.ledBy)}</td>`;
+    case "document":
+      return `<td class="num-cell">${p.document
+        ? `<a class="t-doc" href="${esc(p.document)}" target="_blank" rel="noopener" title="Open document">${docIcon}Link</a>`
+        : `<span class="t-doc no" title="No document">—</span>`}</td>`;
+    default:
+      if(f.num) return `<td class="num-cell ${p[f.key]===null?'muted':''}">${countLabel(p,f.key)}</td>`;
+      return `<td class="t-text">${p[f.key] ? esc(p[f.key]) : dash}</td>`;
+  }
+}
+function renderTable(rows){
+  const fields = visibleFields();
+  document.getElementById("tableHead").innerHTML = fields.map(f=>{
+    const active = state.sortKey === f.key;
+    const arr = active ? (state.sortDir==="asc" ? "▲" : "▼") : "";
+    return `<th data-key="${f.key}">${esc(f.label)}<span class="arr">${arr}</span></th>`;
+  }).join("");
+  document.querySelectorAll("#tableHead th").forEach(th=>th.addEventListener("click",()=>{
+    const key = th.dataset.key;
+    if(state.sortKey === key) state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
+    else {
+      state.sortKey = key;
+      const def = FIELDS.find(f=>f.key===key);
+      state.sortDir = (def && def.num) ? "desc" : key==="year" ? "desc" : "asc";
+    }
+    syncSortSelect(); sync();
+  }));
+  if(!fields.length){
+    document.getElementById("tableBody").innerHTML =
+      `<tr><td style="padding:30px;text-align:center;color:var(--muted)">No columns selected — open the <b>Columns</b> picker and choose at least one field.</td></tr>`;
+  } else {
+    document.getElementById("tableBody").innerHTML = rows.map(p=>
+      `<tr data-id="${p.id}">${fields.map(f=>screenCell(p,f)).join("")}</tr>`).join("");
+  }
+  document.querySelectorAll("#tableBody tr").forEach(tr=>tr.addEventListener("click",e=>{
+    if(e.target.closest("a")) return;
+    openModal(programs.find(p=>p.id===Number(tr.dataset.id)));
+  }));
+  const sum = k => rows.reduce((a,p)=>a+(p[k]||0),0);
+  document.getElementById("tableFoot").innerHTML = `
+    <span><b>${rows.length}</b> program${rows.length===1?"":"s"}</span>
+    <span>Students: <b>${sum("students").toLocaleString()}</b></span>
+    <span>Faculty: <b>${sum("faculty").toLocaleString()}</b></span>
+    <span>Research staff: <b>${sum("researchStaff").toLocaleString()}</b></span>
+    <span>Beneficiaries: <b>${sum("beneficiaries").toLocaleString()}</b></span>
+    <span style="margin-left:auto">Click a row for full details · click a column header to sort</span>`;
+}
+function syncSortSelect(){
+  const val = `${state.sortKey}_${state.sortDir}`;
+  const sel = document.getElementById("fSort");
+  if([...sel.options].some(o=>o.value===val)) sel.value = val;
+}
+
+/* ---------------- Modal ---------------- */
+function field(label, val, full=false){
+  return `<div class="m-field ${full?"full":""}"><label>${esc(label)}</label>
+    <div class="val">${val && String(val).trim() ? esc(val) : '<span style="color:#9aa8af">Not specified</span>'}</div></div>`;
+}
+function openModal(p){
+  document.getElementById("mTitle").textContent = p.title;
+  document.getElementById("mTags").innerHTML = `
+    <span class="yr">${p.year ?? "—"}</span>
+    <span class="badge b-ext-${esc(p.extensionType)}" style="font-size:12px">${esc(p.extensionType)}</span>
+    <span class="badge b-basis-${p.researchType==="Based on Faculty Research"?"Faculty":p.researchType==="Based on Student Research"?"Student":"Others"}" style="font-size:12px">${esc(basisShort(p.researchType))}</span>
+    <span class="badge b-led" style="font-size:12px">Led by ${esc(p.ledBy)}</span>
+    <span class="badge" style="background:rgba(255,255,255,.15);color:#fff;font-size:12px">${esc(p.campus)}</span>`;
+  const stat = (lbl,key)=>`<div class="m-stat"><b>${countLabel(p,key)}</b><span>${lbl}</span></div>`;
+  document.getElementById("mBody").innerHTML = `
+    <div class="m-stats">
+      ${stat("Students","students")}${stat("Faculty","faculty")}
+      ${stat("Research Staff","researchStaff")}${stat("Beneficiaries","beneficiaries")}
+    </div>
+    <div class="m-grid">
+      ${field("Target community / beneficiaries", p.community)}
+      ${field("Duration & frequency", p.duration)}
+      ${field("Objectives", p.objectives, true)}
+      ${field("Research output applied (title & authors)", p.researchOutput, true)}
+      ${field("Expected deliverables / outputs", p.deliverables, true)}
+    </div>
+    ${p.document
+      ? `<a class="btn btn-primary m-doc" href="${esc(p.document)}" target="_blank" rel="noopener">
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>
+         Open supporting document (Google Drive)</a>`
+      : `<div class="m-doc"><span class="btn btn-doc none" style="justify-content:center">No supporting document linked in the source sheet</span></div>`}`;
+  document.getElementById("modal").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function closeModal(){
+  document.getElementById("modal").classList.remove("open");
+  document.body.style.overflow="";
+}
+document.getElementById("mClose").addEventListener("click",closeModal);
+document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal();});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){ closeModal(); document.querySelectorAll(".ms.open").forEach(m=>m.classList.remove("open")); }
+});
+
+/* ---------------- CSV export ---------------- */
+document.getElementById("btnCsv").addEventListener("click",()=>{
+  const rows = filtered();
+  const cols = visibleFields().map(f=>[f.key,f.label]);
+  const csvCell = v => `"${String(v??"").replace(/"/g,'""').replace(/\r?\n/g," ")}"`;
+  const lines = [cols.map(c=>csvCell(c[1])).join(",")]
+    .concat(rows.map(p=>cols.map(c=>csvCell(p[c[0]])).join(",")));
+  const blob = new Blob(["\uFEFF"+lines.join("\r\n")],{type:"text/csv;charset=utf-8"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=`ISPSC_extension_programs_${rows.length}.csv`;
+  a.click();URL.revokeObjectURL(a.href);
+});
+
+/* ---------------- Print report: grouped by campus then year ---------------- */
+function printCell(p, f){
+  switch(f.key){
+    case "year": return `<td class="pv-counts">${p.year ?? "—"}</td>`;
+    case "title": return `<td class="pv-title">${esc(p.title)}</td>`;
+    case "document":
+      return `<td>${p.document ? `<a class="p-doc" href="${esc(p.document)}" target="_blank" rel="noopener">Linked</a>` : '<span class="pv-nodoc">—</span>'}</td>`;
+    default:
+      if(f.num) return `<td class="pv-counts">${countLabel(p,f.key)}</td>`;
+      return `<td>${p[f.key] ? esc(p[f.key]) : '<span class="pv-nodoc">—</span>'}</td>`;
+  }
+}
+function buildPrint(rows){
+  const sum = k => rows.reduce((a,p)=>a+(p[k]||0),0);
+  const fields = visibleFields().length ? visibleFields()
+    : MINIMAL_COLS.map(k=>FIELDS.find(f=>f.key===k));
+  const pvHead = fields.map(f=>`<th style="width:${f.w||"auto"}">${esc(f.pv)}</th>`).join("");
+  const pvRow = p => `<tr>${fields.map(f=>printCell(p,f)).join("")}</tr>`;
+  const byCampus = new Map();
+  rows.forEach(p=>{
+    if(!byCampus.has(p.campus)) byCampus.set(p.campus, new Map());
+    const ym = byCampus.get(p.campus);
+    const y = p.year ?? "Undated";
+    if(!ym.has(y)) ym.set(y, []);
+    ym.get(y).push(p);
+  });
+  const campusNames = [...byCampus.keys()].sort((a,b)=>a.localeCompare(b));
+  const campusSection = cName => {
+    const ym = byCampus.get(cName);
+    const years = [...ym.keys()].sort((a,b)=>{
+      if(a==="Undated") return 1;
+      if(b==="Undated") return -1;
+      return b - a;
+    });
+    const total = [...ym.values()].reduce((a,l)=>a+l.length,0);
+    return `<section class="pv-campus">
+      <h2><span>${esc(cName)}</span><span>${total} program${total===1?"":"s"}</span></h2>
+      ${years.map(y=>`
+        <div class="pv-year">
+          <h3>School year ${esc(String(y))} — ${ym.get(y).length} program${ym.get(y).length===1?"":"s"}</h3>
+          <table class="pv">
+            <thead><tr>${pvHead}</tr></thead>
+            <tbody>${ym.get(y).map(pvRow).join("")}</tbody>
+          </table>
+        </div>`).join("")}
+    </section>`;
+  };
+  document.getElementById("printView").innerHTML = `
+    <div class="pv-head">
+      <h1>Ilocos Sur Polytechnic State College — Extension &amp; Outreach Programs</h1>
+      <div class="pv-sub">CHED Form U8 · Complete Listing and Description of Outreach Programs · Region I · San Nicolas, Candon City, Ilocos Sur</div>
+      <div class="pv-sub">Printed ${new Date().toLocaleString()}</div>
+      <div class="pv-kpis">
+        <span><b>${rows.length}</b> programs</span>
+        <span><b>${campusNames.length}</b> campuses</span>
+        <span><b>${sum("students").toLocaleString()}</b> student participants</span>
+        <span><b>${sum("faculty").toLocaleString()}</b> faculty participants</span>
+        <span><b>${sum("researchStaff").toLocaleString()}</b> research staff</span>
+        <span><b>${sum("beneficiaries").toLocaleString()}</b> beneficiary participants</span>
+      </div>
+      <div class="pv-filters"><b>Active filters:</b> ${esc(describeFilters())}</div>
+      <div class="pv-filters"><b>Fields in report (${fields.length}):</b> ${esc(fields.map(f=>f.label).join(" · "))}</div>
+    </div>
+    ${rows.length ? campusNames.map(campusSection).join("") : "<p>No programs match the active filters.</p>"}
+    <div class="pv-foot">Generated from the ISPSC University Conversion (UIP 2026) Form U8 published Google Sheet.
+      Full program details and supporting documents are available in the digital dashboard. “—” indicates data not specified in the source.</div>`;
+}
+document.getElementById("btnPrint").addEventListener("click",()=>{
+  buildPrint(filtered());
+  window.print();
+});
+
+/* ---------------- View toggle ---------------- */
+function applyView(){
+  const isTable = state.view === "table";
+  document.getElementById("tableWrap").hidden = !isTable;
+  document.getElementById("cards").style.display = isTable ? "none" : "";
+  document.querySelectorAll("#viewSeg button").forEach(b=>
+    b.classList.toggle("on", b.dataset.view === state.view));
+  safeStore.setItem("ispsc-view", state.view);
+}
+document.querySelectorAll("#viewSeg button").forEach(b=>
+  b.addEventListener("click",()=>{ state.view = b.dataset.view; applyView(); }));
+
+/* ---------------- Wiring ---------------- */
+let qTimer;
+document.getElementById("q").addEventListener("input",e=>{
+  clearTimeout(qTimer);
+  qTimer=setTimeout(()=>{state.q=e.target.value;sync();},160);
+});
+document.getElementById("fDoc").addEventListener("change",e=>{state.hasDoc=e.target.value;sync();});
+document.getElementById("minBen").addEventListener("input",e=>{
+  state.minBen = e.target.value; clearTimeout(qTimer); qTimer=setTimeout(sync,250);
+});
+document.getElementById("minStu").addEventListener("input",e=>{
+  state.minStu = e.target.value; clearTimeout(qTimer); qTimer=setTimeout(sync,250);
+});
+document.getElementById("fSort").addEventListener("change",e=>{
+  [state.sortKey,state.sortDir] = e.target.value.split("_"); sync();
+});
+document.getElementById("btnReset").addEventListener("click",()=>{
+  state.q=""; state.campus.clear(); state.year.clear(); state.ext.clear(); state.basis.clear();
+  state.led.clear(); state.hasDoc=ALL; state.minBen=""; state.minStu="";
+  state.sortKey="year"; state.sortDir="desc";
+  document.getElementById("q").value="";
+  document.getElementById("minBen").value=""; document.getElementById("minStu").value="";
+  document.getElementById("fDoc").value=ALL;
+  syncSortSelect(); sync();
+});
+document.getElementById("btnTop").addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+
+function sync(){
+  const rows = filtered();
+  renderKpis(rows);
+  renderYearChart();
+  donut("extDonut", EXTS.map(k=>({key:k,count:programs.filter(p=>p.extensionType===k).length})), EXT_COLORS, state.ext);
+  donut("basisDonut", BASES.map(k=>({key:k,count:programs.filter(p=>p.researchType===k).length})), BASIS_COLORS, state.basis);
+  donut("ledDonut", LEDS.map(k=>({key:k,count:programs.filter(p=>p.ledBy===k).length})), LED_COLORS, state.led);
+  renderCampusBars();
+  syncMultiSelects();
+  syncColumnPicker();
+  document.getElementById("fDoc").classList.toggle("on", state.hasDoc!==ALL);
+  document.getElementById("minBen").classList.toggle("on", state.minBen!=="");
+  document.getElementById("minStu").classList.toggle("on", state.minStu!=="");
+  syncSortSelect();
+  renderChips();
+  renderCards(rows);
+  renderTable(rows);
+  document.getElementById("resCount").textContent = rows.length;
+  document.getElementById("resOf").textContent = `of ${programs.length} total`;
+}
+
+document.getElementById("hTotal").textContent = programs.length;
+buildMultiSelects();
+buildColumnPicker();
+applyView();
+sync();
+</script>
+</body>
+</html>
