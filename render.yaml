@@ -1,0 +1,29 @@
+# Render Blueprint — static site deploy for the ISPSC Extension Programs Dashboard.
+#
+# The dashboard is a single self-contained index.html (no server, no runtime deps),
+# so the "build" only has to place that file into the publish directory.
+# Render used to fail with:
+#     ==> Empty build command; skipping build
+#     ==> Publish directory build does not exist!
+# because staticPublishPath pointed at a folder nothing ever created.
+services:
+  - type: web
+    name: ispsc-extension-dashboard
+    runtime: static
+    plan: free
+    autoDeploy: true
+    # Nothing to compile: copy the committed, already-built dashboard into ./build.
+    # (To regenerate it from data.json + template.html instead, use:
+    #   python3 build.py --out-dir build   — requires Python in the build image.)
+    buildCommand: mkdir -p build && cp index.html build/index.html
+    staticPublishPath: ./build
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /index.html
+        name: Cache-Control
+        value: public, max-age=300, must-revalidate

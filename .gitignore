@@ -1,0 +1,7 @@
+# Build output written by build.py / the Render build command
+build/
+dist/
+
+# Python
+__pycache__/
+*.pyc
