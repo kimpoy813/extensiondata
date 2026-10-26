@@ -85,10 +85,16 @@ svg text{font-family:inherit}
 .bar-val{font-size:10.5px;font-weight:700;fill:var(--g900);text-anchor:middle;pointer-events:none}
 .bar-lbl{font-size:11px;fill:var(--muted);text-anchor:middle;pointer-events:none}
 .axis{stroke:var(--line);stroke-width:1}
-.donut-seg{cursor:pointer;transition:opacity .15s;stroke:#fff;stroke-width:2.5px}
-.donut-seg:hover{opacity:.82}.donut-seg.dim{opacity:.25}
+/* NOTE: do NOT set `stroke`/`stroke-width` here. A CSS declaration beats the
+   presentation attributes on the <circle>s, which painted every segment white
+   at 2.5px and made the pie charts invisible. Colour + width come from the
+   markup; this rule only handles interaction. */
+.donut-seg{cursor:pointer;transition:opacity .15s;stroke-linecap:butt}
+.donut-seg:hover{opacity:.82}.donut-seg.dim{opacity:.22}
 .donut-center{text-anchor:middle;pointer-events:none}
-.legend{margin-top:6px;display:flex;flex-direction:column;gap:7px}
+.donut-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}
+.donut-wrap svg{flex:none;overflow:visible}
+.legend{margin-top:6px;display:flex;flex-direction:column;gap:7px;width:100%}
 .legend button{display:flex;align-items:center;gap:9px;width:100%;background:none;border:1px solid transparent;
   border-radius:9px;padding:5px 8px;cursor:pointer;font:inherit;text-align:left;color:var(--ink)}
 .legend button:hover{background:var(--bg)}
@@ -102,10 +108,18 @@ svg text{font-family:inherit}
 .hbar-row.active{background:var(--g50)}
 .hbar-row.dim{opacity:.4}
 .hbar-name{width:128px;flex:none;font-size:12.8px;font-weight:600;color:var(--ink)}
-.hbar-track{flex:1;height:17px;background:#f0f3f4;border-radius:6px;overflow:hidden}
-.hbar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--g700),var(--g600));transition:width .5s ease}
+.hbar-track{flex:1;height:18px;background:#eef1f3;border-radius:6px;overflow:hidden;
+  box-shadow:inset 0 1px 2px rgba(16,40,48,.06)}
+/* display:block is required: the fill is a <span>, and an inline element
+   ignores width/height, which is why every campus bar rendered as an empty
+   grey track. --bc carries the per-bar colour from JS so the .active rule
+   below can still win. */
+.hbar-fill{display:block;height:100%;width:0;min-width:3px;border-radius:6px;
+  background:linear-gradient(90deg,var(--bc,var(--g700)),var(--bc,var(--g600)));
+  transition:width .55s cubic-bezier(.22,.61,.36,1)}
 .hbar-row.active .hbar-fill{background:linear-gradient(90deg,var(--gold),var(--gold-l))}
-.hbar-ct{width:34px;text-align:right;font-size:12.5px;font-weight:700;color:var(--muted);flex:none}
+.hbar-ct{width:40px;text-align:right;font-size:12.5px;font-weight:700;color:var(--muted);flex:none}
+.hbar-ct .pct{display:block;font-size:10px;font-weight:600;color:#9aa8b0;line-height:1}
 
 /* ---------- Filter card ---------- */
 .filter-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;margin-top:14px}
@@ -678,55 +692,74 @@ function renderYearChart(){
     el.addEventListener("click",()=>{ toggleIn(state.year, Number(el.dataset.year)); sync(); }));
 }
 
-/* ---------------- Donut charts ---------------- */
+/* ---------------- Pie / donut charts ---------------- */
 function donut(elId, entries, colors, stateSet){
   const total = entries.reduce((a,e)=>a+e.count,0);
+  const col = k => colors[k] || "#6b7280";   // never render an unmapped key as "undefined"
   const r=58,c=2*Math.PI*r, cx=80,cy=80;
   let off=0,segs="";
   entries.forEach(e=>{
-    const frac=e.count/total, len=frac*c;
+    const frac = total ? e.count/total : 0, len = frac*c;
+    if(len <= 0) return;
     const dim = stateSet.size && !stateSet.has(e.key);
     segs += `<circle class="donut-seg${dim?" dim":""}" cx="${cx}" cy="${cy}" r="${r}" fill="none"
-       stroke="${colors[e.key]}" stroke-width="22"
-       stroke-dasharray="${len-2.5} ${c-len+2.5}" stroke-dashoffset="${-off}"
+       stroke="${col(e.key)}" stroke-width="22"
+       stroke-dasharray="${Math.max(len-2.5,0.6)} ${c-Math.max(len-2.5,0.6)}" stroke-dashoffset="${-off}"
        data-key="${esc(e.key)}"><title>${esc(e.key)}: ${e.count} (${Math.round(frac*100)}%)</title></circle>`;
     off += len;
   });
   const legend = entries.map(e=>{
-    const pct=Math.round(e.count/total*100);
+    const pct = total ? Math.round(e.count/total*100) : 0;
     const on = stateSet.has(e.key);
-    return `<button data-key="${esc(e.key)}" class="${on?"active":""}">
-      <span class="dot" style="background:${colors[e.key]}"></span>
+    return `<button data-key="${esc(e.key)}" class="${on?"active":""}" aria-pressed="${on}">
+      <span class="dot" style="background:${col(e.key)}"></span>
       <span class="nm">${esc(basisShort(e.key))}</span>
       <span class="ct">${e.count}</span><span class="pc">${pct}%</span></button>`;
   }).join("");
   document.getElementById(elId).innerHTML = `
-    <div style="display:flex;align-items:center;gap:8px">
-      <svg viewBox="0 0 160 160" width="150" height="150" style="flex:none">
-        ${segs}
+    <div class="donut-wrap">
+      <svg viewBox="0 0 160 160" width="158" height="158" role="img"
+           aria-label="Distribution chart, ${total} programs">
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#eef1f3" stroke-width="22"/>
+        <g transform="rotate(-90 ${cx} ${cy})">${segs}</g>
         <text class="donut-center" x="80" y="75"><tspan x="80" style="font-size:23px;font-weight:750;fill:#06352c">${total}</tspan><tspan x="80" dy="18" style="font-size:11px;fill:#5f717b;font-weight:600">programs</tspan></text>
       </svg>
-      <div class="legend" style="flex:1">${legend}</div>
+      <div class="legend">${legend}</div>
     </div>`;
   document.querySelectorAll(`#${elId} .donut-seg, #${elId} .legend button`).forEach(el=>
     el.addEventListener("click",()=>{ stateSet.has(el.dataset.key) ? stateSet.delete(el.dataset.key) : stateSet.add(el.dataset.key); sync(); }));
 }
 
-/* ---------------- Campus horizontal bars ---------------- */
+/* ---------------- Campus horizontal progress bars ---------------- */
+let campusBarsDrawn = false;
 function renderCampusBars(){
   const counts = CAMPUSES.map((c,i)=>({key:c,count:programs.filter(p=>p.campus===c).length,color:CAMPUS_COLORS[i%7]}));
   counts.sort((a,b)=>b.count-a.count);
-  const max = Math.max(...counts.map(c=>c.count));
-  document.getElementById("campusBars").innerHTML = counts.map(c=>{
+  const max = Math.max(1, ...counts.map(c=>c.count));
+  const total = counts.reduce((a,c)=>a+c.count,0) || 1;
+  const root = document.getElementById("campusBars");
+  root.innerHTML = counts.map(c=>{
     const dim = state.campus.size && !state.campus.has(c.key);
     const on = state.campus.has(c.key);
-    return `<div class="hbar-row ${dim?"dim":""} ${on?"active":""}" data-key="${esc(c.key)}">
+    const pct = Math.round(c.count/max*100);
+    const share = Math.round(c.count/total*100);
+    return `<div class="hbar-row ${dim?"dim":""} ${on?"active":""}" data-key="${esc(c.key)}"
+                 title="${esc(c.key)}: ${c.count} of ${total} programs (${share}%)">
       <span class="hbar-name">${esc(c.key)}</span>
-      <span class="hbar-track"><span class="hbar-fill" style="width:${Math.round(c.count/max*100)}%;
-        background:${on?"":`linear-gradient(90deg,${c.color},${c.color}cc)`}"></span></span>
-      <span class="hbar-ct">${c.count}</span></div>`;
+      <span class="hbar-track"><span class="hbar-fill" data-w="${pct}" style="--bc:${c.color}"></span></span>
+      <span class="hbar-ct">${c.count}<span class="pct">${share}%</span></span></div>`;
   }).join("");
-  document.querySelectorAll("#campusBars .hbar-row").forEach(el=>
+  // Animate on first paint only; later re-renders (filter clicks) snap straight to the value.
+  const fills = [...root.querySelectorAll(".hbar-fill")];
+  if(campusBarsDrawn){
+    fills.forEach(f=>{ f.style.width = f.dataset.w + "%"; });
+  } else {
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      fills.forEach(f=>{ f.style.width = f.dataset.w + "%"; });
+    }));
+    campusBarsDrawn = true;
+  }
+  root.querySelectorAll(".hbar-row").forEach(el=>
     el.addEventListener("click",()=>{ toggleIn(state.campus, el.dataset.key); sync(); }));
 }
 
