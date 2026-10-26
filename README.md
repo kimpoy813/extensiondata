@@ -86,12 +86,16 @@ python3 -m http.server 8080 --directory build
   - document filter (with linked document / no document — 8 of 115 have none)
   - minimum-threshold inputs for beneficiaries and student participants
   - removable active-filter chips and one-click reset
-- **Print / PDF report** — `Print / PDF` renders the current filtered list as a
-  landscape A4 report **grouped by campus and then by school year**, with group subtotals,
-  participation counts, the active-filter summary, a list of the fields included, and full
-  document URLs. Only the fields ticked in the Columns picker are shown — e.g. pick
-  **Minimal** to print just Year, Campus and Program title. Use the browser's
-  "Save as PDF" destination to produce a shareable file.
+- **Print / PDF report** — `Print / PDF` renders the current filtered list as a clean,
+  compact landscape A4 document: a one-block masthead, four summary figures
+  (programs · campuses · participants · beneficiaries), the active filters only when set,
+  and **one table per campus** sorted newest-first. The campus table header repeats
+  automatically if it runs onto another page, and long prose fields are clipped with an
+  ellipsis so the report stays readable instead of running to dozens of pages.
+  **Document URLs are never printed** — a ✓ means a document is linked (open the dashboard
+  or the CSV for the actual link). Only the fields ticked in the Columns picker appear —
+  pick **Minimal** to print just Year, Campus and Program title. Use the browser's
+  "Save as PDF" destination to produce the file.
 - **Detail modal** with every Form U8 field and a link to the supporting Google Drive /
   TinyURL document.
 - **Export CSV** of the currently filtered results (Excel-friendly UTF-8 BOM).
