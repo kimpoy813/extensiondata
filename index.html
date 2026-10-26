@@ -153,6 +153,7 @@ svg text{font-family:inherit}
 .hbar-row.active .hbar-fill{background:linear-gradient(90deg,var(--gold),var(--gold-l))}
 .hbar-ct{width:44px;flex:none;text-align:right;font-size:12.5px;font-weight:700;color:var(--ink-2);
   font-variant-numeric:tabular-nums;line-height:1.1}
+.hbar-ct .n{font-weight:700}
 .hbar-ct .pct{display:block;font-size:10px;font-weight:600;color:var(--muted-2)}
 
 /* ---------- Sticky action toolbar ---------- */
@@ -234,6 +235,8 @@ svg text{font-family:inherit}
 .ms-opt input{accent-color:var(--g700);width:15px;height:15px;flex:none;cursor:pointer}
 .ms-opt .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ms-opt .ct{color:var(--muted-2);font-size:11.5px;font-weight:700;flex:none;font-variant-numeric:tabular-nums}
+.ms-opt.zero{opacity:.45;cursor:default}
+.ms-opt.zero .ct{color:#b6c2c8}
 .ms-note{font-size:10.5px;color:var(--muted-2);padding:2px 7px 8px;line-height:1.45}
 .ms-presets{display:flex;gap:5px;padding:0 5px 8px;border-bottom:1px solid var(--line-2);margin-bottom:6px}
 .ms-presets button{flex:1;border:1px solid var(--line);background:var(--bg);border-radius:7px;padding:5px 4px;
@@ -545,7 +548,7 @@ footer.app a:hover{text-decoration:underline}
   <div class="sec-title">Summary <small>recalculates with every filter</small></div>
   <section class="kpis" id="kpis"></section>
 
-  <div class="sec-title">Visual overview <small>click any bar, segment or campus to filter</small></div>
+  <div class="sec-title">Visual overview <small>click any bar, segment or campus to filter — the charts follow your filters</small></div>
   <section class="charts">
     <div class="panel span2">
       <h3>Programs per Year</h3>
@@ -559,17 +562,17 @@ footer.app a:hover{text-decoration:underline}
     </div>
     <div class="panel">
       <h3>By Research Basis</h3>
-      <div class="hint">Faculty, student or others</div>
+      <div class="hint">Faculty, student or others · click a segment to filter</div>
       <div id="basisDonut"></div>
     </div>
     <div class="panel span3">
       <h3>Programs by Campus</h3>
-      <div class="hint">Share of the catalogue · click a row to filter</div>
+      <div class="hint">Share of the current selection · click a row to filter</div>
       <div id="campusBars"></div>
     </div>
     <div class="panel">
       <h3>By Proponent</h3>
-      <div class="hint">Who led the activity</div>
+      <div class="hint">Who led the activity · click a segment to filter</div>
       <div id="ledDonut"></div>
     </div>
   </section>
@@ -756,16 +759,20 @@ function searchTokens(q){
 }
 
 /* ---------------- filtering ---------------- */
-function filtered(){
+function filtered(skip){
+  /* `skip` names one dimension whose filter is ignored. The charts use it so
+     each one reflects every active filter EXCEPT its own dimension — that way
+     selecting "Candon Campus" updates all the other charts while the campus
+     chart still lists every campus (so you can switch or add another). */
   const tokens = searchTokens(state.q);
   const minBen = state.minBen === "" ? null : Number(state.minBen);
   const minStu = state.minStu === "" ? null : Number(state.minStu);
   let out = programs.filter(p => {
-    if(state.campus.size && !state.campus.has(p.campus)) return false;
-    if(state.year.size && !state.year.has(p.year)) return false;
-    if(state.ext.size && !state.ext.has(p.extensionType)) return false;
-    if(state.basis.size && !state.basis.has(p.researchType)) return false;
-    if(state.led.size && !state.led.has(p.ledBy)) return false;
+    if(skip !== "campus" && state.campus.size && !state.campus.has(p.campus)) return false;
+    if(skip !== "year" && state.year.size && !state.year.has(p.year)) return false;
+    if(skip !== "ext" && state.ext.size && !state.ext.has(p.extensionType)) return false;
+    if(skip !== "basis" && state.basis.size && !state.basis.has(p.researchType)) return false;
+    if(skip !== "led" && state.led.size && !state.led.has(p.ledBy)) return false;
     if(state.hasDoc === "yes" && !p.document) return false;
     if(state.hasDoc === "no" && p.document) return false;
     if(minBen !== null && !(p.beneficiaries !== null && p.beneficiaries >= minBen)) return false;
@@ -779,13 +786,22 @@ function filtered(){
   });
   const numericKeys = new Set(["year","beneficiaries","students","faculty","researchStaff"]);
   const k = state.sortKey, dir = state.sortDir === "asc" ? 1 : -1;
+  /* Titles are sorted on what the user actually sees — the year prefix is
+     stripped everywhere it is displayed — and compared case-insensitively and
+     numerically, so "Grade 9" precedes "Grade 10" and case no longer decides
+     the order. */
+  const sortVal = p => {
+    const v = p[k];
+    if(numericKeys.has(k)) return v === null || v === undefined ? -Infinity : v;
+    if(k === "title") return stripYear(String(v ?? ""));
+    return String(v ?? "");
+  };
   out.sort((a,b) => {
-    let va = a[k], vb = b[k];
-    if(numericKeys.has(k)){ va = va === null || va === undefined ? -Infinity : va; vb = vb === null || vb === undefined ? -Infinity : vb; }
-    else { va = String(va ?? ""); vb = String(vb ?? ""); }
-    if(va < vb) return -1*dir;
-    if(va > vb) return 1*dir;
-    return a.id - b.id;
+    const va = sortVal(a), vb = sortVal(b);
+    const c = (typeof va === "number" && typeof vb === "number")
+      ? (va < vb ? -1 : va > vb ? 1 : 0)
+      : String(va).localeCompare(String(vb), undefined, {numeric:true, sensitivity:"base"});
+    return c ? c * dir : a.id - b.id;
   });
   return out;
 }
@@ -819,13 +835,13 @@ function renderKpis(rows){
 }
 
 /* ---------------- Year bar chart ---------------- */
-function renderYearChart(){
+function renderYearChart(rows){
   const yearsAsc = [...YEARS].sort((a,b)=>a-b);
   const counts = {};
   yearsAsc.forEach(y=>counts[y]=0);
-  programs.forEach(p=>{if(p.year) counts[p.year]++;});
+  (rows || programs).forEach(p=>{if(p.year) counts[p.year]++;});
   const W=680,H=250,padL=8,padB=26,padT=22,padR=8;
-  const max = Math.max(...Object.values(counts));
+  const max = Math.max(1, ...Object.values(counts));   /* guard: 0 rows must not divide by 0 */
   const n = yearsAsc.length;
   const slot = (W-padL-padR)/n;
   const bw = Math.min(34, slot*0.62);
@@ -847,6 +863,11 @@ function renderYearChart(){
       <line class="axis" x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}"/>${bars}</svg>`;
   document.querySelectorAll("#yearChart .bar").forEach(el=>
     el.addEventListener("click",()=>{ toggleIn(state.year, Number(el.dataset.year)); sync(); }));
+}
+
+/* count rows per value of a field, for any chart or dropdown */
+function countsFor(rows, key, keys){
+  return keys.map(k => ({key:k, count: rows.reduce((a,p)=>a+(p[key]===k ? 1 : 0), 0)}));
 }
 
 /* ---------------- Pie / donut charts ---------------- */
@@ -889,8 +910,9 @@ function donut(elId, entries, colors, stateSet){
 
 /* ---------------- Campus horizontal progress bars ---------------- */
 let campusBarsDrawn = false;
-function renderCampusBars(){
-  const counts = CAMPUSES.map((c,i)=>({key:c,count:programs.filter(p=>p.campus===c).length,color:CAMPUS_COLORS[i%7]}));
+function renderCampusBars(rows){
+  const src = rows || programs;
+  const counts = CAMPUSES.map((c,i)=>({key:c,count:src.filter(p=>p.campus===c).length,color:CAMPUS_COLORS[i%7]}));
   counts.sort((a,b)=>b.count-a.count);
   const max = Math.max(1, ...counts.map(c=>c.count));
   const total = counts.reduce((a,c)=>a+c.count,0) || 1;
@@ -904,7 +926,7 @@ function renderCampusBars(){
                  title="${esc(c.key)}: ${c.count} of ${total} programs (${share}%)">
       <span class="hbar-name">${esc(c.key)}</span>
       <span class="hbar-track"><span class="hbar-fill" data-w="${pct}" style="--bc:${c.color}"></span></span>
-      <span class="hbar-ct">${c.count}<span class="pct">${share}%</span></span></div>`;
+      <span class="hbar-ct"><b class="n">${c.count}</b><span class="pct">${share}%</span></span></div>`;
   }).join("");
   // Animate on first paint only; later re-renders (filter clicks) snap straight to the value.
   const fills = [...root.querySelectorAll(".hbar-fill")];
@@ -928,9 +950,22 @@ const MS_CONFIG = [
   {id:"ms-basis", label:"Research bases", set:state.basis, options:BASES, fmt:basisShort},
   {id:"ms-led", label:"Proponents", set:state.led, options:LEDS, fmt:v=>v},
 ];
+const MS_KEY = {campus:"campus",year:"year",ext:"extensionType",basis:"researchType",led:"ledBy"};
+/* Counts beside each dropdown option also respect the other filters: they are
+   tallied from filtered(dim), i.e. everything except that dropdown's own
+   selection. Cached per sync() so typing stays snappy. */
+let tallyCache = null;
+function tallyFor(dim){
+  if(!tallyCache) tallyCache = new Map();
+  if(!tallyCache.has(dim)){
+    const key = MS_KEY[dim], m = new Map();
+    filtered(dim).forEach(p => m.set(p[key], (m.get(p[key])||0) + 1));
+    tallyCache.set(dim, m);
+  }
+  return tallyCache.get(dim);
+}
 function countFor(cfg, v){
-  const key = {campus:"campus",year:"year",ext:"extensionType",basis:"researchType",led:"ledBy"}[cfg.id.split("-")[1]];
-  return programs.filter(p => p[key] === v).length;
+  return tallyFor(cfg.id.split("-")[1]).get(v) || 0;
 }
 function buildMultiSelects(){
   MS_CONFIG.forEach(cfg => {
@@ -970,9 +1005,16 @@ function buildMultiSelects(){
 function syncMultiSelects(){
   MS_CONFIG.forEach(cfg => {
     const root = document.getElementById(cfg.id);
-    root.querySelectorAll("input[type=checkbox]").forEach(cb=>{
+    const dim = cfg.id.split("-")[1];
+    root.querySelectorAll(".ms-opt").forEach(opt=>{
+      const cb = opt.querySelector("input[type=checkbox]");
       const v = cfg.id === "ms-year" ? Number(cb.value) : cb.value;
       cb.checked = cfg.set.has(v);
+      const ct = opt.querySelector(".ct");
+      const n = countFor(cfg, v);
+      if(ct) ct.textContent = n;
+      opt.classList.toggle("zero", n === 0 && !cfg.set.has(v));
+      cb.disabled = n === 0 && !cfg.set.has(v);
     });
     const btn = root.querySelector(".ms-btn");
     const badge = root.querySelector(".ms-badge");
@@ -1501,13 +1543,16 @@ window.addEventListener("scroll", onScroll, {passive:true});
 onScroll();
 
 function sync(){
+  tallyCache = null;
   const rows = filtered();
   renderKpis(rows);
-  renderYearChart();
-  donut("extDonut", EXTS.map(k=>({key:k,count:programs.filter(p=>p.extensionType===k).length})), EXT_COLORS, state.ext);
-  donut("basisDonut", BASES.map(k=>({key:k,count:programs.filter(p=>p.researchType===k).length})), BASIS_COLORS, state.basis);
-  donut("ledDonut", LEDS.map(k=>({key:k,count:programs.filter(p=>p.ledBy===k).length})), LED_COLORS, state.led);
-  renderCampusBars();
+  const byYear = filtered("year"), byCampus = filtered("campus");
+  const byExt = filtered("ext"), byBasis = filtered("basis"), byLed = filtered("led");
+  renderYearChart(byYear);
+  donut("extDonut", countsFor(byExt, "extensionType", EXTS), EXT_COLORS, state.ext);
+  donut("basisDonut", countsFor(byBasis, "researchType", BASES), BASIS_COLORS, state.basis);
+  donut("ledDonut", countsFor(byLed, "ledBy", LEDS), LED_COLORS, state.led);
+  renderCampusBars(byCampus);
   syncMultiSelects();
   syncColumnPicker();
   document.getElementById("fDoc").classList.toggle("on", state.hasDoc!==ALL);

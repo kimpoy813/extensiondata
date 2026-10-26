@@ -69,10 +69,17 @@ python3 -m http.server 8080 --directory build
 
 - **KPI cards** — programs, campuses reached, beneficiaries (15,859), students (2,983),
   faculty (715), research staff (27); all recompute when filters are active.
-- **Interactive charts** — programs per year, per campus, and donuts for extension type,
-  research basis, and proponent. Clicking any chart element toggles a filter (multi-select).
+- **Interactive charts that follow your filters** — programs per year, per campus, and
+  donuts for extension type, research basis, and proponent. Clicking any chart element
+  toggles a filter (multi-select). Every chart is cross-filtered: it counts the rows that
+  pass **all the other** filters, so selecting a campus immediately redraws the year,
+  extension-type, research-basis and proponent charts (while the campus chart keeps
+  listing every campus so you can switch or add another). The option counts in each
+  dropdown behave the same way, and options that would return nothing are dimmed and
+  disabled.
 - **Two result views** — card grid or a sortable, sticky-header **table** (click any column
-  header to sort; click a row for full details). The choice is remembered on the device.
+  header to sort; click a row for full details). Title sorting uses the visible title with
+  the year prefix stripped, and compares case-insensitively and numerically. The choice is remembered on the device.
 - **Field / column picker** — a **Columns** dropdown chooses exactly which of the 16 fields
   appear, with **Minimal** (Year · Campus · Program title), **Default** (11 fields) and
   **All 16** presets, plus per-field checkboxes (at least one field always remains).
