@@ -15,12 +15,30 @@ school years 2014–2026).
 | `raw.csv` | Raw CSV export of the source Google Sheet |
 | `data.json` | Cleaned, structured program records |
 
+## Source
+
+The published sheet (FORM U8, `gid=102814479`) — this is the same link the dashboard's
+**Source** footer points at:
+
+- View: <https://docs.google.com/spreadsheets/d/e/2PACX-1vQwJ_u0ebDjDTw-ik8pP2BPejEqMTaB5F9g3Hh99LknlIs-HYUcQKKNIRjf7exBt_4TyAeQ2iWkkAec/pubhtml?gid=102814479&single=true>
+- CSV: `https://docs.google.com/spreadsheets/d/e/2PACX-1vQwJ_u0ebDjDTw-ik8pP2BPejEqMTaB5F9g3Hh99LknlIs-HYUcQKKNIRjf7exBt_4TyAeQ2iWkkAec/pub?gid=102814479&single=true&output=csv`
+
 ## How to refresh the data
 
-1. Re-export the Google Sheet as CSV (replace `raw.csv`):
-   `.../pub?output=csv&gid=102814479`
+1. Open the CSV link above and save it over `raw.csv`.
 2. Run: `python3 parse.py && python3 build.py`
 3. Reload `index.html`.
+
+If the sheet is ever **re-published** (Google issues a new `2PACX-…` id), update
+`SOURCE_URL` in `template.html` and rebuild so the footer link stays current. Note that the
+browser can download the CSV while automated clients sometimes cannot — Google answers
+`/pub?output=csv` with HTTP 500 for scripted requests, so a manual download is the reliable
+route.
+
+> The current `raw.csv` matches this sheet: rows 14–16, 40–46, 69–77 and 143 were
+> compared field by field (titles, author strings, participant counts, extension type,
+> *led by*, Drive file ids) against the published sheet and are identical — it is the same
+> data under a new publish id, not a new revision.
 
 ## Run locally
 
