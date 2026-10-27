@@ -133,9 +133,11 @@ python3 -m http.server 8080 --directory build
   - minimum-threshold inputs for beneficiaries and student participants
   - removable active-filter chips and one-click reset
 - **Print / PDF report** — `Print / PDF` renders the current filtered list as a clean,
-  compact landscape A4 document: a one-block masthead, four summary figures
+  compact landscape A4 document: four summary figures
   (programs · campuses · participants · beneficiaries), the active filters only when set,
-  and **one table per campus** sorted newest-first. The campus table header repeats
+  and **one table per campus** sorted newest-first. The report prints **no masthead and no
+  footer** — the pages are meant to sit inside the Form U8 paperwork, so the document
+  supplies the title. (`PV_SHOW_HEAD` / `PV_SHOW_FOOT` in the script switch them back on.) The campus table header repeats
   automatically if it runs onto another page, and long prose fields are clipped with an
   ellipsis so the report stays readable instead of running to dozens of pages.
   **Document URLs are never printed** — a ✓ means a document is linked (open the dashboard

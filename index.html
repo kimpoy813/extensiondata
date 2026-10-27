@@ -413,6 +413,8 @@ footer.app a:hover{text-decoration:underline}
 
   /* ---- summary strip: 4 figures, nothing else ---- */
   .pv-summary{display:flex;margin:0 0 6pt;border:0.6pt solid #d7e0dd;border-radius:2.5pt;overflow:hidden}
+  /* no masthead/footer in the report (PV_SHOW_HEAD / PV_SHOW_FOOT in the JS) */
+  .pv-head,.pv-foot{display:none}
   .pv-summary div{flex:1;padding:3.5pt 7pt;border-left:0.6pt solid #d7e0dd}
   .pv-summary div:first-child{border-left:0}
   .pv-summary b{display:block;font-size:10.5pt;color:#07322a;line-height:1.1;font-variant-numeric:tabular-nums}
@@ -1297,6 +1299,11 @@ document.getElementById("btnCsv").addEventListener("click",()=>{
    prose fields clipped so the report stays readable instead of running to
    dozens of pages. */
 const PV_LIMIT = {title:150, objectives:70, deliverables:60, researchOutput:70, community:55, duration:40};
+/* The report no longer prints its own masthead or footer — the printed pages go
+   straight onto the Form U8 paperwork, so the document supplies the title and
+   the page furniture. Set these to true to bring the blocks back. */
+const PV_SHOW_HEAD = false;
+const PV_SHOW_FOOT = false;
 const pvFlat = s => String(s ?? "").replace(/\s+/g, " ").trim();
 function pvClip(s, n){
   const t = pvFlat(s);
@@ -1456,7 +1463,7 @@ function buildPrint(rows){
     </section>`;
   }).join("");
 
-  document.getElementById("printView").innerHTML = `
+  const headBlock = !PV_SHOW_HEAD ? "" : `
     <div class="pv-head">
       <div class="pv-inst">Ilocos Sur Polytechnic State College · Region I</div>
       <h1>Extension &amp; Outreach Programs${filters ? " — filtered view" : ""}</h1>
@@ -1466,7 +1473,15 @@ function buildPrint(rows){
         <span>${rows.length} of ${programs.length} programs</span>
         <span>Prepared ${pvDate()}</span>
       </div>
-    </div>
+    </div>`;
+  const footBlock = !PV_SHOW_FOOT ? "" : `
+    <div class="pv-foot">
+      <span>Source: CHED Form U8 published Google Sheet · full details and documents in the digital dashboard</span>
+      <span>— = not specified · ✓ = document linked</span>
+    </div>`;
+
+  document.getElementById("printView").innerHTML = `
+    ${headBlock}
     <div class="pv-summary">
       <div><b>${rows.length}</b><span>Programs</span></div>
       <div><b>${campusNames.length}</b><span>Campuses</span></div>
@@ -1476,10 +1491,7 @@ function buildPrint(rows){
     ${filters ? `<div class="pv-filterline"><b>Filters</b> — ${esc(filters)}</div>` : ""}
     ${pvCharts(rows)}
     ${rows.length ? sections : `<div class="pv-empty">No programs match the active filters.</div>`}
-    <div class="pv-foot">
-      <span>Source: CHED Form U8 published Google Sheet · full details and documents in the digital dashboard</span>
-      <span>— = not specified · ✓ = document linked</span>
-    </div>`;
+    ${footBlock}`;
 }
 document.getElementById("btnPrint").addEventListener("click",()=>{
   buildPrint(filtered());
