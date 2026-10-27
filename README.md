@@ -12,6 +12,7 @@ school years 2014–2026).
 | `template.html` | Source template with a `__DATA__` placeholder |
 | `parse.py` | Parses `raw.csv` (exported from the published Google Sheet) into clean `data.json` |
 | `build.py` | Injects `data.json` into `template.html` and writes `index.html` |
+| `check_links.py` | Verifies every supporting-document link still resolves; exits non-zero if any is broken |
 | `raw.csv` | Raw CSV export of the source Google Sheet |
 | `data.json` | Cleaned, structured program records |
 
@@ -35,10 +36,30 @@ browser can download the CSV while automated clients sometimes cannot — Google
 `/pub?output=csv` with HTTP 500 for scripted requests, so a manual download is the reliable
 route.
 
-> The current `raw.csv` matches this sheet: rows 14–16, 40–46, 69–77 and 143 were
-> compared field by field (titles, author strings, participant counts, extension type,
-> *led by*, Drive file ids) against the published sheet and are identical — it is the same
-> data under a new publish id, not a new revision.
+### When document links break
+
+A Google Drive file id stops resolving when the document is deleted, moved to trash, or
+re-uploaded as a new copy. The sheet keeps working while every link in this repo 404s, so
+link rot has to be checked on purpose:
+
+```bash
+python3 check_links.py            # every link in data.json
+python3 check_links.py --raw raw.csv   # or straight from the CSV
+python3 check_links.py --verbose  # list the healthy ones too
+```
+
+It requests only the first byte of each document, runs a few checks at a time, prints the
+program id, title and reason for anything broken, and exits non-zero if any link fails —
+so it can gate a deploy. Programs with no document are skipped.
+
+To repair a broken link, copy the current link from the sheet's **Documents** column into
+`raw.csv` (or replace the file id in place), then re-run `parse.py` and `build.py`.
+
+> **Link audit (this revision).** All 107 document links were compared against the
+> published sheet. 106 were identical; **one was stale** — *“2025 MAKING YOUR MARK: CAMPUS
+> JOURNALISM TRAINING”* still pointed at `1VPtF9_z…`, which now returns 404, while the
+> sheet carries the re-uploaded `1rAdgeAa…`. That row has been corrected. An earlier note
+> in this file claimed the Drive ids matched; that was wrong, and this audit supersedes it.
 
 ## Run locally
 
